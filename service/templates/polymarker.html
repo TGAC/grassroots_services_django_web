@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv='cache-control' content='no-cache'/>
+    <meta http-equiv='expires' content='0'/>
+    <meta http-equiv='pragma' content='no-cache'/>
+
+    <title>Grassroots Infrastructure</title>
+
+
+    <link rel="stylesheet" href="dynamic/styles/style.css" type="text/css"/>
+    <!-- font awesome -->
+    <link href="dynamic/scripts/fontawesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+
+    <!-- jQuery -->
+    <script type="text/javascript" src="dynamic/scripts/jquery/js/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="dynamic/scripts/jquery/jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="dynamic/scripts/jquery/jquery-ui-1.11.4.custom/jquery-ui.min.css"
+          type="text/css"/>
+    <link rel="stylesheet" href="dynamic/scripts/jquery/colorbox/colorbox.css"
+          type="text/css"/>
+
+    <!-- bootstrap -->
+    <script src="dynamic/scripts/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="dynamic/scripts/bootstrap/js/validator.js" type="text/javascript"></script>
+    <link href="dynamic/scripts/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+
+    <!-- wis -->
+    <script type="text/javascript" src="dynamic/scripts/gi_dynamic_web.js"></script>
+    <script type="text/javascript" src="dynamic/scripts/wis.js"></script>
+    <script type="text/javascript" src="dynamic/scripts/FileSaver.min.js"></script>
+    <!-- polymarker -->
+    <script type="text/javascript" src="dynamic/scripts/marker.js"></script>
+    <script type="text/javascript" src="dynamic/scripts/biojs_io_fasta.min.js"></script>
+    <script type="text/javascript" src="dynamic/scripts/msa.min.gz.js"></script>
+    <script type="text/javascript" src="dynamic/scripts/jquery/js/jquery.csvToTable.js"></script>
+    <link rel="stylesheet" href="dynamic/scripts/jquery/css/csvtable.css" type="text/css" />
+    <link rel="stylesheet" href="dynamic/styles/msa.min.gz.css" type="text/css"/>
+
+    <!-- give $ back to prototype -->
+    <!--<script type="text/javascript">jQuery.noConflict();</script>-->
+
+
+</head>
+<body>
+
+<!-- Fixed navbar -->
+<nav class="navbar navbar-default navbar-static-top" role="navigation" style="background-color:white!important;">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Grassroots Infrastructure</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="">Home</a></li>
+                <li><a href="grassroots-portal/services">Services</a></li>
+                <li><a href="grassroots-portal/indexer">Search</a></li>
+                <li><a href="grassroots-portal/contact">Contact</a></li>
+                <li><a href="http://wheatis.tgac.ac.uk/grassroots/api/">Grassroots API</a></li>
+            </ul>
+            <!--Your Logo here-->
+            <img class="navbar-nav navbar-right" style="height:50px;" src="dynamic/images/earlham-institure-logo.png"/>
+        </div>
+    </div>
+</nav>
+<!--content-->
+
+<div class="container center-block">
+    <h2 id="title"></h2>
+
+    <p id="description"></p>
+    <div id="CSVTable"></div>
+    <form id="form" role="form">
+
+    </form>
+    <div id="status"></div>
+    <div id="output_format_div" style="display:none; float:right;">
+        <p>Download job format
+            <select id="output_format" onchange="changeDownloadFormat();">
+
+            </select>
+        </p>
+    </div>
+    <div style="clear:both;"></div>
+
+    <div id="result"></div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var csv_table_selector = $('#CSVTable');
+            var table = csv_table_selector.CSVToTable(csv_file_with_newline, {headers: ["ID",	"SNP", "Chr","CTotal", 	"Contig regions", 	"SNP type", "A", "B","Common", "Primer type", "Product size", "Error"], startLine: 1});
+            table.bind("loadComplete",function() {
+
+                csv_table_selector.jExpand();
+                csv_table_selector.load_msa('primers.fa');
+            });
+            $('#statusTable').jExpand();
+
+            $( "#show_list").click(function() {
+                $("#statusTable" ).toggle();
+            });
+            $("#statusTable").hide();
+            $( "#show_mask").click(function() {
+                csv_table_selector.show_all();
+            });
+            $( "#hide_mask").click(function() {
+                csv_table_selector.hide_all();
+            });
+
+        });
+
+
+    </script>
+</div>
+
+<!--footer-->
+<div id="footer">
+    <br/>
+
+    <p>
+        &copy; 2015 - 2017
+        Brought to you by <a href="http://www.earlham.ac.uk/" target="_blank">Earlham Institute</a><br/>
+        Powered by Grassroots API
+    </p>
+</div>
+</body>
+</html>
