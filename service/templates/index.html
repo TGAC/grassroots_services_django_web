@@ -43,7 +43,6 @@
     <!--<link href="../static/scripts/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>-->
 
     <!-- wis -->
-    <script type="text/javascript" src="config.js"></script>
     <script type="text/javascript" src="../static/scripts/gi_dynamic_web.js"></script>
     <script type="text/javascript" src="../static/scripts/fieldtrial_map.js"></script>
     <script type="text/javascript" src="../static/scripts/wis.js"></script>
@@ -125,7 +124,7 @@
                 </li>
             </ul>
             <img class="navbar-nav navbar-right" style="height:50px;margin-left:50px;"
-                 src="https://grassroots.tools/img/logo-white.png"/>
+                 src="{% static "images/logo-white.png" %}"/>
         </div>
     </div>
 </nav>
@@ -139,7 +138,7 @@
         <p id="description"></p>
 
         <p id="moreinfo"></p>
-        <div id="simpleAdvanceWrapper"  style="display:none;">
+        <div id="simpleAdvanceWrapper" style="display:none;">
             <label class="radio-inline" style="margin-right: 20px;"><input type="radio" name="simpleadvanced"
                                                                            value="show_simple"
                                                                            onclick="simpleOrAdvanced(this.value)"
@@ -184,7 +183,17 @@
             var groups;
             $(document).ready(function () {
                 // populateService('BlastN service');
-                get_all_services_as_table();
+                $.ajax({
+                    url: "/service/get_all_services/",
+                    type: "GET",
+                    success:
+                        function (data) {
+                            display_all_services_as_table(JSON.parse(data));
+                        },
+                    error: function () {
+                    }
+                });
+
 
 
                 var yrtable;

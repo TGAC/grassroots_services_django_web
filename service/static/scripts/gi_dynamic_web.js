@@ -123,6 +123,116 @@ function get_all_services_as_table() {
     $('#back_link').css('visibility', 'hidden');
 }
 
+function display_all_services_as_table(json) {
+
+    // $('#form').html("<table id=\"listTable\">Loading services...</table>");
+
+    console.info(JSON.stringify(json));
+    // var list_html = [];
+    // list_html.push('<h3>Click any of the service to load the form</h3>');
+    // list_html.push('<ul>');
+    // for (var j = 0; j < json['services'].length; j++) {
+    //     var service_name = json['services'][j]['service_name'];
+    //     var icon_uri = json['services'][j]['operations']['icon_uri'];
+    //     list_html.push('<li class="newstyle_link" onclick="populateService(\'' + service_name + '\')"><img src="' + icon_uri + '"/><u>' + service_name + '</u></li>');
+    // }
+    // list_html.push('</ul>');
+    // $('#form').html(list_html.join(' '));
+    var context_json = json['@context'];
+    var listTable = jQuery('#listTable').DataTable({
+        data: json['services'],
+        searchHighlight: true,
+        scrollX: true,
+        scrollCollapse: true,
+        "columns": [
+            {
+                title: "Service",
+                "render": function (data, type, full, meta) {
+                    // return '<div class="newstyle_link" onclick="populateService(\'' + full['so:name'] + '\')"><img src="' + full['operations']['so:image'] + '"/> <u>' + full['so:name'] + '</u></div>';
+                    return '<a class="newstyle_link" href="' + full['so:name'] + '"><img src="' + full['operation']['so:image'] + '"/> <u>' + full['so:name'] + '</u></a>';
+                }
+            },
+            {data: "so:description", title: "Description", "sDefaultContent": ""},
+            {
+                title: "Provider",
+                "render": function (data, type, full, meta) {
+                    var provider_html = [];
+                    provider_html.push('<ul class="list_service_table_ul">');
+                    if (full['provider'] != undefined) {
+                        var this_provider = full['provider'];
+                        provider_html.push('<li title="' + this_provider['so:description'] + '"><img src="' + this_provider['so:logo'] + '" height="20px"/><a target="_blank" href="' + this_provider['so:url'] + '" class="newstyle_link" >' + this_provider['so:name'] + '</a></li>');
+
+                    } else if (full['providers'] != undefined) {
+                        for (var proi = 0; proi < full['providers'].length; proi++) {
+                            var this_provider = full['providers'][proi];
+                            provider_html.push('<li title="' + this_provider['so:description'] + '"><img src="' + this_provider['so:logo'] + '" height="20px"/><a target="_blank" href="' + this_provider['so:url'] + '" class="newstyle_link" >' + this_provider['so:name'] + '</a></li>');
+                        }
+                    }
+                    provider_html.push('</ul>');
+                    return provider_html.join(' ');
+                }
+            },
+            {
+                title: "Application Category",
+                "render": function (data, type, full, meta) {
+                    return '<div title="' + full['category']['application_category']['so:description'] + '"><a target="_blank" href="' + ontology_links(context_json, full['category']['application_category']['so:sameAs']) + '" class="newstyle_link">' + full['category']['application_category']['so:name'] + '</a></div>';
+                }
+            },
+            {
+                title: "Application Sub-Category",
+                "render": function (data, type, full, meta) {
+                    if (full['category']['application_subcategory'] != undefined) {
+                        return '<div title="' + full['category']['application_subcategory']['so:description'] + '"><a target="_blank" href="' + ontology_links(context_json, full['category']['application_subcategory']['so:sameAs']) + '" class="newstyle_link">' + full['category']['application_subcategory']['so:name'] + '</a></div>';
+
+                    } else {
+                        return '';
+                    }
+                }
+            },
+            {
+                title: "Input",
+                "render": function (data, type, full, meta) {
+                    var input_html = [];
+                    input_html.push('<ul class="list_service_table_ul">');
+                    for (var ini = 0; ini < full['category']['input'].length; ini++) {
+                        var this_input = full['category']['input'][ini];
+                        input_html.push('<li title="' + this_input['so:description'] + '"><a target="_blank" href="' + ontology_links(context_json, this_input['so:sameAs']) + '">' + this_input['so:name'] + '</a></li>');
+                    }
+                    input_html.push('</ul>');
+                    return input_html.join(' ');
+                }
+            },
+            {
+                title: "Output",
+                "render": function (data, type, full, meta) {
+                    var output_html = [];
+                    output_html.push('<ul class="list_service_table_ul">');
+                    for (var outi = 0; outi < full['category']['output'].length; outi++) {
+                        var this_output = full['category']['output'][outi];
+                        output_html.push('<li title="' + this_output['so:description'] + '"><a target="_blank" href="' + ontology_links(context_json, this_output['so:sameAs']) + '">' + this_output['so:name'] + '</a></li>');
+                    }
+                    output_html.push('</ul>');
+                    return output_html.join(' ');
+                }
+            }
+
+
+        ]
+    });
+    // listTable.row.add([
+    //     '<a class="newstyle_link" href="/service/Search%20Treatment"><img src="https://grassroots.tools/grassroots-test/5/images/polygonchange"> <u>Search Treatment</u></a>',
+    //     'Search field trial treatment',
+    //     '',
+    //     '',
+    //     '',
+    //     'Keyword',
+    //     'Treatment'
+    // ]).draw(false);
+
+
+    $('#back_link').css('visibility', 'hidden');
+}
+
 function ontology_links(context_json, ontology_ref) {
     var ontology_array = ontology_ref.split(':');
     var prefix = ontology_array[0] + ':';
@@ -691,7 +801,7 @@ function do_ajax_search() {
                     "start_service": true,
                     "so:name": "Search Field Trials",
                     "parameter_set": {
-                    		"level": "simple",
+                        "level": "simple",
                         "parameters": [
 
                             {
@@ -1263,7 +1373,7 @@ function format_fieldtrial_result(array) {
         }
         if (type === 'Grassroots:Study') {
             typeText = 'Study';
-            var address_name = (array[i]['data']['address']['address']['Address']['name'] != undefined) ? array[i]['data']['address']['address']['Address']['name']  + '<br/>' : "";
+            var address_name = (array[i]['data']['address']['address']['Address']['name'] != undefined) ? array[i]['data']['address']['address']['Address']['name'] + '<br/>' : "";
             var address_locality = (array[i]['data']['address']['address']['Address']['addressLocality'] != undefined) ? array[i]['data']['address']['address']['Address']['addressLocality'] + '<br/>' : "";
             var address_country = (array[i]['data']['address']['address']['Address']['addressCountry'] != undefined) ? array[i]['data']['address']['address']['Address']['addressCountry'] + '<br/>' : "";
             var address_postcode = (array[i]['data']['address']['address']['Address']['postalCode'] != undefined) ? array[i]['data']['address']['address']['Address']['postalCode'] : "";

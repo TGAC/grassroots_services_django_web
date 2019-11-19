@@ -1,4 +1,5 @@
 from django.shortcuts import render
+import json
 
 # Create your views here.
 
@@ -7,9 +8,8 @@ from .grassroots_requests import get_all_services
 
 
 def index(request):
-    service_list_json = get_all_services()
-    # return HttpResponse("Hello, world. You're at the polls index.")
-    return render(request, 'index.html', {'service_list': service_list_json})
+    return render(request, 'index.html', {})
 
-# def detail(request, service_name):
-#     return HttpResponse("You're looking at question %s." % service_name)
+def index_ajax(request):
+    service_list_json = get_all_services()
+    return HttpResponse(service_list_json)
