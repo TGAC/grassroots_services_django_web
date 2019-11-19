@@ -288,13 +288,16 @@ function populateService(service_name) {
 
     } else {
         $.ajax({
-            url: server_url,
-            data: '{"services": [{"so:name":"' + service_name + '"}], "operations": {"operation": "get_named_service"}}',
+            url: "/service/ajax/get_one_service/",
             type: "POST",
-            dataType: "json",
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            data: {'service_name': service_name},
+
             success: function (json) {
-                response = json;
-                console.info(JSON.stringify(json));
+                response = JSON.parse(json);
+                console.info(JSON.stringify(response));
                 $('#title').html(response['services'][0]['so:name']);
                 $('#description').html(response['services'][0]['so:description']);
                 if (response['services'][0]['operation']['so:url'] != undefined) {

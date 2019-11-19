@@ -1,4 +1,6 @@
-{%  include "header.html" %}
+{% include "header.html" %}
+
+{% csrf_token %}
 <!--content-->
 
 <section id="services" style="padding: 100px 0px 100px 0px ! important;">
@@ -46,6 +48,8 @@
 
         <div id="legend" style="display: none"></div>
         <script type="text/javascript">
+
+            var csrftoken = $('input[name$="csrfmiddlewaretoken"]').val();
             // change this to your URL (relative), has to be a local URL as JS restriction of cross domain
             var services = '{"operations": {"operation":"get_all_services"}}';
             var selected_service_name;
@@ -53,23 +57,9 @@
             var parameters;
             var groups;
             $(document).ready(function () {
-                // populateService('BlastN service');
-                $.ajax({
-                    url: "/service/get_all_services/",
-                    type: "GET",
-                    success:
-                        function (data) {
-                            display_all_services_as_table(JSON.parse(data));
-                        },
-                    error: function () {
-                    }
-                });
-
-
-
+                populateService('{{ service_name }}');
                 var yrtable;
 
-                //    var markers = new Array();
                 var markersGroup;
                 var map;
 
