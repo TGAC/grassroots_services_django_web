@@ -240,29 +240,6 @@ function ontology_links(context_json, ontology_ref) {
     return context_json[prefix] + ontology_array[1];
 }
 
-// //deprecated
-// function get_all_services() {
-//     $('#form').html("Getting service...");
-//     $.ajax({
-//         url: server_url,
-//         data: services,
-//         type: "POST",
-//         dataType: "json",
-//         success: function (json) {
-//             console.info(JSON.stringify(json));
-//             var list_html = [];
-//             list_html.push('<h3>Click any of the service to load the form</h3>');
-//             list_html.push('<ul>');
-//             for (var j = 0; j < json['services'].length; j++) {
-//                 var service_name = json['services'][j]['so:name'];
-//                 var icon_uri = json['services'][j]['operations']['icon_uri'];
-//                 list_html.push('<li class="newstyle_link" onclick="populateService(\'' + service_name + '\')"><img src="' + icon_uri + '"/><u>' + service_name + '</u></li>');
-//             }
-//             list_html.push('</ul>');
-//             $('#form').html(list_html.join(' '));
-//         }
-//     });
-// }
 
 function populateService(service_name) {
     $('#back_link').css('visibility', 'visible');
@@ -795,7 +772,7 @@ function do_ajax_search() {
 
     if (input.length > 1) {
 
-        $('#ajax_result').html('Searching <img src=\"'+ DJANGO_STATIC_URL + 'images/ajax-loader.gif\"/>');
+        $('#ajax_result').html('Searching <img src=\"' + static_url + 'images/ajax-loader.gif\"/>');
         var timer;
 
         var submit_json = {
