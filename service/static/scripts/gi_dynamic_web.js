@@ -795,7 +795,7 @@ function do_ajax_search() {
 
     if (input.length > 1) {
 
-        $('#ajax_result').html('Searching <img src=\"/dynamic/images/ajax-loader.gif\"/>');
+        $('#ajax_result').html('Searching <img src=\"'+ DJANGO_STATIC_URL + 'images/ajax-loader.gif\"/>');
         var timer;
 
         var submit_json = {
@@ -834,8 +834,12 @@ function do_ajax_search() {
 
         timer = setTimeout(function () {
             $.ajax({
-                url: server_url,
-                data: JSON.stringify(submit_json),
+                url: '/service/ajax/search_treatment/',
+                data: submit_json,
+
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
                 type: "POST",
                 dataType: "json",
                 success: function (json) {

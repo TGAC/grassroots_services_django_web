@@ -14,6 +14,12 @@ def get_all_services():
 
 def get_service(service_name):
     get_service_req = {"services": [{"so:name": service_name}], "operations": {"operation": "get_named_service"}}
+    print(get_service_req)
 
     res = requests.post(server_url, data=json.dumps(get_service_req))
+    return json.dumps(res.json())
+
+
+def search_treatment(data):
+    res = requests.post(server_url, data=json.dumps(data))
     return json.dumps(res.json())

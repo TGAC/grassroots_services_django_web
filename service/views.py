@@ -6,6 +6,7 @@ import json
 from django.http import HttpResponse
 from .grassroots_requests import get_all_services
 from .grassroots_requests import get_service
+from .grassroots_requests import search_treatment
 
 
 def index(request):
@@ -25,3 +26,9 @@ def single_service_ajax(request):
     service_name = request.POST['service_name']
     service_json = get_service(service_name)
     return HttpResponse(service_json)
+
+def search_treatment_ajax(request):
+    data = request.POST['data']
+    response_json = search_treatment(data)
+    return HttpResponse(response_json)
+

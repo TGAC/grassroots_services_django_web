@@ -1,11 +1,18 @@
 {% include "header.html" %}
 
 {% csrf_token %}
+
+
+
+<script type="text/javascript">
+   const DJANGO_STATIC_URL = '{{ STATIC_URL }}';
+    console.log(DJANGO_STATIC_URL);
+</script>
 <!--content-->
 
 <section id="services" style="padding: 100px 0px 100px 0px ! important;">
     <div class="container">
-        <div id="back_link" style="visibility: hidden;"><a href="."><< Back to all services list</a><br/></div>
+        <div id="back_link" ><a href="/service/"><< Back to all services list</a><br/></div>
         <h2 id="title"></h2>
 
         <p id="description"></p>
@@ -70,41 +77,5 @@
         </script>
     </div>
 </section>
-
-
-{#<script type="text/javascript">#}
-{#    $(document).ready(function () {#}
-{#        $(this).scrollTop(0);#}
-{#        // if (getUrlParameter('service') != null) {#}
-{#        //     var modalid = getUrlParameter('service');#}
-{#        //     populateService(modalid);#}
-{#        // }#}
-{#        var pathname = (window.location.pathname).split('/');#}
-{#        var lastSegment = pathname.pop() || pathname.pop();#}
-{#        if (lastSegment != 'services.html' && lastSegment != 'service' && lastSegment != '' && lastSegment != null) {#}
-{#            populateService(lastSegment.replace(/%20/g, " "));#}
-{#        }#}
-{#        $(window).keydown(function (event) {#}
-{#            if (event.keyCode == 13) {#}
-{#                event.preventDefault();#}
-{#                return false;#}
-{#            }#}
-{#        });#}
-{#    });#}
-{#    var getUrlParameter = function getUrlParameter(sParam) {#}
-{#        var sPageURL = decodeURIComponent(window.location.search.substring(1)),#}
-{#            sURLVariables = sPageURL.split('&'),#}
-{#            sParameterName,#}
-{#            i;#}
-{##}
-{#        for (i = 0; i < sURLVariables.length; i++) {#}
-{#            sParameterName = sURLVariables[i].split('=');#}
-{##}
-{#            if (sParameterName[0] === sParam) {#}
-{#                return sParameterName[1] === undefined ? true : sParameterName[1];#}
-{#            }#}
-{#        }#}
-{#    };#}
-{#</script>#}
 
 {% include "footer.html" %}
