@@ -10,8 +10,10 @@ urlpatterns = [
     path('ajax/get_all_services/', views.index_ajax),
     path('ajax/get_one_service/', views.single_service_ajax),
     path('ajax/search_treatment/', views.search_treatment_ajax),
+    path('ajax/submit_form/', views.submit_form_ajax),
+    path('ajax/check_result/', views.check_result_ajax),
 
-    re_path(r'(?P<service_name>[A-z0-9-\w]+)$', views.single_service),
+    re_path(r'(?P<service_name>[A-z0-9-\w%]+)$', views.single_service),
 
 
 

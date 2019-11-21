@@ -7,6 +7,8 @@ from django.http import HttpResponse
 from .grassroots_requests import get_all_services
 from .grassroots_requests import get_service
 from .grassroots_requests import search_treatment
+from .grassroots_requests import submit_form
+from .grassroots_requests import check_result
 
 
 def index(request):
@@ -28,7 +30,17 @@ def single_service_ajax(request):
     return HttpResponse(service_json)
 
 def search_treatment_ajax(request):
-    data = request.POST['data']
+    data = request.POST
     response_json = search_treatment(data)
+    return HttpResponse(response_json)
+
+def submit_form_ajax(request):
+    data = request.POST['data']
+    response_json = submit_form(json.loads(data))
+    return HttpResponse(response_json)
+
+def check_result_ajax(request):
+    data = request.POST['data']
+    response_json = check_result(json.loads(data))
     return HttpResponse(response_json)
 

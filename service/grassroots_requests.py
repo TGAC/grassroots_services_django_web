@@ -19,3 +19,11 @@ def get_service(service_name):
 def search_treatment(data):
     res = requests.post(server_url, data=json.dumps(data))
     return json.dumps(res.json())
+
+def submit_form(data):
+    res = requests.post(server_url, data=json.dumps(data))
+    return json.dumps(res.json())
+
+def check_result(data):
+    res = requests.post(server_url, data=json.dumps(data))
+    return json.dumps(res.json())
