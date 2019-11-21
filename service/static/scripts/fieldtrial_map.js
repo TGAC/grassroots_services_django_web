@@ -119,13 +119,18 @@ function produceFieldtrialTable(data, type_param) {
             {
                 title: "Experiments",
                 "render": function (data, type, full, meta) {
-                    if (full['_id'] != undefined) {
-                        var id = full['_id']['$oid'];
+                    if (full['_id'] != undefined && full['number_of_plots'] != undefined) {
+                        if (full['number_of_plots']>0) {
+                            var id = full['_id']['$oid'];
 
-                        /* remove the quotes */
-                        id = id.replace(/"/g, "");
-                        //return '<u class="newstyle_link" onclick="plot_colorbox(\'' + id + '\');" style="cursor: pointer;">View</u>';
-                        return '<a class=\"newstyle_link\" href=\"../dynamic/fieldtrialplots_dynamic.html?id=' + id + '\"  target=\"_blank\">View plots</a>';
+                            /* remove the quotes */
+                            id = id.replace(/"/g, "");
+                            //return '<u class="newstyle_link" onclick="plot_colorbox(\'' + id + '\');" style="cursor: pointer;">View</u>';
+
+                            return '<a class=\"newstyle_link\" href=\"../dynamic/fieldtrialplots_dynamic.html?id=' + id + '\"  target=\"_blank\">View plots</a>';
+                        }else {
+                            return '';
+                        }
                     } else {
                         return '';
                     }
