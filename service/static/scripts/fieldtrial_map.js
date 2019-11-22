@@ -120,7 +120,7 @@ function produceFieldtrialTable(data, type_param) {
                 title: "Experiments",
                 "render": function (data, type, full, meta) {
                     if (full['_id'] != undefined && full['number_of_plots'] != undefined) {
-                        if (full['number_of_plots']>0) {
+                        if (full['number_of_plots'] > 0) {
                             var id = full['_id']['$oid'];
 
                             /* remove the quotes */
@@ -128,7 +128,7 @@ function produceFieldtrialTable(data, type_param) {
                             //return '<u class="newstyle_link" onclick="plot_colorbox(\'' + id + '\');" style="cursor: pointer;">View</u>';
 
                             return '<a class=\"newstyle_link\" href=\"../dynamic/fieldtrialplots_dynamic.html?id=' + id + '\"  target=\"_blank\">View plots</a>';
-                        }else {
+                        } else {
                             return '';
                         }
                     } else {
@@ -471,17 +471,19 @@ function formatPlot(plot) {
     }
 
     // return '<td>' + accession + '</td>';
-    var replicate_index = plot['replicate'];
+    // var replicate_index = plot['replicate'];
     var color;
     // if (colorJSON[replicate_index]==undefined){
     //    color = getRandomColor();
     //    colorJSON[replicate_index] = color;
     // } else {
-    color = colorJSON[replicate_index];
+    // color = colorJSON[replicate_index];
+    color = colorJSON[8];
     // }
     plotsModalInfo[plotId] = formatPlotModal(plot);
 
-    return '<td style="cursor:pointer; font-size: 0.8rem; background-color:' + color + '" onclick="plotModal(\'' + plotId + '\')">' + replicate_index + '/' + accession + '</td>';
+    // return '<td style="cursor:pointer; font-size: 0.8rem; background-color:' + color + '" onclick="plotModal(\'' + plotId + '\')">' + replicate_index + '/' + accession + '</td>';
+    return '<td style="cursor:pointer; font-size: 0.8rem; background-color:' + color + '" onclick="plotModal(\'' + plotId + '\')">Row:' + plot['row_index'] + ' Column:' + plot['column_index'] + '</td>';
 }
 
 function plotModal(plotId) {
@@ -492,22 +494,29 @@ function plotModal(plotId) {
 
 function formatPlotModal(plot) {
     var htmlarray = [];
-
-    var replicate_index = plot['replicate'];
-    var color = colorJSON[replicate_index];
-
-    var accession = '';
-    var pedigree = '';
     var phenotypearray = [];
-    phenotypearray.push('<table class="table plots"><thead><tr><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th></tr></thead><tbody>');
+    var rowsInfoarray = [];
+
+    rowsInfoarray.push('<table class="table racks"><thead><tr><th>Replicate</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th></tr></thead><tbody>');
+    phenotypearray.push('<table class="table plots"><thead><tr><th>Replicate</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th></tr></thead><tbody>');
+
     for (r = 0; r < plot['rows'].length; r++) {
-        accession += " " + plot['rows'][r]['material']['accession'];
-        pedigree += " " + plot['rows'][r]['material']['pedigree'];
+        var replicate_index = plot['rows'][r]['replicate'];
+        var color = colorJSON[replicate_index];
+        var accession = SafePrint(plot['rows'][r]['material']['accession']);
+        var pedigree = SafePrint(plot['rows'][r]['material']['pedigree']);
+        rowsInfoarray.push('<tr>');
+        rowsInfoarray.push('<td style="background-color:' + color + '">' + SafePrint(replicate_index) + '</td>');
+        rowsInfoarray.push('<td>' + accession + '</td>');
+        rowsInfoarray.push('<td>' + pedigree + '</td>');
+        rowsInfoarray.push('<td><a class="newstyle_link" target="_blank" href="' + SafePrint(plot['rows'][r]['material']['gene_bank']['so:url']) + '">' + SafePrint(plot['rows'][r]['material']['gene_bank']['so:name']) + '</a></td>');
+        rowsInfoarray.push('<tr>');
         if (plot['rows'][r]['observations'] != undefined) {
             for (o = 0; o < plot['rows'][r]['observations'].length; o++) {
                 var observation = plot['rows'][r]['observations'][o];
 
                 phenotypearray.push('<tr>');
+                phenotypearray.push('<td style="background-color:' + color + '">' + SafePrint(replicate_index) + '</td>');
                 phenotypearray.push('<td>' + SafePrint(observation['date']) + '</td>');
                 phenotypearray.push('<td>' + SafePrint(observation['raw_value']) + '</td>');
                 phenotypearray.push('<td>' + SafePrint(observation['corrected_value']) + '</td>');
@@ -533,30 +542,20 @@ function formatPlotModal(plot) {
             }
         }
     }
+    rowsInfoarray.push('</tbody></table>');
     phenotypearray.push('</tbody></table>');
-    htmlarray.push('<p style="font-size: 0.8rem;">Accession: ' + accession + '<br/>');
     htmlarray.push('Row: ' + plot['row_index'] + '<br/>');
     htmlarray.push('Column: ' + plot['column_index'] + '<br/>');
-    htmlarray.push('<span style="background-color:' + color + '" >Replicate: ' + replicate_index + '</span><br/>');
     htmlarray.push('Length: ' + plot['length'] + 'm<br/>');
     htmlarray.push('Width: ' + plot['width'] + 'm<br/>');
     htmlarray.push('Trial Design: ' + SafePrint(plot['trial_desgin']) + '<br/>');
     htmlarray.push('Sowing Date: ' + SafePrint(plot['sowing_date']) + '<br/>');
     htmlarray.push('Harvest Date: ' + SafePrint(plot['harvest_date']) + '<br/>');
-    htmlarray.push('Pedigree: ' + pedigree + '<br/>');
+    htmlarray.push('<hr/>');
+    htmlarray.push(rowsInfoarray.join(""));
     htmlarray.push('<hr/>');
     htmlarray.push('<h5>Phenotype</h5>');
     htmlarray.push(phenotypearray.join(""));
-    // htmlarray.push('<p>: '+plot[''] +'</p>');
-    // htmlarray.push('<p>: '+plot[''] +'</p>');
-    // htmlarray.push('<p>: '+plot[''] +'</p>');
-    // htmlarray.push('<p>: '+plot[''] +'</p>');
-    // htmlarray.push('<p>: '+plot[''] +'</p>');
-    // htmlarray.push('<p>: '+plot[''] +'</p>');
-    // htmlarray.push('<p>: '+plot[''] +'</p>');
-    // htmlarray.push('<p>: '+plot[''] +'</p>');
-    // htmlarray.push('<p>: '+plot[''] +'</p>');
-    // htmlarray.push('<p>: '+plot[''] +'</p>');
 
     return htmlarray.join("");
 
