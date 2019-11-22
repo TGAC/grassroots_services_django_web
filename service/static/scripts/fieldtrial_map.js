@@ -497,8 +497,8 @@ function formatPlotModal(plot) {
     var phenotypearray = [];
     var rowsInfoarray = [];
 
-    rowsInfoarray.push('<table class="table racks"><thead><tr><th>Replicate</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th></tr></thead><tbody>');
-    phenotypearray.push('<table class="table plots"><thead><tr><th>Replicate</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th></tr></thead><tbody>');
+    rowsInfoarray.push('<table class="table racks"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th></tr></thead><tbody>');
+    phenotypearray.push('<table class="table plots"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th></tr></thead><tbody>');
 
     for (r = 0; r < plot['rows'].length; r++) {
         var replicate_index = plot['rows'][r]['replicate'];
@@ -507,6 +507,7 @@ function formatPlotModal(plot) {
         var pedigree = SafePrint(plot['rows'][r]['material']['pedigree']);
         rowsInfoarray.push('<tr>');
         rowsInfoarray.push('<td style="background-color:' + color + '">' + SafePrint(replicate_index) + '</td>');
+        rowsInfoarray.push('<td>' + SafePrint(plot['rows'][r]['rack_index']) + '</td>');
         rowsInfoarray.push('<td>' + accession + '</td>');
         rowsInfoarray.push('<td>' + pedigree + '</td>');
         rowsInfoarray.push('<td><a class="newstyle_link" target="_blank" href="' + SafePrint(plot['rows'][r]['material']['gene_bank']['so:url']) + '">' + SafePrint(plot['rows'][r]['material']['gene_bank']['so:name']) + '</a></td>');
@@ -517,6 +518,7 @@ function formatPlotModal(plot) {
 
                 phenotypearray.push('<tr>');
                 phenotypearray.push('<td style="background-color:' + color + '">' + SafePrint(replicate_index) + '</td>');
+                phenotypearray.push('<td>' + SafePrint(plot['rows'][r]['rack_index']) + '</td>');
                 phenotypearray.push('<td>' + SafePrint(observation['date']) + '</td>');
                 phenotypearray.push('<td>' + SafePrint(observation['raw_value']) + '</td>');
                 phenotypearray.push('<td>' + SafePrint(observation['corrected_value']) + '</td>');
