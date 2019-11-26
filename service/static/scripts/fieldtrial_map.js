@@ -97,6 +97,18 @@ function produceFieldtrialTable(data, type_param) {
                 }
             },
             {
+                title: "Study Design",
+                "render": function (data, type, full, meta) {
+                    return SafePrint(full['study_design']);
+                }
+            },
+            {
+                title: "Phenotype Gathering Notes",
+                "render": function (data, type, full, meta) {
+                    return SafePrint(full['phenotype_gathering_notes']);
+                }
+            },
+            {
                 title: "Sowing Date",
                 "render": function (data, type, full, meta) {
                     if (full['sowing_date'] != undefined) {
