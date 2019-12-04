@@ -9,6 +9,7 @@ from .grassroots_requests import get_service
 from .grassroots_requests import search_treatment
 from .grassroots_requests import submit_form
 from .grassroots_requests import check_result
+from .grassroots_requests import search_treatment_return_ols
 
 
 def index(request):
@@ -29,18 +30,32 @@ def single_service_ajax(request):
     service_json = get_service(service_name)
     return HttpResponse(service_json)
 
+
+def interact_with_apache(request):
+    data = request.POST['data']
+    response_json = interact_backend(data)
+    return HttpResponse(response_json)
+
+
 def search_treatment_ajax(request):
-    data = request.POST
+    data = request.POST['data']
     response_json = search_treatment(data)
     return HttpResponse(response_json)
+
 
 def submit_form_ajax(request):
     data = request.POST['data']
     response_json = submit_form(json.loads(data))
     return HttpResponse(response_json)
 
+
 def check_result_ajax(request):
     data = request.POST['data']
     response_json = check_result(json.loads(data))
     return HttpResponse(response_json)
 
+
+def crop_ontology_search(request):
+    search_string = request.GET['q']
+    response_json = search_treatment_return_ols(search_string)
+    return HttpResponse(response_json)

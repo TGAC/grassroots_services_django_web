@@ -16,6 +16,10 @@ def get_service(service_name):
     return json.dumps(res.json())
 
 
+def interact_backend(data):
+    res = requests.post(server_url, data=json.dumps(data))
+    return json.dumps(res.json())
+
 def search_treatment(data):
     res = requests.post(server_url, data=json.dumps(data))
     return json.dumps(res.json())
@@ -26,4 +30,38 @@ def submit_form(data):
 
 def check_result(data):
     res = requests.post(server_url, data=json.dumps(data))
+    return json.dumps(res.json())
+
+def search_treatment_return_ols(string):
+    submit_json = {
+        "services": [
+            {
+             "start_service": True,
+             "so:name": "Search Field Trials",
+                    "parameter_set": {
+                    "level": "simple",
+                    "parameters": [
+                        {
+                            "param": "FT Keyword Search",
+                            "current_value": f"{string}*"
+                        },
+                        {
+                            "param": "FT Facet",
+                            "current_value": "Measured Variable"
+                        },
+                        {
+                        "param": "FT Results Page Number",
+                        "current_value": 0
+                    },
+                    {
+                        "param": "FT Results Page Size",
+                        "current_value": 500
+                    }
+                ]
+            }
+        }
+      ]
+    }
+    #
+    res = requests.post(server_url, data=json.dumps(submit_json))
     return json.dumps(res.json())
