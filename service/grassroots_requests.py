@@ -80,7 +80,8 @@ def search_treatment_return_ols(string):
                 "status": 0,
                 "response": {
                     # "numFound": 2,
-                    "start": 0,
+                    "start": 0
+                    # ,
                     # "docs": [{
                     #     "id": "cco:http://identifiers.org/uniprot/Q9M339",
                     #     "iri": "http://identifiers.org/uniprot/Q9M339",
@@ -101,37 +102,47 @@ def search_treatment_return_ols(string):
                     #         "type": "class"
                     #     }
                     # ],
-                    "highlighting": {
-                        "cco:http://identifiers.org/uniprot/Q9M339": {
-                            "label_autosuggest": [
-                                "<b>RS32_ARATH</b>"
-                            ]
-                        },
-                        "ncbitaxon:class:http://purl.obolibrary.org/obo/NCBITaxon_467564": {
-                            "label_autosuggest": [
-                                "bacterium <b>RS32G</b>"
-                            ]
-                        }
-                    }
+                    # "highlighting": {
+                    #     "cco:http://identifiers.org/uniprot/Q9M339": {
+                    #         "label_autosuggest": [
+                    #             "<b>RS32_ARATH</b>"
+                    #         ]
+                    #     },
+                    #     "ncbitaxon:class:http://purl.obolibrary.org/obo/NCBITaxon_467564": {
+                    #         "label_autosuggest": [
+                    #             "bacterium <b>RS32G</b>"
+                    #         ]
+                    #     }
+                    # }
                 }
             }
         }
         response_json['responseHeader']['response']['numFound'] = num_found
+
+        highlighting = {}
         for each_result in results:
             each_result_formated = {}
 
-            each_result_formated['id'] = each_result['variable']['so:name']
-            each_result_formated['iri'] = each_result['']
-            each_result_formated['short_form'] = each_result['']
-            each_result_formated['obo_id'] = each_result['']
-            each_result_formated['label'] = each_result['']
-            each_result_formated['ontology_name'] = each_result['']
-            each_result_formated['ontology_prefix'] = each_result['']
-            each_result_formated['type'] = each_result['']
+            id = each_result['data']['variable']['so:name']
+            each_result_formated['id'] = id
+            each_result_formated['iri'] = "http://www.cropontology.org/terms/" + each_result['data']['variable']['so:sameAs']
+            each_result_formated['short_form'] = id
+            each_result_formated['obo_id'] = ""
+            each_result_formated['label'] = each_result['data']['trait']['so:name']
+            each_result_formated['ontology_name'] = each_result['data']['variable']['so:sameAs']
+            each_result_formated['ontology_prefix'] = "co"
+            each_result_formated['type'] = each_result['data']['@type']
 
             docs_results.append(each_result_formated)
 
+            highlighting[id] = {
+                "label_autosuggest": [
+                    f"{string}"
+                ]
+            }
+
         response_json['responseHeader']['response']['docs'] = docs_results
+        response_json['responseHeader']['response']['highlighting'] = highlighting
         return json.dumps(response_json)
     else:
         return "[]"
