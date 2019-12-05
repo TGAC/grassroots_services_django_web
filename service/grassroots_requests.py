@@ -47,7 +47,8 @@ def search_treatment_return_ols(string):
                     "parameters": [
                         {
                             "param": "FT Keyword Search",
-                            "current_value": f"{string}*"
+                            # "current_value": f"{string}*"
+                            "current_value": "{}*".format(string)
                         },
                         {
                             "param": "FT Facet",
@@ -137,7 +138,8 @@ def search_treatment_return_ols(string):
 
             highlighting[id] = {
                 "label_autosuggest": [
-                    f"{string}"
+                    # f"{string}"
+                    "{}".format(string)
                 ]
             }
 
