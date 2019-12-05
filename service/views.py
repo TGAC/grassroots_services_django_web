@@ -1,6 +1,5 @@
 from django.shortcuts import render
 import json
-# from jsonpickle import encode
 
 # Create your views here.
 
@@ -59,6 +58,4 @@ def check_result_ajax(request):
 def crop_ontology_search(request):
     search_string = request.GET['q']
     response_json = search_treatment_return_ols(search_string)
-    # out = jsonpickle.encode(response_json, unpicklable=False)
     return HttpResponse(response_json, content_type='application/json')
-    # return HttpResponse(response_json)
