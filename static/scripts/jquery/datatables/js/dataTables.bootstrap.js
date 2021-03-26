@@ -190,11 +190,11 @@ if ( DataTable.TableTools ) {
 
 // Define as an AMD module if possible
 if ( typeof define === 'function' && define.amd ) {
-	define( ['jquery', 'datatables'], factory );
+	define( ['static/scripts/jquery/datatables/js/jquery', 'datatables'], factory );
 }
 else if ( typeof exports === 'object' ) {
     // Node/CommonJS
-    factory( require('jquery'), require('datatables') );
+    factory( require('static/scripts/jquery/datatables/js/jquery'), require('datatables') );
 }
 else if ( jQuery ) {
 	// Otherwise simply initialise as normal, stopping multiple evaluation

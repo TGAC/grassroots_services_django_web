@@ -31,11 +31,11 @@
 
 	if ( typeof define === 'function' && define.amd ) {
 		// Define as an AMD module if possible
-		define( 'datatables', ['jquery'], factory );
+		define( 'datatables', ['static/scripts/jquery/datatables/js/jquery'], factory );
 	}
 	else if ( typeof exports === 'object' ) {
 		// Node/CommonJS
-		module.exports = factory( require( 'jquery' ) );
+		module.exports = factory( require( 'static/scripts/jquery/datatables/js/jquery' ) );
 	}
 	else if ( jQuery && !jQuery.fn.dataTable ) {
 		// Define using browser globals otherwise
