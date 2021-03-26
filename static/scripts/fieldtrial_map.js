@@ -1,5 +1,7 @@
 var plotsHTMLArray = {};
 var plotsGRUArray = [];
+var plot_json = [];
+var plotsPhenotypeArray = [];
 var global_width = 0;
 var global_height = 0;
 var colorJSON = {
@@ -10,9 +12,11 @@ var colorJSON = {
     5: "#F012BE",
     6: "#FF4136",
     7: "#3D9970",
-    8: "#2ECC40"
+    8: "#ABEBC6",
+    9: "#2ECC40",
 };
 var plotsModalInfo = {};
+var formatted_treatments = [];
 
 function startFieldTrialGIS(jsonArray, type_param) {
     console.log(JSON.stringify(jsonArray));
@@ -21,29 +25,32 @@ function startFieldTrialGIS(jsonArray, type_param) {
     jQuery('#status').html('');
     var fieldTrialName = '';
     var team = '';
+    var fieldTrialId = '';
     for (i = 0; i < jsonArray.length; i++) {
-        if (type_param === 'Grassroots:FieldTrial' || type_param === 'AllFieldTrials') {
+        if (type_param === 'Grassroots:FieldTrial') {
             fieldTrialName = jsonArray[i]['data']['so:name'];
             team = jsonArray[i]['data']['team'];
+            fieldTrialId = jsonArray[i]['data']['_id']['$oid'];
             if (jsonArray[i]['data']['studies'] != null) {
                 for (j = 0; j < jsonArray[i]['data']['studies'].length; j++)
                     if (jsonArray[i]['data']['studies'][j]['address'] != undefined) {
                         if (jsonArray[i]['data']['studies'][j]['address']['address']['location']['centre'] != undefined) {
                             var study_json = jsonArray[i]['data']['studies'][j];
-                            study_json["team"] = team;
-                            study_json["parent_field_trial_name"] = fieldTrialName;
+                            // study_json["team"] = team;
+                            // study_json["parent_field_trial_name"] = fieldTrialName;
+                            // study_json["parent_field_trial_id"] = fieldTrialId;
                             filtered_data_with_location.push(study_json);
                         }
                     } else {
                         var study_json = jsonArray[i]['data']['studies'][j];
-                        study_json["team"] = team;
-                        study_json["so:name"] = fieldTrialName;
+                        // study_json["team"] = team;
+                        // study_json["so:name"] = fieldTrialName;
                         filtered_data_without_location.push(study_json);
                     }
             } else {
                 filtered_data_without_location.push(jsonArray[i]['data']);
             }
-        } else if (type_param === 'Grassroots:Study') {
+        } else if (type_param === 'Grassroots:Study' || type_param === 'AllFieldTrials') {
             // var ft_id = jsonArray[i]['data']['parent_field_trial_id']['$oid'];
             // var req_json = CreatePlotsRequestForFieldTrial(ft_id);
 
@@ -78,26 +85,85 @@ function startFieldTrialGIS(jsonArray, type_param) {
     }
     produceFieldtrialTable(filtered_data_without_location.concat(filtered_data_with_location), type_param);
 
-    displayFTLocations(filtered_data_with_location);
-
-    create_study_modal_html(filtered_data_without_location.concat(filtered_data_with_location));
+    displayFTLocations(filtered_data_with_location, type_param);
+    if (type_param !== 'AllFieldTrials') {
+        create_study_modal_html(filtered_data_without_location.concat(filtered_data_with_location));
+    }
 }
 
 function produceFieldtrialTable(data, type_param) {
     // yrtable.destroy();
     yrtable = jQuery('#resultTable').DataTable({
         data: data,
+        "ordering": false,
         "columns": [
             {
-                title: "Name",
+                title: "Programme",
                 "render": function (data, type, full, meta) {
-                    return full['so:name'];
+                    let result = '';
+                    if (full['parent_program'] !== undefined) {
+                        if (full['parent_program']['so:image'] !== undefined) {
+                            result = result + ' <img src="' + full['parent_program']['so:image'] + '" height="32px;"/><br/> ';
+                        }
+                        if (full['parent_program']['so:name'] !== undefined) {
+                            result = result + ' ' + SafePrint(full['parent_program']['so:name']) + '<br/>';
+                        }
+                        if (full['parent_program']['principal_investigator'] !== undefined) {
+                            let pi_name = full['parent_program']['principal_investigator']['so:name'];
+                            if (full['parent_program']['principal_investigator']['so:email'] !== undefined) {
+                                let pi_email = full['parent_program']['principal_investigator']['so:email'];
+                                result = result + ' <a href="mailto:' + pi_email + '" target="_blank">' + pi_name + '</a>';
+                            } else {
+                                result = result + ' ' + SafePrint(pi_name);
+                            }
+                        }
+                    }
+                    return result;
+                }
+            },
+            {
+                title: "Field Trial",
+                "render": function (data, type, full, meta) {
+                    var ft_name = SafePrint(full['parent_field_trial']['so:name']);
+                    if (full['parent_field_trial'] !== undefined) {
+                        var ftId = full['parent_field_trial']['_id']['$oid'];
+                        ft_name = '<a href="fieldtrial_dynamic.html?id=' + ftId + '&type=Grassroots:FieldTrial" target="_blank">' + full['parent_field_trial']['so:name'] + '</a>';
+                    }
+                    return ft_name;
+                }
+            },
+            {
+                title: "Study",
+                "render": function (data, type, full, meta) {
+                    var studyId = full['_id']['$oid'];
+                    let study_result = '<a href="fieldtrial_dynamic.html?id=' + studyId + '&type=Grassroots:Study" target="_blank">' + full['so:name'] + '</a>';
+
+                    if (full['curator'] !== undefined) {
+                        let curator_name = full['curator']['so:name'];
+                        if (full['curator']['so:email'] !== undefined) {
+                            let curator_email = full['curator']['so:email'];
+                            study_result = study_result + '<br/>Curator: <a href="mailto:' + curator_email + '" target="_blank">' + curator_name + '</a>';
+                        } else {
+                            study_result = study_result + '<br/>Curator: ' + curator_name;
+                        }
+
+                    }
+                    if (full['contact'] !== undefined) {
+                        let contact_name = full['contact']['so:name'];
+                        if (full['contact']['so:email'] !== undefined) {
+                            let contact_email = full['contact']['so:email'];
+                            study_result = study_result + '<br/>Contact: <a href="mailto:' + contact_email + '" target="_blank">' + contact_name + '</a>';
+                        } else {
+                            study_result = study_result + '<br/>Contact: ' + contact_name;
+                        }
+                    }
+                    return study_result;
                 }
             },
             {
                 title: "Team",
                 "render": function (data, type, full, meta) {
-                    return full['team'];
+                    return SafePrint(full['parent_field_trial']['team']);
                 }
             },
             // {
@@ -149,15 +215,43 @@ function produceFieldtrialTable(data, type_param) {
                 "render": function (data, type, full, meta) {
                     return get_study_address(full, true);
                 }
-            }
-            ,
+            },
             {
-                title: "Additional Info",
+                title: "Shape Data",
+                "render": function (data, type, full, meta) {
+                    if (full['shape_data'] !== null && full['shape_data'] !== undefined && full['shape_data'] !== '') {
+                        return '<u class="newstyle_link">View</u>';
+                    } else {
+                        return '';
+                    }
+                }
+            },
+            {
+                title: "Treatment Factors",
                 "render": function (data, type, full, meta) {
                     var studyId = full['_id']['$oid'];
-                    return '<span style="cursor:pointer;" class="newstyle_link" onclick="plotModal(\'' + studyId + '\')">Study Info</span>';
+                    var treatment = '';
+                    if (full['treatment_factors'] !== undefined && full['treatment_factors'] !== null && type_param !== 'AllFieldTrials') {
+                        if (full['treatment_factors'].length > 0) {
+                            treatment = '<span style="cursor:pointer;" class="newstyle_link" onclick="plotModal(\'' + studyId + 'treatment\')">Treatment Factors</span>'
+                        }
+                    }
+                    // return '<ul><li><span style="cursor:pointer;" class="newstyle_link" onclick="plotModal(\'' + studyId + '\')">Study Info</span></li>' + treatment + '</ul>';
+                    return treatment;
                 }
             }
+            // ,
+            // {
+            //     title: "Links",
+            //     "render": function (data, type, full, meta) {
+            //         var studyId = full['_id']['$oid'];
+            //         var fieldtrial_link = '';
+            //         if (full["parent_field_trial_id"] !== undefined) {
+            //             fieldtrial_link = '<li><a href="fieldtrial_dynamic.html?id=' + full["parent_field_trial_id"] + '&type=Grassroots:FieldTrial" target="_blank">Field Trial</a></li>'
+            //         }
+            //         return '<ul><li><a href="fieldtrial_dynamic.html?id=' + studyId + '&type=Grassroots:Study" target="_blank">Study</a></li>' + fieldtrial_link + '</ul>';
+            //     }
+            // }
 
         ]
 
@@ -165,20 +259,48 @@ function produceFieldtrialTable(data, type_param) {
 
     jQuery('#resultTable tbody').on('click', 'td', function () {
         var cellIdx = yrtable.cell(this).index();
+        console.log(cellIdx);
         var rowIdx = cellIdx['row'];
         var json = yrtable.row(rowIdx).data();
-        if (json['address'] != undefined) {
-            if (json['address']['address']['location']['centre'] != undefined) {
+        let lalo = [];
+        if (json['address'] !== undefined && cellIdx['column'] === 8) {
+            if (json['address']['address']['location']['centre'] !== undefined) {
                 var la = json['address']['address']['location']['centre']['latitude'];
                 var lo = json['address']['address']['location']['centre']['longitude'];
-                map.setView([la, lo], 16, {animate: true});
-            }
-        }
-        $(window).scrollTop($('#map').offset().top - 90);
+                map.setView([la, lo], 18, {animate: true});
+                $(window).scrollTop($('#map').offset().top - 90);
 
+            }
+        } else if (json['shape_data'] !== null && json['shape_data'] !== undefined && json['shape_data'] !== '' && cellIdx['column'] === 9) {
+
+            if (json['address']['address']['location']['centre'] !== undefined) {
+                var la = json['address']['address']['location']['centre']['latitude'];
+                var lo = json['address']['address']['location']['centre']['longitude'];
+                lalo = [la, lo];
+            }
+
+            let shape_data = JSON.parse(json['shape_data']);
+            let coord = shape_data.features[0].geometry.coordinates;
+            let zoom = 18;
+            if (coord[0][0].length === 2) {
+                lalo = coord[0][0][0].reverse();
+                zoom = 22;
+            } else if (coord[0][0][0].length === 2) {
+                lalo = coord[0][0][0].reverse();
+                zoom = 22;
+            }
+
+            map.setView(lalo, zoom, {animate: true});
+            $(window).scrollTop($('#map').offset().top - 90);
+        }
     });
 
+    // if (type_param === 'Grassroots:Study'){
+    //     yrtable.column( 11 ).visible( false );
+    // }
+
     if (type_param === 'AllFieldTrials') {
+        yrtable.column(10).visible(false);
         console.log("server search here");
         jQuery('#resultTable').on('search.dt', function () {
             removePointers();
@@ -211,16 +333,6 @@ function produceFieldtrialTable(data, type_param) {
             }
 
 
-            // var searchData = yrtable.rows({filter: 'applied'}).data().toArray();
-            // var search_data = [];
-            // for (i = 0; i < searchData.length; i++) {
-            //     if (searchData[i]['address']['address'] != undefined) {
-            //         if (searchData[i]['address']['address']['location']['centre'] != undefined) {
-            //             search_data.push(searchData[i]);
-            //         }
-            //     }
-            // }
-            // displayFTLocations(search_data);
         });
     } else {
         jQuery('#resultTable').on('search.dt', function () {
@@ -234,7 +346,7 @@ function produceFieldtrialTable(data, type_param) {
                     }
                 }
             }
-            displayFTLocations(search_data);
+            displayFTLocations(search_data, type_param);
         });
 
     }
@@ -273,19 +385,34 @@ function get_study_address(full, link_bool) {
 }
 
 function get_study_plots_link(full) {
-    if (full['_id'] != undefined && full['number_of_plots'] != undefined) {
-        if (full['number_of_plots'] > 0) {
-            var id = full['_id']['$oid'];
+    if (check_plots(full)) {
+        var id = full['_id']['$oid'];
 
-            /* remove the quotes */
-            id = id.replace(/"/g, "");
+        /* remove the quotes */
+        id = id.replace(/"/g, "");
 
-            return '<a class=\"newstyle_link\" href=\"../dynamic/fieldtrialplots_dynamic.html?id=' + id + '\"  target=\"_blank\">View plots</a>';
-        } else {
-            return '';
-        }
+        return '<a class=\"newstyle_link\" href=\"../dynamic/fieldtrialplots_dynamic.html?id=' + id + '\"  target=\"_blank\">View plots</a>';
     } else {
         return '';
+    }
+}
+
+function check_plots(full) {
+    if (full['_id'] != undefined) {
+        if (full['number_of_plots'] != undefined) {
+            if (full['number_of_plots'] > 0) {
+                return true;
+            }
+        }
+        if (full['plots'] != undefined) {
+            if (full['plots'].length > 0) {
+                return true;
+            }
+        } else {
+            return false;
+        }
+    } else {
+        return false;
     }
 }
 
@@ -295,27 +422,118 @@ function create_study_modal_html(array) {
         var studyId = studyJson['_id']['$oid'];
 
         plotsModalInfo[studyId] = create_study_info_html(studyJson);
+
+        if (studyJson['treatment_factors'] !== undefined) {
+            if (studyJson['treatment_factors'] !== null) {
+                if (studyJson['treatment_factors'].length !== 0) {
+                    plotsModalInfo[studyId + 'treatment'] = generate_treatments_html(studyJson);
+                }
+            }
+        }
     }
 
 }
 
 function create_study_info_html(studyJson) {
     var htmlarray = [];
-
+    // htmlarray.push('<div class="container">');
     if (studyJson["parent_field_trial_name"] != undefined) {
-        htmlarray.push('Field Trail Name: ' + studyJson["parent_field_trial_name"]);
+        htmlarray.push('<div class="row">');
+        htmlarray.push('<div class="col-2">');
+        htmlarray.push('<b>Field Trial Name:</b> ');
+        htmlarray.push('</div>');
+        htmlarray.push('<div class="col-10">');
+        htmlarray.push(studyJson["parent_field_trial_name"]);
+        htmlarray.push('</div>');
+        htmlarray.push('</div>');
+        htmlarray.push('<br/>');
     }
 
-    htmlarray.push('Study Name: ' + studyJson['so:name'] + '<br/>');
-    htmlarray.push('Study Description: ' + SafePrint(studyJson['so:description']) + '<br/>');
-    htmlarray.push('Study Design: ' + SafePrint(studyJson['study_design']) + '<br/>');
-    htmlarray.push('Phenotype Gathering Note: ' + SafePrint(studyJson['phenotype_gathering_notes']) + '<br/>');
-    htmlarray.push('Sowing Date: ' + SafePrint(studyJson['sowing_date']) + '<br/>');
-    htmlarray.push('Harvest Date: ' + SafePrint(studyJson['harvest_date']) + '<br/>');
-    htmlarray.push('Plots: ' + get_study_plots_link(studyJson) + '<br/>');
-    htmlarray.push('Address: ' + get_study_address(studyJson, false) + '<br/>');
-    htmlarray.push('<hr/>');
+    // htmlarray.push('Study Name: ' + studyJson['so:name'] + '<br/>');
+    htmlarray.push('<div class="row">');
+    htmlarray.push('<div class="col-2">');
+    htmlarray.push('<b>Study Name:</b> ');
+    htmlarray.push('</div>');
+    htmlarray.push('<div class="col-10">');
+    htmlarray.push(studyJson['so:name']);
+    htmlarray.push('</div>');
+    htmlarray.push('</div>');
 
+    // htmlarray.push('Study Description: ' + SafePrint(studyJson['so:description']) + '<br/>');
+    // htmlarray.push('<div class="row">');
+    // htmlarray.push('<div class="col-2">');
+    // htmlarray.push('<b>Study Description:</b> ');
+    // htmlarray.push('</div>');
+    // htmlarray.push('<div class="col-10">');
+    // htmlarray.push(SafePrint(studyJson['so:description']));
+    // htmlarray.push('</div>');
+    // htmlarray.push('</div>');
+
+    // htmlarray.push('Study Design: ' + SafePrint(studyJson['study_design']) + '<br/>');
+    htmlarray.push('<div class="row">');
+    htmlarray.push('<div class="col-2">');
+    htmlarray.push('<b>Study Design:</b> ');
+    htmlarray.push('</div>');
+    htmlarray.push('<div class="col-10">');
+    htmlarray.push(SafePrint(studyJson['study_design']));
+    htmlarray.push('</div>');
+    htmlarray.push('</div>');
+
+    // htmlarray.push('Phenotype Gathering Note: ' + SafePrint(studyJson['phenotype_gathering_notes']) + '<br/>');
+    htmlarray.push('<div class="row">');
+    htmlarray.push('<div class="col-2">');
+    htmlarray.push('<b>Team:</b> ');
+    htmlarray.push('</div>');
+    htmlarray.push('<div class="col-10">');
+    htmlarray.push(SafePrint(studyJson['team']));
+    htmlarray.push('</div>');
+    htmlarray.push('</div>');
+    htmlarray.push('<br/>');
+
+    // htmlarray.push('Sowing Date: ' + SafePrint(studyJson['sowing_date']) + '<br/>');
+    htmlarray.push('<div class="row">');
+    htmlarray.push('<div class="col-2">');
+    htmlarray.push('<b>Sowing Date:</b> ');
+    htmlarray.push('</div>');
+    htmlarray.push('<div class="col-10">');
+    htmlarray.push(SafePrint(studyJson['sowing_date']));
+    htmlarray.push('</div>');
+    htmlarray.push('</div>');
+
+    // htmlarray.push('Harvest Date: ' + SafePrint(studyJson['harvest_date']) + '<br/>');
+    htmlarray.push('<div class="row">');
+    htmlarray.push('<div class="col-2">');
+    htmlarray.push('<b>Harvest Date:</b> ');
+    htmlarray.push('</div>');
+    htmlarray.push('<div class="col-10">');
+    htmlarray.push(SafePrint(studyJson['harvest_date']));
+    htmlarray.push('</div>');
+    htmlarray.push('</div>');
+
+    // htmlarray.push('Plots: ' + get_study_plots_link(studyJson) + '<br/>');
+    htmlarray.push('<div class="row">');
+    htmlarray.push('<div class="col-2">');
+    htmlarray.push('<b>Plots:</b> ');
+    htmlarray.push('</div>');
+    htmlarray.push('<div class="col-10">');
+    htmlarray.push(get_study_plots_link(studyJson));
+    htmlarray.push('</div>');
+    htmlarray.push('</div>');
+    htmlarray.push('<br/>');
+
+    // htmlarray.push('Address: ' + get_study_address(studyJson, false) + '<br/>');
+    htmlarray.push('<div class="row">');
+    htmlarray.push('<div class="col-2">');
+    htmlarray.push('<b>Address:</b> ');
+    htmlarray.push('</div>');
+    htmlarray.push('<div class="col-10">');
+    htmlarray.push(get_study_address(studyJson, false));
+    htmlarray.push('</div>');
+    htmlarray.push('</div>');
+
+    // htmlarray.push('</div>');
+    htmlarray.push('<hr/>');
+    // console.log(generate_treatments_html(studyJson));
     return htmlarray.join("");
 
 }
@@ -353,7 +571,7 @@ function removePointers() {
 //     });
 
 
-function displayFTLocations(array) {
+function displayFTLocations(array, type_param) {
     for (i = 0; i < array.length; i++) {
         var la = '';
         var lo = '';
@@ -394,6 +612,13 @@ function displayFTLocations(array) {
         // ;
         var popup_note = create_study_info_html(array[i])
         addFTPointer(la, lo, popup_note);
+        // if (type_param !== 'AllFieldTrials') {
+        if (array[i]['shape_data'] !== null && array[i]['shape_data'] !== undefined && array[i]['shape_data'] !== '') {
+            let geo_json = JSON.parse(array[i]['shape_data']);
+            var shape_layer = L.geoJson(geo_json);
+            markersGroup2.addLayer(shape_layer);
+        }
+        // }
     }
     map.addLayer(markersGroup2);
 
@@ -503,42 +728,44 @@ function addFTPointer(la, lo, note) {
 // }
 
 
-function createPlotsHTML(array) {
-    for (i = 0; i < array.length; i++) {
-        var expAreaId = array[i]['_id']['$oid'];
-        var plots = array[i]['plots'];
-        var htmlarray = [];
+// function createPlotsHTML(array) {
+//     for (i = 0; i < array.length; i++) {
+//         var expAreaId = array[i]['_id']['$oid'];
+//         var plots = array[i]['plots'];
+//         var htmlarray = [];
+//
+//         var row = 1;
+//         var column = 1;
+//
+//         for (j = 0; j < plots.length; j++) {
+//
+//             if (plots[j]['row_index'] === row) {
+//                 if (plots[j]['column_index'] === column) {
+//                     htmlarray.push(formatPlot(plots[j]));
+//                     column++;
+//                 }
+//             } else if (plots[j]['row_index'] > row) {
+//
+//                 row++;
+//                 column = 2;
+//                 htmlarray.push('</tr><tr>');
+//                 htmlarray.push('<td>' + row + '</td>');
+//                 htmlarray.push(formatPlot(plots[j]));
+//             }
+//         }
+//         var tableString = '<td>1</td>' + htmlarray.join("");
+//         var tableArray = tableString.split("</tr><tr>");
+//         var reversedString = tableArray.reverse().join("</tr><tr>");
+//         plotsHTMLArray[expAreaId] = '<div id="plot"><table class="table " id="' + expAreaId + '" style="margin:20px;"><tr>' + reversedString + '</tr></table></div>';
+//     }
+//
+// }
 
-        var row = 1;
-        var column = 1;
-
-        for (j = 0; j < plots.length; j++) {
-
-            if (plots[j]['row_index'] === row) {
-                if (plots[j]['column_index'] === column) {
-                    htmlarray.push(formatPlot(plots[j]));
-                    column++;
-                }
-            } else if (plots[j]['row_index'] > row) {
-
-                row++;
-                column = 2;
-                htmlarray.push('</tr><tr>');
-                htmlarray.push('<td>' + row + '</td>');
-                htmlarray.push(formatPlot(plots[j]));
-            }
-        }
-        var tableString = '<td>1</td>' + htmlarray.join("");
-        var tableArray = tableString.split("</tr><tr>");
-        var reversedString = tableArray.reverse().join("</tr><tr>");
-        plotsHTMLArray[expAreaId] = '<div id="plot"><table class="table " id="' + expAreaId + '" style="margin:20px;"><tr>' + reversedString + '</tr></table></div>';
-    }
-
-}
-
-function formatPlot(plot) {
-    var plotId = plot['_id']['$oid'];
-    var accession = "";
+function formatPlot(plot, plot_block_rows, plot_block_columns) {
+    let plotId = plot['_id']['$oid'];
+    let current_row = parseInt(plot['row_index']);
+    let current_column = parseInt(plot['column_index']);
+    let accession = "";
     for (r = 0; r < plot['rows'].length; r++) {
         accession += " " + plot['rows'][r]['material']['accession'];
     }
@@ -551,59 +778,167 @@ function formatPlot(plot) {
     //    colorJSON[replicate_index] = color;
     // } else {
     // color = colorJSON[replicate_index];
-    color = colorJSON[8];
+    color = '#ABEBC6';
     // }
     plotsModalInfo[plotId] = formatPlotModal(plot);
 
     // return '<td style="cursor:pointer; font-size: 0.8rem; background-color:' + color + '" onclick="plotModal(\'' + plotId + '\')">' + replicate_index + '/' + accession + '</td>';
-    return '<td style="cursor:pointer; font-size: 0.8rem; background-color:' + color + '" onclick="plotModal(\'' + plotId + '\')">Row:' + plot['row_index'] + ' Column:' + plot['column_index'] + '</td>';
+    // return '<td class="plot" id="' + plotId + '" style="cursor:pointer; font-size: 0.8rem;  background-color:' + color + '" onclick="plotModal(\'' + plotId + '\')">Row:' + plot['row_index'] + ' Column:' + plot['column_index'] + '</td>';
+
+    let padding = plot_gap_calculator(current_column, current_row, plot_block_columns, plot_block_rows);
+    return '<td style="' + padding + '"><div class="plot" id="' + plotId + '" style="padding:5px; cursor:pointer; font-size: 0.8rem;  background-color:' + color + '" onclick="plotModal(\'' + plotId + '\')">Row:' + current_row + ' Column:' + current_column + '</div></td>';
+}
+
+function plot_gap_calculator(current_column, current_row, plot_block_columns, plot_block_rows) {
+    let padding = 'padding:5px;';
+    if (current_column % plot_block_columns === 0 && current_row % plot_block_rows === 0) {
+        console.log('both');
+        padding = 'padding:30px 30px 5px 5px;';
+    } else if (current_column % plot_block_columns === 0) {
+        console.log('ver');
+        padding = 'padding:5px 30px 5px 5px;';
+    } else if (current_row % plot_block_rows === 0) {
+        console.log('hori');
+        padding = 'padding:30px 5px 5px 5px;';
+    }
+    return padding;
 }
 
 function plotModal(plotId) {
     $('#modal-body').html(plotsModalInfo[plotId]);
     $('#plotModal').modal('show');
-    for (r = 0; r < plotsGRUArray.length; r++) {
 
-        var linksJson = plotsGRUArray[r];
-        if (linksJson['plotId'] === plotId) {
-            $('#' + linksJson['id']).html(linksJson['links'] + ' ');
+    let searchStr = '';
+    for (i = 0; i < plot_json.length; i++) {
+        if (plot_json[i]['_id']['$oid'] === plotId) {
+            var plot = plot_json[i];
+            for (r = 0; r < plot['rows'].length; r++) {
+                let this_accession = SafePrint(plot['rows'][r]['material']['accession']);
+                get_GRU_by_accession(this_accession, plotId, r);
+                searchStr = this_accession;
+            }
         }
+    }
+
+    for (j = 0; j < plot_json.length; j++) {
+        const loop_plotId = plot_json[j]['_id']['$oid'];
+        if (loop_plotId !== plotId) {
+            var rows = plot_json[j]['rows'];
+            for (jr = 0; jr < rows.length; jr++) {
+                var accession = rows[jr]['material']['accession'];
+                if (accession != undefined) {
+                    if (searchStr === accession && searchStr !== '') {
+                        let formatted_plot = format_plot_rows(plot_json[j], true);
+                        $('#rowsInfo').append(formatted_plot['rowsInfo'].join(""));
+                        $('#phenotypes').append(formatted_plot['phenotypes'].join(""));
+                        break;
+                    }
+                }
+            }
+        }
+
     }
 
 }
 
 function formatPlotModal(plot) {
 
-    var plotId = plot['_id']['$oid'];
-    var htmlarray = [];
-    var phenotypearray = [];
-    var rowsInfoarray = [];
+    let htmlarray = [];
+    let phenotypearray = [];
+    let rowsInfoarray = [];
 
-    rowsInfoarray.push('<table class="table racks"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th><th>Links</th></tr></thead><tbody>');
-    phenotypearray.push('<table class="table plots"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th></tr></thead><tbody>');
+    rowsInfoarray.push('<table class="table racks"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th><th>Links</th><th>Treatments</th></tr></thead><tbody id="rowsInfo">');
+    phenotypearray.push('<table class="table plots"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th></tr></thead><tbody id="phenotypes">');
+
+    let formatted_plot = format_plot_rows(plot, false);
+
+    rowsInfoarray = rowsInfoarray.concat(formatted_plot['rowsInfo']);
+    phenotypearray = phenotypearray.concat(formatted_plot['phenotypes']);
+
+    rowsInfoarray.push('</tbody></table>');
+    phenotypearray.push('</tbody></table>');
+    htmlarray.push('<div class="row justify-content-between">');
+    htmlarray.push('<div class="col-4">');
+    htmlarray.push('Row: ' + plot['row_index'] + '<br/>');
+    htmlarray.push('Column: ' + plot['column_index'] + '<br/>');
+    htmlarray.push('Length: ' + SafePrint_with_value(plot['length'], default_length) + 'm<br/>');
+    htmlarray.push('Width: ' + SafePrint_with_value(plot['width'], default_width) + 'm<br/>');
+    htmlarray.push('Study Design: ' + SafePrint_with_value(plot['study_design'], default_design) + '<br/>');
+    htmlarray.push('Sowing Date: ' + SafePrint_with_value(plot['sowing_date'], default_sowing_date) + '<br/>');
+    htmlarray.push('Harvest Date: ' + SafePrint_with_value(plot['harvest_date'], default_harvest_date) + '<br/>');
+    htmlarray.push('Sowing Order: ' + SafePrint(plot['sowing_order']) + '<br/>');
+    htmlarray.push('Walking Order: ' + SafePrint(plot['walking_order']) + '<br/>');
+    // htmlarray.push('Treatment: ' + SafePrint(plot['treatment']) + '<br/>');
+    htmlarray.push('Comment: ' + SafePrint(plot['comment']) + '<br/>');
+
+    // if (plot['so:url'] != undefined) {
+    //     var link = plot['so:url'];
+    //     htmlarray.push('Link: <a href="' + link + '" target="_blank">' + link + '</a><br/>');
+    // }
+    htmlarray.push('</div>');
+    htmlarray.push('<div class="col-4">');
+    if (plot['so:image'] != undefined) {
+        if (plot['so:image']['contentUrl'] != undefined && plot['so:image']['thumbnail']) {
+            let contentUrl = plot['so:image']['contentUrl'];
+            let thumbnail = plot['so:image']['thumbnail'];
+            htmlarray.push('<a <a href="' + contentUrl + '" target="_blank"><img height="300" src=" ' + thumbnail + '"/></a>');
+        }
+    }
+    htmlarray.push('</div>');
+    htmlarray.push('</div>');
+    htmlarray.push(formatted_treatments);
+    htmlarray.push('<hr/>');
+    htmlarray.push(rowsInfoarray.join(""));
+    htmlarray.push('<hr/>');
+    htmlarray.push('<h5>Phenotypes</h5>');
+    htmlarray.push(phenotypearray.join(""));
+
+    return htmlarray.join("");
+
+
+}
+
+function format_plot_rows(plot, replicate_bool) {
+    let plotId = plot['_id']['$oid'];
+    let formatted_plot = {};
+    let phenotypearray = [];
+    let rowsInfoarray = [];
+    // rowsInfoarray.push('<table class="table racks"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th><th>Links</th></tr></thead><tbody>');
+    // phenotypearray.push('<table class="table plots"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th></tr></thead><tbody>');
+    let replicate = ' (Current Plot)';
+    if (replicate_bool) {
+        replicate = ' <u style="cursor:pointer;" onclick="plotModal(\'' + plotId + '\')">(Plot Row:' + plot['row_index'] + ' - Col:' + plot['column_index'] + ')</u>';
+    }
 
     for (r = 0; r < plot['rows'].length; r++) {
-        var random_id = generate_random_id();
+        // var random_id = generate_random_id();
         var replicate_index = plot['rows'][r]['replicate'];
         var color = colorJSON[replicate_index];
         var accession = SafePrint(plot['rows'][r]['material']['accession']);
         var pedigree = SafePrint(plot['rows'][r]['material']['pedigree']);
+        var treatments = plot['rows'][r]['treatments'];
         rowsInfoarray.push('<tr>');
-        rowsInfoarray.push('<td style="background-color:' + color + '">' + SafePrint(replicate_index) + '</td>');
+        rowsInfoarray.push('<td style="background-color:' + color + '">' + SafePrint(replicate_index) + replicate + '</td>');
         rowsInfoarray.push('<td>' + SafePrint(plot['rows'][r]['rack_index']) + '</td>');
         rowsInfoarray.push('<td>' + accession + '</td>');
         rowsInfoarray.push('<td>' + pedigree + '</td>');
         rowsInfoarray.push('<td><a class="newstyle_link" target="_blank" href="' + SafePrint(plot['rows'][r]['material']['gene_bank']['so:url']) + '">' + SafePrint(plot['rows'][r]['material']['gene_bank']['so:name']) + '</a></td>');
-        rowsInfoarray.push('<td id="' + random_id + '"></td>');
+        //rowsInfoarray.push('<td id="' + random_id + '"></td>');
+        rowsInfoarray.push('<td id="' + plotId + '_' + r + '"></td>');
+        if (treatments !== null && treatments !== [] && treatments !== undefined) {
+            rowsInfoarray.push('<td>' + format_plot_treatment(treatments) + '</td>');
+        } else {
+            rowsInfoarray.push('<td></td>');
+        }
         rowsInfoarray.push('<tr>');
-        get_GRU_by_accession(accession, plotId, random_id);
+        // get_GRU_by_accession(accession, plotId, random_id);
 
         if (plot['rows'][r]['observations'] != undefined) {
             for (o = 0; o < plot['rows'][r]['observations'].length; o++) {
                 var observation = plot['rows'][r]['observations'][o];
 
                 phenotypearray.push('<tr>');
-                phenotypearray.push('<td style="background-color:' + color + '">' + SafePrint(replicate_index) + '</td>');
+                phenotypearray.push('<td style="background-color:' + color + '">' + SafePrint(replicate_index) + replicate + '</td>');
                 phenotypearray.push('<td>' + SafePrint(plot['rows'][r]['rack_index']) + '</td>');
                 phenotypearray.push('<td>' + SafePrint(observation['date']) + '</td>');
                 phenotypearray.push('<td>' + SafePrint(observation['raw_value']) + '</td>');
@@ -632,28 +967,26 @@ function formatPlotModal(plot) {
 
         // plotsGRUArray[plotId] = plotGRULinkArray;
     }
-    rowsInfoarray.push('</tbody></table>');
-    phenotypearray.push('</tbody></table>');
-    htmlarray.push('Row: ' + plot['row_index'] + '<br/>');
-    htmlarray.push('Column: ' + plot['column_index'] + '<br/>');
-    htmlarray.push('Length: ' + plot['length'] + 'm<br/>');
-    htmlarray.push('Width: ' + plot['width'] + 'm<br/>');
-    htmlarray.push('Trial Design: ' + SafePrint(plot['trial_desgin']) + '<br/>');
-    htmlarray.push('Sowing Date: ' + SafePrint(plot['sowing_date']) + '<br/>');
-    htmlarray.push('Harvest Date: ' + SafePrint(plot['harvest_date']) + '<br/>');
-    htmlarray.push('<hr/>');
-    htmlarray.push(rowsInfoarray.join(""));
-    htmlarray.push('<hr/>');
-    htmlarray.push('<h5>Phenotype</h5>');
-    htmlarray.push(phenotypearray.join(""));
+    // rowsInfoarray.push('</tbody></table>');
+    // phenotypearray.push('</tbody></table>');
 
-    return htmlarray.join("");
+    formatted_plot['rowsInfo'] = rowsInfoarray;
+    formatted_plot['phenotypes'] = phenotypearray;
 
+    return formatted_plot;
+}
 
+function format_plot_treatment(treatments) {
+    let htmlarray = [];
+    for (i = 0; i < treatments.length; i++) {
+        htmlarray.push(treatments[i]['so:sameAs'] + ' - ' + treatments[i]['label']);
+        htmlarray.push('<br/>');
+    }
+    return htmlarray.join(' ');
 }
 
 // function get_GRU_by_accession(accession) {
-function get_GRU_by_accession(accession, plotId, id) {
+function get_GRU_by_accession(accession, plotId, r) {
     $.ajax({
         type: "GET",
         url: '/seedstor/apisearch-unified.php?query=' + accession,
@@ -661,11 +994,12 @@ function get_GRU_by_accession(accession, plotId, id) {
         contentType: "application/json; charset=utf-8",
         success: function (gru_json) {
             var links = format_gru_json(gru_json);
-            var linksjson = {};
-            linksjson['plotId'] = plotId;
-            linksjson['id'] = id;
-            linksjson['links'] = links;
-            plotsGRUArray.push(linksjson);
+            $('#' + plotId + '_' + r).html(links);
+            // var linksjson = {};
+            // linksjson['plotId'] = plotId;
+            // linksjson['id'] = id;
+            // linksjson['links'] = links;
+            // plotsGRUArray.push(linksjson);
         }
     });
 }
@@ -676,17 +1010,14 @@ function get_GRU_by_accession(accession, plotId, id) {
 function format_gru_json(gru_json) {
     var htmlarray = [];
     if (gru_json != undefined && gru_json.length > 0) {
-        // for (i = 0; i < gru_json.length; i++) {
-        if (gru_json.length > 0) {
+        for (i = 0; i < gru_json.length; i++) {
+            // if (gru_json.length > 0) {
             if (gru_json[0]['idPlant'] != undefined) {
-
                 var idPlant = gru_json[i]['idPlant'];
-                // htmlarray.push(idPlant);
-                htmlarray.push('<a target="_blank" class="newstyle_link" href="https://seedstor.ac.uk/search-infoaccession.php?idPlant=' + idPlant + '">Plant ' + idPlant + '</a> ');
+                htmlarray.push('<a target="_blank" class="newstyle_link" href="https://www.seedstor.ac.uk/search-infoaccession.php?idPlant=' + idPlant + '">Plant ' + idPlant + '</a> ');
             }
         }
     }
-    // }
     return htmlarray.join('');
 }
 
@@ -696,8 +1027,17 @@ function format_gru_json(gru_json) {
  * @param obj The object to check.
  */
 function SafePrint(obj) {
-    if (obj === undefined) {
+    if (obj === undefined || obj === null) {
         return "";
+    } else {
+        return obj;
+    }
+}
+
+function SafePrint_with_value(obj, value) {
+    if (obj === undefined || obj === null) {
+        return value;
+        console.log(value);
     } else {
         return obj;
     }
@@ -720,7 +1060,7 @@ function CreatePlotsRequestForExperimentalArea(exp_area_id) {
                         "param": "Get all Plots for Study",
                         "current_value": true
                     }, {
-                        "param": "Search Studies",
+                        "param": "ST Search Studies",
                         "current_value": true
                     }]
                 }
@@ -745,8 +1085,8 @@ function CreatePlotsRequestForFieldTrial(fieldtrial_id) {
                         "current_value": fieldtrial_id
                     },
                     {
-                        "param": "FT Facet",
-                        "current_value": "Field Trial"
+                        "param": "FT Trial Facet",
+                        "current_value": true
                     },
                     {
                         "param": "FT Results Page Number",
@@ -768,7 +1108,10 @@ function CreatePlotsRequestForFieldTrial(fieldtrial_id) {
 }
 
 function CreatePlotsRequestForAllFieldTrials(keyword) {
-
+    // let facet = 'Study';
+    // if (keyword === '') {
+    //     facet = 'Field Trial';
+    // }
     var request = {
         "services": [
             {
@@ -782,8 +1125,8 @@ function CreatePlotsRequestForAllFieldTrials(keyword) {
                             "current_value": keyword
                         },
                         {
-                            "param": "FT Facet",
-                            "current_value": "Field Trial"
+                            "param": "FT Study Facet",
+                            "current_value": true
                         },
                         {
                             "param": "FT Results Page Number",
@@ -803,6 +1146,165 @@ function CreatePlotsRequestForAllFieldTrials(keyword) {
 
     return request;
 
+}
+
+// plot page
+
+let default_length = "";
+let default_width = "";
+let default_design = "";
+let default_sowing_date = "";
+let default_harvest_date = "";
+
+function LoadTable(experimental_area_json) {
+    $('#control').show();
+    console.log(JSON.stringify(experimental_area_json));
+    var jsonArray = experimental_area_json['results'][0]['results'];
+
+    default_length = SafePrint(jsonArray[0]['data']['plot_length']);
+    default_width = SafePrint(jsonArray[0]['data']['plot_width']);
+    default_design = SafePrint(jsonArray[0]['data']['study_design']);
+    default_sowing_date = SafePrint(jsonArray[0]['data']['sowing_date']);
+    default_harvest_date = SafePrint(jsonArray[0]['data']['harvest_date']);
+
+    // console.log(">>>>>>>>>>>>"+default_sowing_date);
+    var filtered_data = [];
+    jQuery('#status').html('');
+    var fieldTrialName = '';
+    var team = '';
+    for (i = 0; i < jsonArray.length; i++) {
+        let exp_area = jsonArray[i]['data'];
+
+        let plots_table = GeneratePlotsForExperimentalArea(exp_area);
+        $('#plots').html(plots_table);
+        /*
+                        for (j = 0; j < exp_areas_array.length; j++) {
+                            let address = exp_areas_array [j]['address'];
+
+                            if (address != undefined) {
+
+                                fieldTrialName = jsonArray [i]['data']['so:name'];
+                                team = jsonArray [i]['data']['team'];
+                                if (address ['address']['location']['centre'] != undefined) {
+                                    filtered_data.push (exp_areas_array [j]);
+                                }
+                            }
+                        }
+        */
+    }
+    // console.log(JSON.stringify(plotsHTMLArray));
+
+}
+
+function GeneratePlotsForExperimentalArea(experimental_area_json) {
+    console.log(JSON.stringify(experimental_area_json));
+
+    plot_json = experimental_area_json['plots'];
+    let expAreaId = experimental_area_json['_id']['$oid'];
+    let plots = experimental_area_json['plots'];
+
+    let plot_block_rows = parseInt(experimental_area_json['plot_block_rows']);
+    let plot_block_columns = parseInt(experimental_area_json['plot_block_columns']);
+
+    formatted_treatments = generate_treatments_html(experimental_area_json);
+
+    if (plots.length > 0) {
+        var htmlarray = [];
+
+        var row = 1;
+        var column = 1;
+
+        for (j = 0; j < plots.length; j++) {
+
+            if (plots[j]['row_index'] === row) {
+                if (plots[j]['column_index'] === column) {
+                    htmlarray.push(formatPlot(plots[j], plot_block_rows, plot_block_columns));
+                    column++;
+                }
+            } else if (plots[j]['row_index'] > row) {
+
+                let current_row = parseInt(plots[j]['row_index']);
+                let current_column = parseInt(plots[j]['column_index']);
+                row++;
+                column = 2;
+                htmlarray.push('</tr><tr>');
+                let padding = plot_gap_calculator(current_column, current_row, plot_block_columns, plot_block_rows);
+                htmlarray.push('<td  style="' + padding + '">' + row + '</td>');
+                htmlarray.push(formatPlot(plots[j], plot_block_rows, plot_block_columns));
+            }
+        }
+        var tableString = '<td>1</td>' + htmlarray.join("");
+        var tableArray = tableString.split("</tr><tr>");
+        var reversedString = tableArray.reverse().join("</tr><tr>");
+
+        // return '<div id="plot"><table class="table " id="' + expAreaId + '" style="margin:20px; border-spacing:5px; border-collapse:separate;"><tr>' + reversedString + '</tr></table></div>';
+        return '<div id="plot"><table class="table " id="' + expAreaId + '" style="margin:20px; "><tr>' + reversedString + '</tr></table></div>';
+    } else {
+        return '<div id="plot"><p>No plot data available.</p></div>'
+    }
+}
+
+function generate_treatments_html(experimental_area_json) {
+    var htmlarray = [];
+    if (experimental_area_json['treatment_factors'] !== undefined && experimental_area_json['treatment_factors'] !== null) {
+        if (experimental_area_json['treatment_factors'].length > 0) {
+            var treatment_factors = [];
+            treatment_factors = experimental_area_json['treatment_factors'];
+
+            htmlarray.push('<table class="table"><thead><tr><th>Treatment</th><th>Ontology term</th><th width="50%">Description</th><th>Values</th></tr></thead><tbody>');
+            for (j = 0; j < treatment_factors.length; j++) {
+                var treatment = treatment_factors[j];
+                var ontology = treatment['treatment']['so:sameAs'];
+
+                htmlarray.push('<tr>');
+                htmlarray.push('<td>' + treatment['treatment']['so:name'] + '</td>');
+                htmlarray.push('<td><a class="newstyle_link" target="_blank" href="https://browser.planteome.org/amigo/term/' + ontology + '">' + ontology + '</a></td>');
+                htmlarray.push('<td>' + treatment['treatment']['so:description'] + '</td>');
+
+                htmlarray.push('<td>');
+                for (i = 0; i < treatment['values'].length; i++) {
+                    var this_value = treatment['values'][i];
+                    htmlarray.push(this_value['Label'] + ': ' + this_value['Value'] + '<br/>');
+                }
+                htmlarray.push('</td>');
+                htmlarray.push('</tr>');
+            }
+            htmlarray.push('</tbody></table>');
+        }
+    }
+    return htmlarray.join(' ');
+
+}
+
+function filter_plot() {
+    $('.plot').css('background-color', '#ABEBC6');
+    $('#filter_result').html('');
+    var result = 0;
+    var searchStr = $('#searchPlotsInput').val().toLowerCase();
+    if (searchStr !== '') {
+        for (i = 0; i < plot_json.length; i++) {
+            // var bool = false;
+            const plotId = plot_json[i]['_id']['$oid'];
+            var rows = plot_json[i]['rows'];
+            for (r = 0; r < rows.length; r++) {
+                var accession = rows[r]['material']['accession'].toLowerCase();
+                if (accession != undefined) {
+                    if (searchStr === accession || accession.includes(searchStr)) {
+                        // bool = true;
+                        $('#' + plotId).css('background-color', '#2ECC40');
+                        result++;
+                        break;
+                    }
+                }
+            }
+            // if (bool) {
+            //     var plotId = plot_json[i]['_id']['$oid'];
+            //     console.log(plotId);
+            //     $('#' + plotId).css('background-color', '#FF4136');
+            // }
+        }
+    }
+    $('#filter_result').html('<p>Filtered result: ' + result + '</p>');
 }
 
 
