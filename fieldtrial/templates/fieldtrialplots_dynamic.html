@@ -27,7 +27,7 @@
         <!--<div id="back_link" ><a href="/service/"><< Back to all services list</a><br/></div>-->
         <h2 id="title">Field Trial Details</h2>
 
-        <p id="description"></p>
+        <p id="description"><br/>Study: <a href="/fieldtrial/study/{{ plot_id|safe }}" target="_blank">{{ study_name|safe }}</a></p>
 
         <form id="form" role="form">
             <div class="list_service_table">
@@ -94,7 +94,7 @@
 
         <script type="text/javascript">
             $(document).ready(function () {
-                $('#plots').html('<img src="images/ajax-loader.gif"/>')
+                $('#plots').html('<img src="images/ajax-loader.gif"/>');
                 LoadTable({{ data|safe }});
             });
 
