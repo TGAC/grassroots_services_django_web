@@ -1,31 +1,38 @@
-{%  include "header.html" %}
+{% include "header.html" %}
 <!--content-->
 
+
 <style type="text/css">
-    .modal-body{
+    .modal-body {
         height: 250px;
         overflow-y: auto;
     }
 
     @media (min-height: 500px) {
-        .modal-body { height: 400px; }
+        .modal-body {
+            height: 400px;
+        }
     }
 
     @media (min-height: 800px) {
-        .modal-body { height: 600px; }
+        .modal-body {
+            height: 600px;
+        }
     }
 </style>
 
 <section id="services" style="padding: 100px 0px 100px 0px ! important;">
-    <div class="container" >
+    <div class="container">
         <!--style="width: 1170px ! important; margin-right: auto ! important; margin-left: auto ! important;">-->
         <!--<div id="back_link" ><a href="/service/"><< Back to all services list</a><br/></div>-->
-        <h2 id="title">DFWFieldTrial search service</h2>
+        <h2 id="title">Field Trial Details</h2>
 
-        <p id="description">A service to search field trial data</p>
+        <p id="description"></p>
 
         <form id="form" role="form">
-            <div class="list_service_table"><table id="listTable"></table></div>
+            <div class="list_service_table">
+                <table id="listTable"></table>
+            </div>
         </form>
         <div id="status"></div>
         <div id="output_format_div" style="display:none; float:right;">
@@ -38,8 +45,32 @@
         <div style="clear:both;"></div>
 
         <div id="result"></div>
+        <div class="row" style="border-style: solid;border-width:1px;">
+            <div class="col-10" style="border-style: solid;border-width: 0 1px 0 0;">
+                <div class="wrapper1" style="overflow: scroll;height: 20px; ">
+                    <div id="upperslider" style="width:100%;"></div>
+                </div>
+                <div id="plots" style="overflow: scroll;"></div>
+            </div>
+            <div class="col-2">
+                <div id="control" style="display: none; margin-left: 20px; padding:5px;">
+                    <br>
+                    Search:</br>
+                    <input type="text" id="searchPlotsInput" onkeyup="filter_plot();" value=""/></br><br/>
+                    <!--                        Phenotype:</br>-->
+                    <!--                        Height: <input type="text" id="height" value="117.25" disabled="disabled"/></br>-->
+                    <!--                        Yield: <input type="text" id="yield" value="8.91292789637138" disabled="disabled"/></br><br/>-->
+                    <!--                        GRU Accession: <input type="text" id="gruAccession" value="PW141-41-2-20-Q5B-NDVI-W"-->
+                    <!--                                              disabled="disabled"/></br>-->
+<!--                    <button onclick="filter_plot();">Filter</button>-->
+                    <div id="filter_result"></div>
 
-        <div id="plots" style="width:100%; overflow: scroll;"></div>
+                    <!--                    </br></br></br></br>-->
+                    <!--                        <button>Get Data</button>-->
+                    </p>
+                </div>
+            </div>
+        </div>
 
         <!-- Modal -->
         <div class="modal" tabindex="-1" role="dialog" id="plotModal" style="z-index: 999999;">
@@ -63,102 +94,10 @@
 
         <script type="text/javascript">
             $(document).ready(function () {
-                $('#plots').html ('<img src="images/ajax-loader.gif"/>')
-                var id_param = null;
+                $('#plots').html('<img src="images/ajax-loader.gif"/>')
+                LoadTable({{ data|safe }});
+            });
 
-                if ('URLSearchParams' in window) {
-                    // Browser supports URLSearchParams
-                    let params = new URLSearchParams (document.location.search.substring(1));
-                    id_param = params.get ("id");
-                }
-
-                if (id_param != null) {
-                    var req_json = CreatePlotsRequestForExperimentalArea (id_param);
-
-
-                    if (req_json) {
-                         $.ajax ({
-                            type: "POST",
-                            url: server_url,
-                            data: JSON.stringify (req_json),
-                            dataType: "json",
-                            contentType: "application/json; charset=utf-8"
-                        }).done (function (experimental_areas_json) {
-                            console.log(experimental_areas_json);
-                            LoadTable (experimental_areas_json);
-                        }).fail (function (req, status, error) {
-                            console.info ("req " + "status " + status + " error " + error);
-                        });
-                    }
-                }
-          });
-
-        function LoadTable (experimental_area_json) {
-            var jsonArray = experimental_area_json['results'][0]['results'];
-            var filtered_data = [];
-            jQuery('#status').html('');
-            var fieldTrialName = '';
-            var team = '';
-            for (i = 0; i < jsonArray.length; i++) {
-                let exp_area = jsonArray[i]['data'];
-
-                let plots_table = GeneratePlotsForExperimentalArea (exp_area);
-                $('#plots').html (plots_table);
-/*
-                for (j = 0; j < exp_areas_array.length; j++) {
-                    let address = exp_areas_array [j]['address'];
-
-                    if (address != undefined) {
-
-                        fieldTrialName = jsonArray [i]['data']['so:name'];
-                        team = jsonArray [i]['data']['team'];
-                        if (address ['address']['location']['centre'] != undefined) {
-                            filtered_data.push (exp_areas_array [j]);
-                        }
-                    }
-                }
-*/
-            }
-            console.log(JSON.stringify(plotsHTMLArray));
-
-        }
-
-        function GeneratePlotsForExperimentalArea (experimental_area_json) {
-            console.log(JSON.stringify(experimental_area_json));
-            var expAreaId = experimental_area_json['_id']['$oid'];
-            var plots = experimental_area_json['plots'];
-
-            if (plots.length>0) {
-                var htmlarray = [];
-
-                var row = 1;
-                var column = 1;
-
-                for (j = 0; j < plots.length; j++) {
-
-                    if (plots[j]['row_index'] === row) {
-                        if (plots[j]['column_index'] === column) {
-                            htmlarray.push(formatPlot(plots[j]));
-                            column++;
-                        }
-                    } else if (plots[j]['row_index'] > row) {
-
-                        row++;
-                        column = 2;
-                        htmlarray.push('</tr><tr>');
-                        htmlarray.push('<td>' + row + '</td>');
-                        htmlarray.push(formatPlot(plots[j]));
-                    }
-                }
-                var tableString = '<td>1</td>' + htmlarray.join("");
-                var tableArray = tableString.split("</tr><tr>");
-                var reversedString = tableArray.reverse().join("</tr><tr>");
-
-                return '<div id="plot"><table class="table " id="' + expAreaId + '" style="margin:20px; border-spacing:5px; border-collapse:separate;"><tr>' + reversedString + '</tr></table></div>';
-            } else {
-                return '<div id="plot"><p>No plot data available.</p></div>'
-            }
-        }
 
         </script>
     </div>

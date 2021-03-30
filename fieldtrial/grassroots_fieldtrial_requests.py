@@ -91,6 +91,29 @@ def get_study(id):
     res = requests.post(server_url, data=json.dumps(study_request))
     return json.dumps(res.json())
 
+def get_plot(id):
+    plot_request = {
+            "services": [{
+                "so:name": "Search Field Trials",
+                "start_service": True,
+                "parameter_set": {
+                    "level": "advanced",
+                    "parameters": [{
+                        "param": "ST Id",
+                        "current_value": id
+                    }, {
+                        "param": "Get all Plots for Study",
+                        "current_value": True
+                    }, {
+                        "param": "ST Search Studies",
+                        "current_value": True
+                    }]
+                }
+            }]
+        }
+    res = requests.post(server_url, data=json.dumps(plot_request))
+    return json.dumps(res.json())
+
 #
 # def get_service(service_name):
 #     get_service_req = {"services": [{"so:name": service_name}], "operations": {"operation": "get_named_service"}}

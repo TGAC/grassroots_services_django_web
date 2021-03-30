@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from .grassroots_fieldtrial_requests import get_all_fieldtrials
 from .grassroots_fieldtrial_requests import get_fieldtrial
 from .grassroots_fieldtrial_requests import get_study
-# from .grassroots_fieldtrial_requests import get_plot
+from .grassroots_fieldtrial_requests import get_plot
 
 
 def index_loading(request):
@@ -22,5 +22,5 @@ def single_fieldtrial(request, fieldtrial_id):
 def single_study(request, study_id):
     return render(request, 'fieldtrial_dynamic.html', {'data': get_study(study_id), 'type': 'Grassroots:Study'})
 
-# def single_plot(request, plot_id):
-#     return render(request, 'fieldplot_dynamic.html', {'data': get_plot(plot_id)})
+def single_plot(request, plot_id):
+    return render(request, 'fieldtrialplots_dynamic.html', {'data': get_plot(plot_id)})

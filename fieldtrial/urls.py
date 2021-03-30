@@ -8,17 +8,9 @@ urlpatterns = [
     path('', views.index, name='index'),
     # path('all', views.index, name='index'),
     path('study/<study_id>', views.single_study),
+    path('plot/<plot_id>', views.single_plot),
     # re_path(r'(study/?P<study_id>[A-z0-9-\w%]+)$', views.single_study),
     re_path(r'(?P<fieldtrial_id>[A-z0-9-\w%]+)$', views.single_fieldtrial)
     # re_path(r'plot/(?P<plot_id>[A-z0-9-\w%]+)$', views.single_plot),
 
-    # re_path('study/r'(?P<fieldtrial_id>[A-z0-9-\w%]+)$', views.single_fieldtrial),
-    # re_path('plot/r'(?P<fieldtrial_id>[A-z0-9-\w%]+)$', views.single_fieldtrial),
-    # path('ajax/get_one_service/', views.single_service_ajax),
-    # path('ajax/interact_backend/', views.interact_with_apache),
-    # path('ajax/search_treatment/', views.search_treatment_ajax),
-    # path('ajax/submit_form/', views.submit_form_ajax),
-    # path('ajax/check_result/', views.check_result_ajax),
-    #
-    # path('api/co_ols', views.crop_ontology_search),
 ]
