@@ -260,6 +260,9 @@ table.plots td {
 .modal-dialog {
     max-width: 70%;
 }
+.modal-lg {
+    max-width: 70% !important;
+}
 
 .modal-backdrop {
     opacity: 0.5 !important;
