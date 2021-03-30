@@ -5,6 +5,7 @@ import json
 
 from django.http import HttpResponse
 from .grassroots_fieldtrial_requests import get_all_fieldtrials
+from .grassroots_fieldtrial_requests import get_fieldtrial
 # from .grassroots_requests import get_service
 # from .grassroots_requests import search_treatment
 # from .grassroots_requests import submit_form
@@ -22,7 +23,7 @@ def index(request):
 
 
 def single_fieldtrial(request, fieldtrial_id):
-    return render(request, 'fieldtrial_dynamic.html', {'service_name': fieldtrial_id})
+    return render(request, 'fieldtrial_dynamic.html', {'data': get_fieldtrial(fieldtrial_id), 'type': 'Grassroots:FieldTrial'})
 #
 #
 # def single_service_ajax(request):

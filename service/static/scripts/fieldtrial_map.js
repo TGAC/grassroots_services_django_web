@@ -127,7 +127,7 @@ function produceFieldtrialTable(data, type_param) {
                     var ft_name = SafePrint(full['parent_field_trial']['so:name']);
                     if (full['parent_field_trial'] !== undefined) {
                         var ftId = full['parent_field_trial']['_id']['$oid'];
-                        ft_name = '<a href="fieldtrial_dynamic.html?id=' + ftId + '&type=Grassroots:FieldTrial" target="_blank">' + full['parent_field_trial']['so:name'] + '</a>';
+                        ft_name = '<a href="/fieldtrial/' + ftId + '" target="_blank">' + full['parent_field_trial']['so:name'] + '</a>';
                     }
                     return ft_name;
                 }
@@ -138,25 +138,6 @@ function produceFieldtrialTable(data, type_param) {
                     var studyId = full['_id']['$oid'];
                     let study_result = '<a href="fieldtrial_dynamic.html?id=' + studyId + '&type=Grassroots:Study" target="_blank">' + full['so:name'] + '</a>';
 
-                    if (full['curator'] !== undefined) {
-                        let curator_name = full['curator']['so:name'];
-                        if (full['curator']['so:email'] !== undefined) {
-                            let curator_email = full['curator']['so:email'];
-                            study_result = study_result + '<br/>Curator: <a href="mailto:' + curator_email + '" target="_blank">' + curator_name + '</a>';
-                        } else {
-                            study_result = study_result + '<br/>Curator: ' + curator_name;
-                        }
-
-                    }
-                    if (full['contact'] !== undefined) {
-                        let contact_name = full['contact']['so:name'];
-                        if (full['contact']['so:email'] !== undefined) {
-                            let contact_email = full['contact']['so:email'];
-                            study_result = study_result + '<br/>Contact: <a href="mailto:' + contact_email + '" target="_blank">' + contact_name + '</a>';
-                        } else {
-                            study_result = study_result + '<br/>Contact: ' + contact_name;
-                        }
-                    }
                     return study_result;
                 }
             },
@@ -240,18 +221,35 @@ function produceFieldtrialTable(data, type_param) {
                     return treatment;
                 }
             }
-            // ,
-            // {
-            //     title: "Links",
-            //     "render": function (data, type, full, meta) {
-            //         var studyId = full['_id']['$oid'];
-            //         var fieldtrial_link = '';
-            //         if (full["parent_field_trial_id"] !== undefined) {
-            //             fieldtrial_link = '<li><a href="fieldtrial_dynamic.html?id=' + full["parent_field_trial_id"] + '&type=Grassroots:FieldTrial" target="_blank">Field Trial</a></li>'
-            //         }
-            //         return '<ul><li><a href="fieldtrial_dynamic.html?id=' + studyId + '&type=Grassroots:Study" target="_blank">Study</a></li>' + fieldtrial_link + '</ul>';
-            //     }
-            // }
+            ,
+            {
+                title: "Contacts",
+                "render": function (data, type, full, meta) {
+                    var studyId = full['_id']['$oid'];
+                    var study_result = '';
+
+                    if (full['curator'] !== undefined) {
+                        let curator_name = full['curator']['so:name'];
+                        if (full['curator']['so:email'] !== undefined) {
+                            let curator_email = full['curator']['so:email'];
+                            study_result = study_result + 'Curator: <a href="mailto:' + curator_email + '" target="_blank">' + curator_name + '</a>';
+                        } else {
+                            study_result = study_result + 'Curator: ' + curator_name;
+                        }
+
+                    }
+                    if (full['contact'] !== undefined) {
+                        let contact_name = full['contact']['so:name'];
+                        if (full['contact']['so:email'] !== undefined) {
+                            let contact_email = full['contact']['so:email'];
+                            study_result = study_result + '<br/>Contact: <a href="mailto:' + contact_email + '" target="_blank">' + contact_name + '</a>';
+                        } else {
+                            study_result = study_result + '<br/>Contact: ' + contact_name;
+                        }
+                    }
+                    return study_result;
+                }
+            }
 
         ]
 
@@ -617,6 +615,13 @@ function displayFTLocations(array, type_param) {
             let geo_json = JSON.parse(array[i]['shape_data']);
             var shape_layer = L.geoJson(geo_json);
             markersGroup2.addLayer(shape_layer);
+            var layerGroup = L.geoJson(geo_json, {
+                onEachFeature: function (feature, layer) {
+                    layer.bindPopup('Study: '+ SafePrint(geo_json['name']) +'<br/>Plot No.: '+SafePrint(feature.properties['Plot_No'])+SafePrint(feature.properties['PlotNumber']));
+                    // layer.bindPopup('<p>Plot No.:</p>');
+                }
+            });
+            markersGroup2.addLayer(layerGroup);
         }
         // }
     }

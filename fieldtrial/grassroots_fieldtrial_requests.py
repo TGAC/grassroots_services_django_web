@@ -37,6 +37,37 @@ def get_all_fieldtrials():
     res = requests.post(server_url, data=json.dumps(list_all_ft_request))
     return json.dumps(res.json())
 
+def get_fieldtrial(id):
+    list_all_ft_request = {
+        "services": [{
+            "start_service": True,
+            "so:name": "Search Field Trials",
+            "parameter_set": {
+                "level": "advanced",
+                "parameters": [
+                    {
+                        "param": "FT Id",
+                        "current_value": id
+                    },
+                    {
+                        "param": "FT Trial Facet",
+                        "current_value": True
+                    },
+                    {
+                        "param": "FT Results Page Number",
+                        "current_value": 0
+                    },
+                    {
+                        "param": "FT Results Page Size",
+                        "current_value": 100
+                    }
+                ]
+            }
+        }]
+    }
+    res = requests.post(server_url, data=json.dumps(list_all_ft_request))
+    return json.dumps(res.json())
+
 #
 # def get_service(service_name):
 #     get_service_req = {"services": [{"so:name": service_name}], "operations": {"operation": "get_named_service"}}
