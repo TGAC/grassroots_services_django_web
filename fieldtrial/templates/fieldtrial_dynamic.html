@@ -103,46 +103,10 @@
 
         <script type="text/javascript">
             $(document).ready(function () {
-                $('#plots').html('<img src="images/ajax-loader.gif"/>');
-                var id_param = null;
-                var type_param = null;
+                $('#plots').html('<img src="../../static/images/ajax-loader.gif"/>');
+                $('#result').html('');
+                start_map({{ data|safe }}, '{{ type|safe }}');
 
-                if ('URLSearchParams' in window) {
-                    // Browser supports URLSearchParams
-                    let params = new URLSearchParams(document.location.search.substring(1));
-                    id_param = params.get("id");
-                    type_param = params.get("type");
-                }
-
-                if (type_param != null) {
-                    var req_json;
-
-                    if (type_param === 'AllFieldTrials') {
-                        req_json = CreatePlotsRequestForAllFieldTrials('');
-                    } else if (id_param != null) {
-                        if (type_param === 'Grassroots:Study') {
-                            req_json = CreatePlotsRequestForExperimentalArea(id_param);
-                        } else if (type_param === 'Grassroots:FieldTrial') {
-                            req_json = CreatePlotsRequestForFieldTrial(id_param);
-                        }
-                    }
-
-                    if (req_json) {
-                        $.ajax({
-                            type: "POST",
-                            url: server_url,
-                            data: JSON.stringify(req_json),
-                            dataType: "json",
-                            contentType: "application/json; charset=utf-8"
-                        }).done(function (ft_json) {
-                            $('#result').html('');
-                            console.log(JSON.stringify(ft_json));
-                            start_map(ft_json, type_param);
-                        }).fail(function (req, status, error) {
-                            console.info("req " + "status " + status + " error " + error);
-                        });
-                    }
-                }
             });
 
             var location_layer_marker = new L.MarkerClusterGroup({});
