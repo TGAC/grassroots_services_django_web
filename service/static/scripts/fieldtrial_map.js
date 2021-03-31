@@ -389,7 +389,7 @@ function get_study_plots_link(full) {
         /* remove the quotes */
         id = id.replace(/"/g, "");
 
-        return '<a class=\"newstyle_link\" href=\"/fieldtrial/plot/' + id + '\"  target=\"_blank\">View plots</a>';
+        return '<a class=\"newstyle_link\" href=\"/fieldtrial/plots/' + id + '\"  target=\"_blank\">View plots</a>';
     } else {
         return '';
     }
