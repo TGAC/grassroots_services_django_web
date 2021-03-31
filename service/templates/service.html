@@ -1,14 +1,9 @@
 {% include "header.html" %}
 
 {% csrf_token %}
-
-
-
-<!--content-->
-
 <section id="services" style="padding: 100px 0px 100px 0px ! important;">
     <div class="container">
-        <div id="back_link" ><a href="/service/"><< Back to all services list</a><br/></div>
+        <div id="back_link" style="visibility: hidden;"><a href="."><< Back to all services list</a><br/></div>
         <h2 id="title"></h2>
 
         <p id="description"></p>
@@ -23,7 +18,7 @@
             <label class="radio-inline"><input type="radio" name="simpleadvanced" value="show_advanced"
                                                onclick="simpleOrAdvanced(this.value)"> Advanced options</label>
         </div>
-        <form id="form" role="form">
+        <form id="form" role="form" data-toggle="validator">
             <div class="list_service_table">
                 <table id="listTable"></table>
             </div>
@@ -40,7 +35,7 @@
 
         <div id="result"></div>
 
-        <div id="map"></div>
+        <div id="map" style="display: none"></div>
 
         <div id="tableWrapper">
             <table id="resultTable"></table>
@@ -50,28 +45,61 @@
         </div>
 
         <div id="legend" style="display: none"></div>
-        <script type="text/javascript">
 
-            var csrftoken = $('input[name$="csrfmiddlewaretoken"]').val();
-            // change this to your URL (relative), has to be a local URL as JS restriction of cross domain
-            var services = '{"operations": {"operation":"get_all_services"}}';
-            var selected_service_name;
-            var response = null;
-            var parameters;
-            var groups;
-            $(document).ready(function () {
-                populateService('{{ service_name }}');
-                var yrtable;
-
-                var markersGroup;
-                var map;
-
-
-            });
-
-
-        </script>
     </div>
 </section>
 
+<!-- Modal -->
+<div class="modal" tabindex="-1" role="dialog" id="treatmentModal" style="z-index: 999999;">
+    <div class="modal-dialog  modal-lg" role="document">
+        <div class="modal-content" style="z-index: 9999999;">
+            <div class="modal-header">
+                <h5 class="modal-title">Plot details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+
+            </div>
+            <div class="modal-footer" id="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="alert alert-success" id="success-alert" style="display: none;">
+    <button type="button" class="close" data-dismiss="alert">x</button>
+    <strong>Success! </strong> Added one set.
+</div>
+<style>
+    .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+        border: 1px solid #2c3e50 ! important;
+        background: #2c3e50 ! important;
+</style>
+
+
+<script type="text/javascript">
+
+    var csrftoken = $('input[name$="csrfmiddlewaretoken"]').val();
+    // change this to your URL (relative), has to be a local URL as JS restriction of cross domain
+    var services = '{"operations": {"operation":"get_all_services"}}';
+    var selected_service_name;
+    var response = null;
+    var parameters;
+    var groups;
+    $(document).ready(function () {
+        populateService('{{ service_name }}');
+        var yrtable;
+
+        var markersGroup;
+        var map;
+
+
+    });
+
+
+</script>
 {% include "footer.html" %}
