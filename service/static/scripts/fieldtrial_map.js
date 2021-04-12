@@ -249,6 +249,18 @@ function produceFieldtrialTable(data, type_param) {
                     }
                     return study_result;
                 }
+            },
+            {
+                title: "Download",
+                "render": function (data, type, full, meta) {
+                    var studyId = full['_id']['$oid'];
+                    var download = '';
+                    if (full['frictionless_data_package_url'] !== undefined) {
+                        var link = full['frictionless_data_package_url'];
+                        download = '<a  class="newstyle_link" target="_blank" href="' + link + '">Frictionless Data Package</a>'
+                    }
+                    return download;
+                }
             }
 
         ]
