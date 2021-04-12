@@ -453,12 +453,14 @@ function create_study_info_html(studyJson) {
 
     }
     if (studyJson["parent_field_trial"] != undefined) {
+        var ftId = studyJson['parent_field_trial']['_id']['$oid'];
+        var ft_name = '<a target="_blank" style="newstyle_link" href="/fieldtrial/' + ftId + '" target="_blank">' + studyJson['parent_field_trial']['so:name'] + '</a>';
         htmlarray.push('<tr>');
         htmlarray.push('<td>');
         htmlarray.push('<b>Field Trial Name:</b> ');
         htmlarray.push('</td>');
         htmlarray.push('<td>');
-        htmlarray.push(studyJson["parent_field_trial"]['so:name']);
+        htmlarray.push(ft_name);
         htmlarray.push('</td>');
         htmlarray.push('</tr>');
     }
@@ -611,6 +613,16 @@ function create_study_info_html(studyJson) {
         htmlarray.push('</tr>');
     }
 
+    if (studyJson['frictionless_data_package_url'] !== undefined) {
+        htmlarray.push('<tr>');
+        htmlarray.push('<td>');
+        htmlarray.push('<b>Download:</b> ');
+        htmlarray.push('</td>');
+        htmlarray.push('<td>');
+        htmlarray.push('<a href="' + studyJson['so:url'] + '" target="_blank" style="newstyle_link">Frictionless Data Package</a>');
+        htmlarray.push('</td>');
+        htmlarray.push('</tr>');
+    }
 
     htmlarray.push('</tbody>');
     htmlarray.push('</table>');
