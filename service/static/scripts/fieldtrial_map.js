@@ -200,7 +200,27 @@ function produceFieldtrialTable(data, type_param) {
             {
                 title: "Contacts",
                 "render": function (data, type, full, meta) {
-                    return format_study_contacts(full);
+                    var study_result = '';
+
+                    if (full['curator'] !== undefined) {
+                        let curator_name = full['curator']['so:name'];
+                        if (full['curator']['so:email'] !== undefined) {
+                            let curator_email = full['curator']['so:email'];
+                            study_result = study_result + 'Curator: <a href="mailto:' + curator_email + '" target="_blank">' + curator_name + '</a>';
+                        } else {
+                            study_result = study_result + 'Curator: ' + curator_name;
+                        }
+                    }
+                    if (full['contact'] !== undefined) {
+                        let contact_name = full['contact']['so:name'];
+                        if (full['contact']['so:email'] !== undefined) {
+                            let contact_email = full['contact']['so:email'];
+                            study_result = study_result + '<br/>Contact: <a href="mailto:' + contact_email + '" target="_blank">' + contact_name + '</a>';
+                        } else {
+                            study_result = study_result + '<br/>Contact: ' + contact_name;
+                        }
+                    }
+                    return study_result;
                 }
             },
             {
