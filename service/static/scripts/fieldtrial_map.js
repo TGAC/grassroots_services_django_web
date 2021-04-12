@@ -440,10 +440,10 @@ function create_study_info_html(studyJson) {
     htmlarray.push('<thead>');
 
     htmlarray.push('<tr>');
-    htmlarray.push('<th>');
+    htmlarray.push('<th width="50%">');
     htmlarray.push('<b>Study Info</b> ');
     htmlarray.push('</th>');
-    htmlarray.push('<th>');
+    htmlarray.push('<th width="50%">');
     htmlarray.push('<b>Values</b> ');
     htmlarray.push('</th>');
     htmlarray.push('</tr>');
