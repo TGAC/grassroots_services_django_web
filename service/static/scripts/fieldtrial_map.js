@@ -70,7 +70,8 @@ function startFieldTrialGIS(jsonArray, type_param) {
         $('.table').DataTable({
             "ordering": false,
             "paging": false,
-            "searching": false
+            "searching": false,
+            "info": false
         });
     } else {
         produceFieldtrialTable(filtered_data_without_location.concat(filtered_data_with_location), type_param);
