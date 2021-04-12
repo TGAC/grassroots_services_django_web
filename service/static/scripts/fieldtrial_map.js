@@ -451,100 +451,101 @@ function create_study_modal_html(array) {
 
 function create_study_info_html(studyJson) {
     var htmlarray = [];
-    // htmlarray.push('<div class="container">');
-    if (studyJson["parent_field_trial_name"] != undefined) {
-        htmlarray.push('<div class="row">');
-        htmlarray.push('<div class="col-2">');
+    htmlarray.push('<table class="table">');
+    htmlarray.push('<thead>');
+
+    htmlarray.push('<tr>');
+    htmlarray.push('<th>');
+    htmlarray.push('<b>Study Info</b> ');
+    htmlarray.push('</th>');
+    htmlarray.push('<th>');
+    htmlarray.push('<b>Values</b> ');
+    htmlarray.push('</th>');
+    htmlarray.push('</tr>');
+    htmlarray.push('<thead>');
+    htmlarray.push('<tbody>');
+    if (studyJson["parent_program"] != undefined) {
+
+    }
+    if (studyJson["parent_field_trial"] != undefined) {
+        htmlarray.push('<tr>');
+        htmlarray.push('<td>');
         htmlarray.push('<b>Field Trial Name:</b> ');
-        htmlarray.push('</div>');
-        htmlarray.push('<div class="col-10">');
-        htmlarray.push(studyJson["parent_field_trial_name"]);
-        htmlarray.push('</div>');
-        htmlarray.push('</div>');
-        htmlarray.push('<br/>');
+        htmlarray.push('</td>');
+        htmlarray.push('<td>');
+        htmlarray.push(studyJson["parent_field_trial"]['so:name']);
+        htmlarray.push('</td>');
+        htmlarray.push('</tr>');
     }
 
-    // htmlarray.push('Study Name: ' + studyJson['so:name'] + '<br/>');
-    htmlarray.push('<div class="row">');
-    htmlarray.push('<div class="col-2">');
+    htmlarray.push('<tr>');
+    htmlarray.push('<td>');
     htmlarray.push('<b>Study Name:</b> ');
-    htmlarray.push('</div>');
-    htmlarray.push('<div class="col-10">');
+    htmlarray.push('</td>');
+    htmlarray.push('<td>');
     htmlarray.push(studyJson['so:name']);
-    htmlarray.push('</div>');
-    htmlarray.push('</div>');
+    htmlarray.push('</td>');
+    htmlarray.push('</tr>');
 
-    // htmlarray.push('Study Description: ' + SafePrint(studyJson['so:description']) + '<br/>');
-    // htmlarray.push('<div class="row">');
-    // htmlarray.push('<div class="col-2">');
-    // htmlarray.push('<b>Study Description:</b> ');
-    // htmlarray.push('</div>');
-    // htmlarray.push('<div class="col-10">');
-    // htmlarray.push(SafePrint(studyJson['so:description']));
-    // htmlarray.push('</div>');
-    // htmlarray.push('</div>');
-
-    // htmlarray.push('Study Design: ' + SafePrint(studyJson['study_design']) + '<br/>');
-    htmlarray.push('<div class="row">');
-    htmlarray.push('<div class="col-2">');
+    htmlarray.push('<tr>');
+    htmlarray.push('<td>');
     htmlarray.push('<b>Study Design:</b> ');
-    htmlarray.push('</div>');
-    htmlarray.push('<div class="col-10">');
+    htmlarray.push('</td>');
+    htmlarray.push('<td>');
     htmlarray.push(SafePrint(studyJson['study_design']));
-    htmlarray.push('</div>');
-    htmlarray.push('</div>');
+    htmlarray.push('</td>');
+    htmlarray.push('</tr>');
 
-    // htmlarray.push('Phenotype Gathering Note: ' + SafePrint(studyJson['phenotype_gathering_notes']) + '<br/>');
-    htmlarray.push('<div class="row">');
-    htmlarray.push('<div class="col-2">');
+    htmlarray.push('<tr>');
+    htmlarray.push('<td>');
     htmlarray.push('<b>Team:</b> ');
-    htmlarray.push('</div>');
-    htmlarray.push('<div class="col-10">');
+    htmlarray.push('</td>');
+    htmlarray.push('<td>');
     htmlarray.push(SafePrint(studyJson['team']));
-    htmlarray.push('</div>');
-    htmlarray.push('</div>');
-    htmlarray.push('<br/>');
+    htmlarray.push('</td>');
+    htmlarray.push('</tr>');
 
     // htmlarray.push('Sowing Date: ' + SafePrint(studyJson['sowing_date']) + '<br/>');
-    htmlarray.push('<div class="row">');
-    htmlarray.push('<div class="col-2">');
+    htmlarray.push('<tr>');
+    htmlarray.push('<td>');
     htmlarray.push('<b>Sowing Date:</b> ');
-    htmlarray.push('</div>');
-    htmlarray.push('<div class="col-10">');
+    htmlarray.push('</td>');
+    htmlarray.push('<td>');
     htmlarray.push(SafePrint(studyJson['sowing_date']));
-    htmlarray.push('</div>');
-    htmlarray.push('</div>');
+    htmlarray.push('</td>');
+    htmlarray.push('</tr>');
 
     // htmlarray.push('Harvest Date: ' + SafePrint(studyJson['harvest_date']) + '<br/>');
-    htmlarray.push('<div class="row">');
-    htmlarray.push('<div class="col-2">');
+    htmlarray.push('<tr>');
+    htmlarray.push('<td>');
     htmlarray.push('<b>Harvest Date:</b> ');
-    htmlarray.push('</div>');
-    htmlarray.push('<div class="col-10">');
+    htmlarray.push('</td>');
+    htmlarray.push('<td>');
     htmlarray.push(SafePrint(studyJson['harvest_date']));
-    htmlarray.push('</div>');
-    htmlarray.push('</div>');
+    htmlarray.push('</td>');
+    htmlarray.push('</tr>');
 
     // htmlarray.push('Plots: ' + get_study_plots_link(studyJson) + '<br/>');
-    htmlarray.push('<div class="row">');
-    htmlarray.push('<div class="col-2">');
+    htmlarray.push('<tr>');
+    htmlarray.push('<td>');
     htmlarray.push('<b>Plots:</b> ');
-    htmlarray.push('</div>');
-    htmlarray.push('<div class="col-10">');
+    htmlarray.push('</td>');
+    htmlarray.push('<td>');
     htmlarray.push(get_study_plots_link(studyJson));
-    htmlarray.push('</div>');
-    htmlarray.push('</div>');
-    htmlarray.push('<br/>');
+    htmlarray.push('</td>');
+    htmlarray.push('</tr>');
 
     // htmlarray.push('Address: ' + get_study_address(studyJson, false) + '<br/>');
-    htmlarray.push('<div class="row">');
-    htmlarray.push('<div class="col-2">');
+    htmlarray.push('<tr>');
+    htmlarray.push('<td>');
     htmlarray.push('<b>Address:</b> ');
-    htmlarray.push('</div>');
-    htmlarray.push('<div class="col-10">');
+    htmlarray.push('</td>');
+    htmlarray.push('<td>');
     htmlarray.push(get_study_address(studyJson, false));
-    htmlarray.push('</div>');
-    htmlarray.push('</div>');
+    htmlarray.push('</td>');
+    htmlarray.push('</tr>');
+    htmlarray.push('</tbody>');
+    htmlarray.push('</table>');
 
     // htmlarray.push('</div>');
     htmlarray.push('<hr/>');
@@ -634,7 +635,7 @@ function displayFTLocations(array, type_param) {
             markersGroup2.addLayer(shape_layer);
             var layerGroup = L.geoJson(geo_json, {
                 onEachFeature: function (feature, layer) {
-                    layer.bindPopup('Study: '+ SafePrint(geo_json['name']) +'<br/>Plot ID: '+SafePrint(feature.properties['plot_id']));
+                    layer.bindPopup('Study: ' + SafePrint(geo_json['name']) + '<br/>Plot ID: ' + SafePrint(feature.properties['plot_id']));
                     // layer.bindPopup('<p>Plot No.:</p>');
                 }
             });
