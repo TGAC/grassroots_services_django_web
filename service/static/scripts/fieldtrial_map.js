@@ -476,7 +476,7 @@ function create_study_info_html(studyJson) {
 
     htmlarray.push('<tr>');
     htmlarray.push('<td>');
-    htmlarray.push('<b>Min PH:</b> ');
+    htmlarray.push('<b>Min pH:</b> ');
     htmlarray.push('</td>');
     htmlarray.push('<td>');
     htmlarray.push(SafePrint(studyJson['min_ph']));
@@ -485,7 +485,7 @@ function create_study_info_html(studyJson) {
 
     htmlarray.push('<tr>');
     htmlarray.push('<td>');
-    htmlarray.push('<b>Max PH:</b> ');
+    htmlarray.push('<b>Max pH:</b> ');
     htmlarray.push('</td>');
     htmlarray.push('<td>');
     htmlarray.push(SafePrint(studyJson['max_ph']));
@@ -513,7 +513,7 @@ function create_study_info_html(studyJson) {
 
     htmlarray.push('<tr>');
     htmlarray.push('<td>');
-    htmlarray.push('<b>Phenotype Gathering Nots:</b> ');
+    htmlarray.push('<b>Phenotype Gathering Notes:</b> ');
     htmlarray.push('</td>');
     htmlarray.push('<td>');
     htmlarray.push(SafePrint(studyJson['phenotype_gathering_notes']));
