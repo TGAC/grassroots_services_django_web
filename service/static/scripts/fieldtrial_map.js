@@ -17,8 +17,10 @@ var colorJSON = {
 };
 var plotsModalInfo = {};
 var formatted_treatments = [];
+var type_param_global = '';
 
 function startFieldTrialGIS(jsonArray, type_param) {
+    type_param_global = type_param;
     console.log(JSON.stringify(jsonArray));
     var filtered_data_with_location = [];
     var filtered_data_without_location = [];
@@ -90,25 +92,8 @@ function produceFieldtrialTable(data, type_param) {
             {
                 title: "Programme",
                 "render": function (data, type, full, meta) {
-                    let result = '';
-                    if (full['parent_program'] !== undefined) {
-                        if (full['parent_program']['so:image'] !== undefined) {
-                            result = result + ' <img src="' + full['parent_program']['so:image'] + '" height="32px;"/><br/> ';
-                        }
-                        if (full['parent_program']['so:name'] !== undefined) {
-                            result = result + ' ' + SafePrint(full['parent_program']['so:name']) + '<br/>';
-                        }
-                        if (full['parent_program']['principal_investigator'] !== undefined) {
-                            let pi_name = full['parent_program']['principal_investigator']['so:name'];
-                            if (full['parent_program']['principal_investigator']['so:email'] !== undefined) {
-                                let pi_email = full['parent_program']['principal_investigator']['so:email'];
-                                result = result + ' <a href="mailto:' + pi_email + '" target="_blank">' + pi_name + '</a>';
-                            } else {
-                                result = result + ' ' + SafePrint(pi_name);
-                            }
-                        }
-                    }
-                    return result;
+
+                    return format_study_parent_program(full);
                 }
             },
             {
@@ -200,50 +185,27 @@ function produceFieldtrialTable(data, type_param) {
             {
                 title: "Treatment Factors",
                 "render": function (data, type, full, meta) {
-                    var studyId = full['_id']['$oid'];
-                    var treatment = '';
-                    if (full['treatment_factors'] !== undefined && full['treatment_factors'] !== null && type_param !== 'AllFieldTrials') {
-                        if (full['treatment_factors'].length > 0) {
-                            treatment = '<span style="cursor:pointer;" class="newstyle_link" onclick="plotModal(\'' + studyId + 'treatment\')">Treatment Factors</span>'
-                        }
-                    }
+                    // var studyId = full['_id']['$oid'];
+                    // var treatment = '';
+                    // if (full['treatment_factors'] !== undefined && full['treatment_factors'] !== null && type_param !== 'AllFieldTrials') {
+                    //     if (full['treatment_factors'].length > 0) {
+                    //         treatment = '<span style="cursor:pointer;" class="newstyle_link" onclick="plotModal(\'' + studyId + 'treatment\')">Treatment Factors</span>'
+                    //     }
+                    // }
                     // return '<ul><li><span style="cursor:pointer;" class="newstyle_link" onclick="plotModal(\'' + studyId + '\')">Study Info</span></li>' + treatment + '</ul>';
-                    return treatment;
+                    return format_study_treatment_facotrs_link(full);
                 }
             }
             ,
             {
                 title: "Contacts",
                 "render": function (data, type, full, meta) {
-                    var studyId = full['_id']['$oid'];
-                    var study_result = '';
-
-                    if (full['curator'] !== undefined) {
-                        let curator_name = full['curator']['so:name'];
-                        if (full['curator']['so:email'] !== undefined) {
-                            let curator_email = full['curator']['so:email'];
-                            study_result = study_result + 'Curator: <a href="mailto:' + curator_email + '" target="_blank">' + curator_name + '</a>';
-                        } else {
-                            study_result = study_result + 'Curator: ' + curator_name;
-                        }
-
-                    }
-                    if (full['contact'] !== undefined) {
-                        let contact_name = full['contact']['so:name'];
-                        if (full['contact']['so:email'] !== undefined) {
-                            let contact_email = full['contact']['so:email'];
-                            study_result = study_result + '<br/>Contact: <a href="mailto:' + contact_email + '" target="_blank">' + contact_name + '</a>';
-                        } else {
-                            study_result = study_result + '<br/>Contact: ' + contact_name;
-                        }
-                    }
-                    return study_result;
+                    return format_study_contacts(full);
                 }
             },
             {
                 title: "Download",
                 "render": function (data, type, full, meta) {
-                    var studyId = full['_id']['$oid'];
                     var download = '';
                     if (full['frictionless_data_package_url'] !== undefined) {
                         var link = full['frictionless_data_package_url'];
@@ -434,6 +396,88 @@ function create_study_modal_html(array) {
 
 }
 
+function format_study_parent_program(full) {
+    let result = '';
+    if (full['parent_program'] !== undefined) {
+        if (full['parent_program']['so:image'] !== undefined) {
+            result = result + ' <img src="' + full['parent_program']['so:image'] + '" height="32px;"/><br/> ';
+        }
+        if (full['parent_program']['so:name'] !== undefined) {
+            result = result + ' ' + SafePrint(full['parent_program']['so:name']) + '<br/>';
+        }
+        if (full['parent_program']['principal_investigator'] !== undefined) {
+            let pi_name = full['parent_program']['principal_investigator']['so:name'];
+            if (full['parent_program']['principal_investigator']['so:email'] !== undefined) {
+                let pi_email = full['parent_program']['principal_investigator']['so:email'];
+                result = result + ' <a href="mailto:' + pi_email + '" target="_blank">' + pi_name + '</a>';
+            } else {
+                result = result + ' ' + SafePrint(pi_name);
+            }
+        }
+    }
+    return result;
+}
+
+function format_study_contacts(full) {
+
+    return 'Curator: ' + format_study_curator(full) + '<br/>Contact: ' + format_study_contact(full);
+}
+
+function format_study_curator(full) {
+    var study_result = '';
+    if (full['curator'] !== undefined) {
+        let curator_name = full['curator']['so:name'];
+        if (full['curator']['so:email'] !== undefined) {
+            let curator_email = full['curator']['so:email'];
+            study_result = '<a href="mailto:' + curator_email + '" target="_blank">' + curator_name + '</a>';
+        } else {
+            study_result = curator_name;
+        }
+
+    }
+    return study_result;
+
+}
+
+function format_study_contact(full) {
+    var study_result = '';
+    if (full['contact'] !== undefined) {
+        let contact_name = full['contact']['so:name'];
+        if (full['contact']['so:email'] !== undefined) {
+            let contact_email = full['contact']['so:email'];
+            study_result = '<a href="mailto:' + contact_email + '" target="_blank">' + contact_name + '</a>';
+        } else {
+            study_result = contact_name;
+        }
+    }
+    return study_result;
+
+}
+
+function format_study_treatment_facotrs_link(full) {
+    var studyId = full['_id']['$oid'];
+    var treatment = '';
+    if (full['treatment_factors'] !== undefined && full['treatment_factors'] !== null && type_param_global !== 'AllFieldTrials') {
+        if (full['treatment_factors'].length > 0) {
+            treatment = '<span style="cursor:pointer;" class="newstyle_link" onclick="plotModal(\'' + studyId + 'treatment\')">Treatment Factors</span>'
+        }
+    }
+    return treatment;
+}
+
+function format_crop(crop_json) {
+    var crop = '';
+    if (crop_json !== undefined) {
+        if (crop_json['so:name'] !== undefined) {
+            crop = crop_json['so:name'];
+            if (crop_json['so:url'] !== undefined) {
+                crop = '<a href="' + crop_json['so:url'] + '" target="_blank">' + crop_json['so:name'] + '</a>';
+            }
+        }
+    }
+    return crop;
+}
+
 function create_study_info_html(studyJson) {
     var htmlarray = [];
     htmlarray.push('<table class="table table-bordered">');
@@ -449,10 +493,39 @@ function create_study_info_html(studyJson) {
     htmlarray.push('</tr>');
     htmlarray.push('<thead>');
     htmlarray.push('<tbody>');
-    if (studyJson["parent_program"] != undefined) {
 
+    htmlarray.push('<tr>');
+    htmlarray.push('<td>');
+    htmlarray.push('<b>Study Name:</b> ');
+    htmlarray.push('</td>');
+    htmlarray.push('<td>');
+    htmlarray.push(studyJson['so:name']);
+    htmlarray.push('</td>');
+    htmlarray.push('</tr>');
+
+    htmlarray.push('<tr>');
+    htmlarray.push('<td>');
+    htmlarray.push('<b>Study Description:</b> ');
+    htmlarray.push('</td>');
+    htmlarray.push('<td>');
+    htmlarray.push(studyJson['so:description']);
+    htmlarray.push('</td>');
+    htmlarray.push('</tr>');
+
+    if (studyJson["parent_program"] !== undefined) {
+
+
+        htmlarray.push('<tr>');
+        htmlarray.push('<td>');
+        htmlarray.push('<b>Programme:</b> ');
+        htmlarray.push('</td>');
+        htmlarray.push('<td>');
+        htmlarray.push(format_study_parent_program(studyJson));
+        htmlarray.push('</td>');
+        htmlarray.push('</tr>');
     }
-    if (studyJson["parent_field_trial"] != undefined) {
+
+    if (studyJson["parent_field_trial"] !== undefined) {
         var ftId = studyJson['parent_field_trial']['_id']['$oid'];
         var ft_name = '<a target="_blank" style="newstyle_link" href="/fieldtrial/' + ftId + '" target="_blank">' + studyJson['parent_field_trial']['so:name'] + '</a>';
         htmlarray.push('<tr>');
@@ -465,14 +538,6 @@ function create_study_info_html(studyJson) {
         htmlarray.push('</tr>');
     }
 
-    htmlarray.push('<tr>');
-    htmlarray.push('<td>');
-    htmlarray.push('<b>Study Name:</b> ');
-    htmlarray.push('</td>');
-    htmlarray.push('<td>');
-    htmlarray.push(studyJson['so:name']);
-    htmlarray.push('</td>');
-    htmlarray.push('</tr>');
 
     htmlarray.push('<tr>');
     htmlarray.push('<td>');
@@ -506,7 +571,7 @@ function create_study_info_html(studyJson) {
     htmlarray.push('<b>Team:</b> ');
     htmlarray.push('</td>');
     htmlarray.push('<td>');
-    htmlarray.push(SafePrint(studyJson['team']));
+    htmlarray.push(SafePrint(studyJson["parent_field_trial"]['team']));
     htmlarray.push('</td>');
     htmlarray.push('</tr>');
 
@@ -561,7 +626,7 @@ function create_study_info_html(studyJson) {
     htmlarray.push('<b>Current Crop:</b> ');
     htmlarray.push('</td>');
     htmlarray.push('<td>');
-    htmlarray.push(SafePrint(studyJson['current_crop']));
+    htmlarray.push(format_crop(studyJson['current_crop']));
     htmlarray.push('</td>');
     htmlarray.push('</tr>');
 
@@ -570,7 +635,7 @@ function create_study_info_html(studyJson) {
     htmlarray.push('<b>Previous Crop:</b> ');
     htmlarray.push('</td>');
     htmlarray.push('<td>');
-    htmlarray.push(SafePrint(studyJson['previous_crop']));
+    htmlarray.push(format_crop(studyJson['previous_crop']));
     htmlarray.push('</td>');
     htmlarray.push('</tr>');
 
@@ -583,7 +648,6 @@ function create_study_info_html(studyJson) {
     htmlarray.push('</td>');
     htmlarray.push('</tr>');
 
-    // htmlarray.push('Plots: ' + get_study_plots_link(studyJson) + '<br/>');
     htmlarray.push('<tr>');
     htmlarray.push('<td>');
     htmlarray.push('<b>Plots:</b> ');
@@ -599,6 +663,33 @@ function create_study_info_html(studyJson) {
     htmlarray.push('</td>');
     htmlarray.push('<td>');
     htmlarray.push(get_study_address(studyJson, false));
+    htmlarray.push('</td>');
+    htmlarray.push('</tr>');
+
+    htmlarray.push('<tr>');
+    htmlarray.push('<td>');
+    htmlarray.push('<b>Treatment Factors:</b> ');
+    htmlarray.push('</td>');
+    htmlarray.push('<td>');
+    htmlarray.push(format_study_treatment_facotrs_link(studyJson));
+    htmlarray.push('</td>');
+    htmlarray.push('</tr>');
+
+    htmlarray.push('<tr>');
+    htmlarray.push('<td>');
+    htmlarray.push('<b>Curator:</b> ');
+    htmlarray.push('</td>');
+    htmlarray.push('<td>');
+    htmlarray.push(format_study_curator(studyJson));
+    htmlarray.push('</td>');
+    htmlarray.push('</tr>');
+
+    htmlarray.push('<tr>');
+    htmlarray.push('<td>');
+    htmlarray.push('<b>Contact:</b> ');
+    htmlarray.push('</td>');
+    htmlarray.push('<td>');
+    htmlarray.push(format_study_contact(studyJson));
     htmlarray.push('</td>');
     htmlarray.push('</tr>');
 
