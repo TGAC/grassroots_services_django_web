@@ -436,7 +436,7 @@ function create_study_modal_html(array) {
 
 function create_study_info_html(studyJson) {
     var htmlarray = [];
-    htmlarray.push('<table class="table cell-border">');
+    htmlarray.push('<table class="table table-bordered">');
     htmlarray.push('<thead>');
 
     htmlarray.push('<tr>');
