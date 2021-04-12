@@ -8,6 +8,7 @@ from .grassroots_fieldtrial_requests import get_all_fieldtrials
 from .grassroots_fieldtrial_requests import get_fieldtrial
 from .grassroots_fieldtrial_requests import get_study
 from .grassroots_fieldtrial_requests import get_plot
+from .grassroots_fieldtrial_requests import search_fieldtrial
 
 
 def index_loading(request):
@@ -30,3 +31,8 @@ def single_plot(request, plot_id):
     plot_json = json.loads(plot)
     study_name = plot_json['results'][0]['results'][0]['data']['so:name']
     return render(request, 'plots.html', {'data': plot, 'plot_id': plot_id, 'study_name': study_name})
+
+def search_fieldtrial(request):
+    data = request.POST.get('search_str', False)
+    response_json = search_fieldtrial(data)
+    return HttpResponse(response_json)

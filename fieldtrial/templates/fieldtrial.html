@@ -1,5 +1,6 @@
-{%  include "header.html" %}
+{% include "header.html" %}
 <!--content-->
+{% csrf_token %}
 <style type="text/css">
     .modal-body {
         height: 250px;
@@ -102,6 +103,7 @@
         </div>
 
         <script type="text/javascript">
+            var csrftoken = $('input[name$="csrfmiddlewaretoken"]').val();
             $(document).ready(function () {
                 $('#plots').html('<img src="../../static/images/ajax-loader.gif"/>');
                 $('#result').html('');

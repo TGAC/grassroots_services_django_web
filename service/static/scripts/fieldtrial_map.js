@@ -295,8 +295,11 @@ function produceFieldtrialTable(data, type_param) {
             if (req_json) {
                 $.ajax({
                     type: "POST",
-                    url: server_url,
-                    data: JSON.stringify(req_json),
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    },
+                    url: '/fieldtrial/ajax/get_fieldtrial/',
+                    data: {'search_str': search_value},
                     dataType: "json",
                     contentType: "application/json; charset=utf-8"
                 }).done(function (ft_json) {
@@ -641,7 +644,7 @@ function create_study_info_html(studyJson) {
     htmlarray.push('</td>');
     htmlarray.push('</tr>');
 
-    if(studyJson['current_crop']!==undefined) {
+    if (studyJson['current_crop'] !== undefined) {
         htmlarray.push('<tr>');
         htmlarray.push('<td>');
         htmlarray.push('<b>Current Crop:</b> ');
@@ -652,7 +655,7 @@ function create_study_info_html(studyJson) {
         htmlarray.push('</tr>');
     }
 
-    if(studyJson['previous_crop']!==undefined) {
+    if (studyJson['previous_crop'] !== undefined) {
         htmlarray.push('<tr>');
         htmlarray.push('<td>');
         htmlarray.push('<b>Previous Crop:</b> ');
