@@ -1,0 +1,193 @@
+{%  include "header.html" %}
+<!--content-->
+<style type="text/css">
+    .modal-body {
+        height: 250px;
+        overflow-y: auto;
+    }
+
+    @media (min-height: 500px) {
+        .modal-body {
+            height: 400px;
+        }
+    }
+
+    @media (min-height: 800px) {
+        .modal-body {
+            height: 600px;
+        }
+    }
+
+    #resultTable td, th {
+        text-align: center;
+    }
+
+    @media (max-width: 767px) {
+        section h2 {
+            font-size: 1em;
+            margin: 0;
+        }
+
+        #map_buttons {
+            position: absolute;
+            top: 150px;
+            border: 1px solid;
+            display: none;
+        }
+    }
+
+    @media (min-width: 767px) {
+        #map_buttons {
+            position: absolute;
+            top: 200px;
+            display: none;
+        }
+    }
+</style>
+
+<section id="services" style="padding: 100px 0px 100px 0px ! important;">
+    <div class="container">
+        <h2 id="title">Browse Field Trials</h2>
+
+
+        <p id="description"></p>
+        <form id="form" role="form">
+            <div class="list_service_table">
+                <table id="listTable"></table>
+            </div>
+        </form>
+        <div id="status"></div>
+        <div id="output_format_div" style="display:none; float:right;">
+            <p>Download job format
+                <select id="output_format" onchange="changeDownloadFormat();">
+
+                </select>
+            </p>
+        </div>
+        <div style="clear:both;"></div>
+
+        <div id="result"><img src="../../static/images/ajax-loader.gif"/></div>
+
+        <div id="map"></div>
+        <div id="map_buttons">
+            <div class="input-group">
+               <span class="input-group-btn" id="locationButton">
+                    <button type="button" class="btn btn-default" onclick="update_map_location();">My Location
+                    </button>
+               </span>
+            </div>
+        </div>
+        <div id="tableWrapper">
+            <table id="resultTable"></table>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal " tabindex="-1" role="dialog" id="plotModal" style="z-index: 999999;">
+            <div class="modal-dialog  modal-dialog-centered" role="document">
+                <div class="modal-content" style="z-index: 9999999;">
+                    <div class="modal-header">
+                        <h5 class="modal-title"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="modal-body">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#plots').html('<img src="../../static/images/ajax-loader.gif"/>');
+                $('#result').html('');
+                start_map({{ data|safe }}, '{{ type|safe }}');
+
+            });
+
+            var location_layer_marker = new L.MarkerClusterGroup({});
+            var location_layer_circle = new L.MarkerClusterGroup({});
+
+            function start_map(ft_json, type_param) {
+                $('#simpleAdvanceWrapper').hide();
+                $('#status').html('');
+                $('#form').html('');
+                $('#tableWrapper').html('<table id="resultTable"></table>');
+                // $('#result').html(JSON.stringify(json['results'][0]['results'][0]['data']));
+                markersGroup2 = new L.MarkerClusterGroup({});
+                // markersGroup_current_location = new L.MarkerClusterGroup({});
+                map = L.map('map', {zoomControl: false}).setView([52.621615, 10.219470], 5);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+                    maxZoom: 25
+                }).addTo(map);
+
+                L.control.zoom({position: 'topright'}).addTo(map);
+                L.control.scale().addTo(map);
+
+                startFieldTrialGIS(ft_json['results'][0]['results'], type_param);
+                $('#map_buttons').show();
+
+                function onLocationFound(e) {
+
+                    map.removeLayer(location_layer_marker);
+                    map.removeLayer(location_layer_circle);
+
+                    location_layer_marker = new L.MarkerClusterGroup({});
+                    location_layer_circle = new L.MarkerClusterGroup({});
+
+                    var radius = e.accuracy;
+
+                    L.marker(e.latlng)
+                        .bindPopup("You are within " + radius + " meters from this point").openPopup().addTo(location_layer_marker);
+
+                    L.circle(e.latlng, radius).addTo(location_layer_circle);
+
+                    // markersGroup_current_location.addLayer(L.marker(e.latlng).bindPopup("You are within " + radius + " meters from this point").openPopup());
+                    // markersGroup_current_location.addLayer(L.circle(e.latlng, radius));
+                    map.addLayer(location_layer_marker);
+                    map.addLayer(location_layer_circle);
+                }
+
+                map.on('locationfound', onLocationFound);
+
+                function onLocationError(e) {
+                    console.log(e.message);
+                }
+
+                map.on('locationerror', onLocationError);
+            }
+
+            let locateIntervalId;
+
+            function locate() {
+                // map.locate({setView: true, maxZoom: 16});
+                map.locate();
+                // console.log("updated location");
+            }
+
+
+            function update_map_location() {
+                map.locate({setView: true, maxZoom: 16});
+                locateIntervalId = setInterval(locate, 1000);
+                $('#locationButton').html('<button type="button" class="btn btn-default" onclick="stop_update_map_location();">Stop Location</button>');
+            }
+
+            function stop_update_map_location() {
+                clearInterval(locateIntervalId);
+                $('#locationButton').html('<button type="button" class="btn btn-default" onclick="update_map_location();">My Location</button>');
+                map.removeLayer(location_layer_marker);
+                map.removeLayer(location_layer_circle);
+            }
+
+        </script>
+    </div>
+</section>
+<!--footer-->
+
+{% include "footer.html" %}
