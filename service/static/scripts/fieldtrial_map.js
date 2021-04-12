@@ -644,6 +644,15 @@ function create_study_info_html(studyJson) {
 
     htmlarray.push('<tr>');
     htmlarray.push('<td>');
+    htmlarray.push('<b>Sowing Date:</b> ');
+    htmlarray.push('</td>');
+    htmlarray.push('<td>');
+    htmlarray.push(SafePrint(studyJson['sowing_date']));
+    htmlarray.push('</td>');
+    htmlarray.push('</tr>');
+
+    htmlarray.push('<tr>');
+    htmlarray.push('<td>');
     htmlarray.push('<b>Harvest Date:</b> ');
     htmlarray.push('</td>');
     htmlarray.push('<td>');
