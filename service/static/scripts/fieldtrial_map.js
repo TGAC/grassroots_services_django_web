@@ -474,6 +474,24 @@ function create_study_info_html(studyJson) {
 
     htmlarray.push('<tr>');
     htmlarray.push('<td>');
+    htmlarray.push('<b>Min PH:</b> ');
+    htmlarray.push('</td>');
+    htmlarray.push('<td>');
+    htmlarray.push(SafePrint(studyJson['min_ph']));
+    htmlarray.push('</td>');
+    htmlarray.push('</tr>');
+
+    htmlarray.push('<tr>');
+    htmlarray.push('<td>');
+    htmlarray.push('<b>Max PH:</b> ');
+    htmlarray.push('</td>');
+    htmlarray.push('<td>');
+    htmlarray.push(SafePrint(studyJson['max_ph']));
+    htmlarray.push('</td>');
+    htmlarray.push('</tr>');
+
+    htmlarray.push('<tr>');
+    htmlarray.push('<td>');
     htmlarray.push('<b>Study Design:</b> ');
     htmlarray.push('</td>');
     htmlarray.push('<td>');
@@ -490,17 +508,70 @@ function create_study_info_html(studyJson) {
     htmlarray.push('</td>');
     htmlarray.push('</tr>');
 
-    // htmlarray.push('Sowing Date: ' + SafePrint(studyJson['sowing_date']) + '<br/>');
+
     htmlarray.push('<tr>');
     htmlarray.push('<td>');
-    htmlarray.push('<b>Sowing Date:</b> ');
+    htmlarray.push('<b>Phenotype Gathering Nots:</b> ');
     htmlarray.push('</td>');
     htmlarray.push('<td>');
-    htmlarray.push(SafePrint(studyJson['sowing_date']));
+    htmlarray.push(SafePrint(studyJson['phenotype_gathering_notes']));
     htmlarray.push('</td>');
     htmlarray.push('</tr>');
 
-    // htmlarray.push('Harvest Date: ' + SafePrint(studyJson['harvest_date']) + '<br/>');
+    htmlarray.push('<tr>');
+    htmlarray.push('<td>');
+    htmlarray.push('<b>Soil:</b> ');
+    htmlarray.push('</td>');
+    htmlarray.push('<td>');
+    htmlarray.push(SafePrint(studyJson['soil']));
+    htmlarray.push('</td>');
+    htmlarray.push('</tr>');
+
+    htmlarray.push('<tr>');
+    htmlarray.push('<td>');
+    htmlarray.push('<b>Slope:</b> ');
+    htmlarray.push('</td>');
+    htmlarray.push('<td>');
+    htmlarray.push(SafePrint(studyJson['envo:00002000']));
+    htmlarray.push('</td>');
+    htmlarray.push('</tr>');
+
+    htmlarray.push('<tr>');
+    htmlarray.push('<td>');
+    htmlarray.push('<b>Aspect:</b> ');
+    htmlarray.push('</td>');
+    htmlarray.push('<td>');
+    htmlarray.push(SafePrint(studyJson['ncit:C42677']));
+    htmlarray.push('</td>');
+    htmlarray.push('</tr>');
+
+    htmlarray.push('<tr>');
+    htmlarray.push('<td>');
+    htmlarray.push('<b>Weather:</b> ');
+    htmlarray.push('</td>');
+    htmlarray.push('<td>');
+    htmlarray.push(SafePrint(studyJson['weather']));
+    htmlarray.push('</td>');
+    htmlarray.push('</tr>');
+
+    htmlarray.push('<tr>');
+    htmlarray.push('<td>');
+    htmlarray.push('<b>Current Crop:</b> ');
+    htmlarray.push('</td>');
+    htmlarray.push('<td>');
+    htmlarray.push(SafePrint(studyJson['current_crop']));
+    htmlarray.push('</td>');
+    htmlarray.push('</tr>');
+
+    htmlarray.push('<tr>');
+    htmlarray.push('<td>');
+    htmlarray.push('<b>Previous Crop:</b> ');
+    htmlarray.push('</td>');
+    htmlarray.push('<td>');
+    htmlarray.push(SafePrint(studyJson['previous_crop']));
+    htmlarray.push('</td>');
+    htmlarray.push('</tr>');
+
     htmlarray.push('<tr>');
     htmlarray.push('<td>');
     htmlarray.push('<b>Harvest Date:</b> ');
@@ -520,7 +591,6 @@ function create_study_info_html(studyJson) {
     htmlarray.push('</td>');
     htmlarray.push('</tr>');
 
-    // htmlarray.push('Address: ' + get_study_address(studyJson, false) + '<br/>');
     htmlarray.push('<tr>');
     htmlarray.push('<td>');
     htmlarray.push('<b>Address:</b> ');
@@ -529,6 +599,19 @@ function create_study_info_html(studyJson) {
     htmlarray.push(get_study_address(studyJson, false));
     htmlarray.push('</td>');
     htmlarray.push('</tr>');
+
+    if (studyJson['so:url'] !== undefined) {
+        htmlarray.push('<tr>');
+        htmlarray.push('<td>');
+        htmlarray.push('<b>More info:</b> ');
+        htmlarray.push('</td>');
+        htmlarray.push('<td>');
+        htmlarray.push('<a href="' + studyJson['so:url'] + '" target="_blank" style="newstyle_link">link</a>');
+        htmlarray.push('</td>');
+        htmlarray.push('</tr>');
+    }
+
+
     htmlarray.push('</tbody>');
     htmlarray.push('</table>');
 
@@ -720,7 +803,8 @@ function addFTPointer(la, lo, note) {
     //     markerLayer = L.marker([la, lo], {icon: greenIcon}).bindPopup(note);
     // }
     // else {
-    markerLayer = L.marker([la, lo]).bindPopup(note);
+    var popup = L.popup({maxHeight: 400}).setContent(note);
+    markerLayer = L.marker([la, lo]).bindPopup(popup).openPopup();
     // }
     // markers.push(markerLayer);
     markersGroup2.addLayer(markerLayer);
