@@ -83,7 +83,12 @@ function startFieldTrialGIS(jsonArray, type_param) {
         $('#description').append(' ' + fieldTrialName);
         $('#title').append(' Study');
     }
-    produceFieldtrialTable(filtered_data_without_location.concat(filtered_data_with_location), type_param);
+    if (type_param === 'Grassroots:Study') {
+        jQuery('#tableWrapper').html(create_study_info_html(jsonArray[0]['data']));
+    } else {
+        produceFieldtrialTable(filtered_data_without_location.concat(filtered_data_with_location), type_param);
+
+    }
 
     displayFTLocations(filtered_data_with_location, type_param);
     if (type_param !== 'AllFieldTrials') {

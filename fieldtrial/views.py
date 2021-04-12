@@ -20,7 +20,10 @@ def single_fieldtrial(request, fieldtrial_id):
     return render(request, 'fieldtrial.html', {'data': get_fieldtrial(fieldtrial_id), 'type': 'Grassroots:FieldTrial'})
 
 def single_study(request, study_id):
-    return render(request, 'study.html', {'data': get_study(study_id), 'type': 'Grassroots:Study'})
+    study = get_study(study_id)
+    # la = study[0]['address']['address']['location']['centre']['latitude']
+    # lo = study[0]['address']['address']['location']['centre']['longitude']
+    return render(request, 'study.html', {'data': study, 'type': 'Grassroots:Study'})
 
 def single_plot(request, plot_id):
     plot = get_plot(plot_id)

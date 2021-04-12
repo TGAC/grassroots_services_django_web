@@ -106,7 +106,6 @@
                 $('#plots').html('<img src="../../static/images/ajax-loader.gif"/>');
                 $('#result').html('');
                 start_map({{ data|safe }}, '{{ type|safe }}');
-
             });
 
             var location_layer_marker = new L.MarkerClusterGroup({});
@@ -132,7 +131,11 @@
 
                 startFieldTrialGIS(ft_json['results'][0]['results'], type_param);
                 $('#map_buttons').show();
-
+                if (ft_json['results'][0]['results'][0]['data']['address'] !== undefined) {
+                    var la = ft_json['results'][0]['results'][0]['data']['address']['address']['location']['centre']['latitude'];
+                    var lo = ft_json['results'][0]['results'][0]['data']['address']['address']['location']['centre']['longitude'];
+                    map.setView([la, lo], 16, {animate: true});
+                }
                 function onLocationFound(e) {
 
                     map.removeLayer(location_layer_marker);
