@@ -398,7 +398,7 @@ function create_study_modal_html(array) {
 
 function format_study_parent_program(full) {
     let result = '';
-    if (full['parent_program'] !== undefined) {
+    if (full['parent_program'] !== undefined && full['parent_program'] !== null) {
         if (full['parent_program']['so:image'] !== undefined) {
             result = result + ' <img src="' + full['parent_program']['so:image'] + '" height="32px;"/><br/> ';
         }
@@ -419,13 +419,12 @@ function format_study_parent_program(full) {
 }
 
 function format_study_contacts(full) {
-
     return 'Curator: ' + format_study_curator(full) + '<br/>Contact: ' + format_study_contact(full);
 }
 
 function format_study_curator(full) {
     var study_result = '';
-    if (full['curator'] !== undefined) {
+    if (full['curator'] !== undefined && full['curator'] !== null) {
         let curator_name = full['curator']['so:name'];
         if (full['curator']['so:email'] !== undefined) {
             let curator_email = full['curator']['so:email'];
@@ -441,7 +440,7 @@ function format_study_curator(full) {
 
 function format_study_contact(full) {
     var study_result = '';
-    if (full['contact'] !== undefined) {
+    if (full['contact'] !== undefined && full['contact'] !== null) {
         let contact_name = full['contact']['so:name'];
         if (full['contact']['so:email'] !== undefined) {
             let contact_email = full['contact']['so:email'];
@@ -467,7 +466,7 @@ function format_study_treatment_facotrs_link(full) {
 
 function format_crop(crop_json) {
     var crop = '';
-    if (crop_json !== undefined) {
+    if (crop_json !== undefined && crop_json !== null) {
         if (crop_json['so:name'] !== undefined) {
             crop = crop_json['so:name'];
             if (crop_json['so:url'] !== undefined) {
@@ -621,23 +620,27 @@ function create_study_info_html(studyJson) {
     htmlarray.push('</td>');
     htmlarray.push('</tr>');
 
-    htmlarray.push('<tr>');
-    htmlarray.push('<td>');
-    htmlarray.push('<b>Current Crop:</b> ');
-    htmlarray.push('</td>');
-    htmlarray.push('<td>');
-    htmlarray.push(format_crop(studyJson['current_crop']));
-    htmlarray.push('</td>');
-    htmlarray.push('</tr>');
+    if(studyJson['current_crop']!==undefined) {
+        htmlarray.push('<tr>');
+        htmlarray.push('<td>');
+        htmlarray.push('<b>Current Crop:</b> ');
+        htmlarray.push('</td>');
+        htmlarray.push('<td>');
+        htmlarray.push(format_crop(studyJson['current_crop']));
+        htmlarray.push('</td>');
+        htmlarray.push('</tr>');
+    }
 
-    htmlarray.push('<tr>');
-    htmlarray.push('<td>');
-    htmlarray.push('<b>Previous Crop:</b> ');
-    htmlarray.push('</td>');
-    htmlarray.push('<td>');
-    htmlarray.push(format_crop(studyJson['previous_crop']));
-    htmlarray.push('</td>');
-    htmlarray.push('</tr>');
+    if(studyJson['previous_crop']!==undefined) {
+        htmlarray.push('<tr>');
+        htmlarray.push('<td>');
+        htmlarray.push('<b>Previous Crop:</b> ');
+        htmlarray.push('</td>');
+        htmlarray.push('<td>');
+        htmlarray.push(format_crop(studyJson['previous_crop']));
+        htmlarray.push('</td>');
+        htmlarray.push('</tr>');
+    }
 
     htmlarray.push('<tr>');
     htmlarray.push('<td>');
