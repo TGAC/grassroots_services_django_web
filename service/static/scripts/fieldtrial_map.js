@@ -452,9 +452,9 @@ function format_study_curator(full) {
         let curator_name = full['curator']['so:name'];
         if (full['curator']['so:email'] !== undefined) {
             let curator_email = full['curator']['so:email'];
-            study_result = '<a href="mailto:' + curator_email + '" target="_blank">' + curator_name + '</a>';
+            study_result = '<a href="mailto:' + curator_email + '" target="_blank">' + SafePrint(curator_name) + '</a>';
         } else {
-            study_result = curator_name;
+            study_result = SafePrint(curator_name);
         }
 
     }
@@ -468,9 +468,9 @@ function format_study_contact(full) {
         let contact_name = full['contact']['so:name'];
         if (full['contact']['so:email'] !== undefined) {
             let contact_email = full['contact']['so:email'];
-            study_result = '<a href="mailto:' + contact_email + '" target="_blank">' + contact_name + '</a>';
+            study_result = '<a href="mailto:' + contact_email + '" target="_blank">' + SafePrint(contact_name) + '</a>';
         } else {
-            study_result = contact_name;
+            study_result = SafePrint(contact_name);
         }
     }
     return study_result;
