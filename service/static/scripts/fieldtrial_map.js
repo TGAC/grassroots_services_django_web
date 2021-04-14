@@ -262,7 +262,8 @@ function produceFieldtrialTable(data, type_param) {
                 lalo = [la, lo];
             }
 
-            let shape_data = JSON.parse(json['shape_data']);
+            // let shape_data = JSON.parse(json['shape_data']);
+            let shape_data = json['shape_data'];
             let coord = shape_data.features[0].geometry.coordinates;
             let zoom = 18;
             if (coord[0][0].length === 2) {
