@@ -740,13 +740,13 @@ function create_study_info_html(studyJson) {
         htmlarray.push('</tr>');
     }
 
-    if (studyJson['frictionless_data_package_url'] !== undefined) {
+    if (studyJson['so:contentUrl'] !== undefined) {
         htmlarray.push('<tr>');
         htmlarray.push('<td>');
         htmlarray.push('<b>Download:</b> ');
         htmlarray.push('</td>');
         htmlarray.push('<td>');
-        htmlarray.push('<a href="' + studyJson['so:url'] + '" target="_blank" style="newstyle_link">Frictionless Data Package</a>');
+        htmlarray.push('<a href="' + studyJson['so:contentUrl'] + '" target="_blank" style="newstyle_link">Frictionless Data Package</a>');
         htmlarray.push('</td>');
         htmlarray.push('</tr>');
     }
