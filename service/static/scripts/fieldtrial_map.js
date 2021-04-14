@@ -838,7 +838,8 @@ function displayFTLocations(array, type_param) {
         addFTPointer(la, lo, popup_note);
         // if (type_param !== 'AllFieldTrials') {
         if (array[i]['shape_data'] !== null && array[i]['shape_data'] !== undefined && array[i]['shape_data'] !== '') {
-            let geo_json = JSON.parse(array[i]['shape_data']);
+            // let geo_json = JSON.parse(array[i]['shape_data']);
+            let geo_json = array[i]['shape_data'];
             var shape_layer = L.geoJson(geo_json);
             markersGroup2.addLayer(shape_layer);
             var layerGroup = L.geoJson(geo_json, {
