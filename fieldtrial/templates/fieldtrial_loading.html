@@ -1,4 +1,5 @@
 {%  include "header.html" %}
+ {% load static %}
 <!--content-->
 <style type="text/css">
     .modal-body {
@@ -66,7 +67,7 @@
         </div>
         <div style="clear:both;"></div>
 
-        <div id="result"><img src="../static/images/ajax-loader.gif"/></div>
+        <div id="result"><img src="{% static 'images/ajax-loader.gif' %}"/></div>
 
         <div id="map"></div>
         <div id="map_buttons">
@@ -103,8 +104,8 @@
 
         <script type="text/javascript">
             $(document).ready(function () {
-                $('#plots').html('<img src="../../static/images/ajax-loader.gif"/>');
-                window.location.href = "/fieldtrial/all";
+                $('#plots').html('<img src="{% static 'images/ajax-loader.gif' %}"/>');
+                window.location.href = root_dir + "fieldtrial/all";
             });
 
         </script>

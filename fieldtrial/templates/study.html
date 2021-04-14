@@ -1,4 +1,5 @@
 {%  include "header.html" %}
+ {% load static %}
 <!--content-->
 <style type="text/css">
     .modal-dialog {
@@ -106,7 +107,7 @@
 
         <script type="text/javascript">
             $(document).ready(function () {
-                $('#plots').html('<img src="../../static/images/ajax-loader.gif"/>');
+                $('#plots').html('<img src="{% static 'images/ajax-loader.gif' %}"/>');
                 $('#result').html('');
                 start_map({{ data|safe }}, '{{ type|safe }}');
             });
