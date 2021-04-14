@@ -103,7 +103,7 @@ function produceFieldtrialTable(data, type_param) {
                     var ft_name = SafePrint(full['parent_field_trial']['so:name']);
                     if (full['parent_field_trial'] !== undefined) {
                         var ftId = full['parent_field_trial']['_id']['$oid'];
-                        ft_name = '<a href="/fieldtrial/' + ftId + '" target="_blank">' + full['parent_field_trial']['so:name'] + '</a>';
+                        ft_name = '<a href="' + root_dir + 'fieldtrial/' + ftId + '" target="_blank">' + full['parent_field_trial']['so:name'] + '</a>';
                     }
                     return ft_name;
                 }
@@ -112,7 +112,7 @@ function produceFieldtrialTable(data, type_param) {
                 title: "Study",
                 "render": function (data, type, full, meta) {
                     var studyId = full['_id']['$oid'];
-                    let study_result = '<a href="/fieldtrial/study/' + studyId + '" target="_blank">' + full['so:name'] + '</a>';
+                    let study_result = '<a href="' + root_dir + 'fieldtrial/study/' + studyId + '" target="_blank">' + full['so:name'] + '</a>';
 
                     return study_result;
                 }
@@ -377,7 +377,7 @@ function get_study_plots_link(full) {
         /* remove the quotes */
         id = id.replace(/"/g, "");
 
-        return '<a class=\"newstyle_link\" href=\"/fieldtrial/plots/' + id + '\"  target=\"_blank\">View plots</a>';
+        return '<a class=\"newstyle_link\" href=\"' + root_dir + 'fieldtrial/plots/' + id + '\"  target=\"_blank\">View plots</a>';
     } else {
         return '';
     }
@@ -550,7 +550,7 @@ function create_study_info_html(studyJson) {
 
     if (studyJson["parent_field_trial"] !== undefined) {
         var ftId = studyJson['parent_field_trial']['_id']['$oid'];
-        var ft_name = '<a target="_blank" style="newstyle_link" href="/fieldtrial/' + ftId + '" target="_blank">' + studyJson['parent_field_trial']['so:name'] + '</a>';
+        var ft_name = '<a target="_blank" style="newstyle_link" href="' + root_dir + 'fieldtrial/' + ftId + '" target="_blank">' + studyJson['parent_field_trial']['so:name'] + '</a>';
         htmlarray.push('<tr>');
         htmlarray.push('<td>');
         htmlarray.push('<b>Field Trial Name:</b> ');
