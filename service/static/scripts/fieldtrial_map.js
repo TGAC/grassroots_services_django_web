@@ -860,8 +860,10 @@ function displayFTLocations(array, type_param) {
             var layerGroup = L.geoJson(geo_json, {
                 onEachFeature: function (feature, layer) {
                     var plotId = feature.properties['plot_id'];
-                    // layer.bindPopup('Study: ' + SafePrint(geo_json['name']) + '<br/>Plot ID: ' + SafePrint(feature.properties['plot_id']));
-                    var popupContent = plotsModalInfo[plotId];
+                    var popupContent = 'Study: ' + SafePrint(geo_json['name']) + '<br/>Plot ID: ' + SafePrint(feature.properties['plot_id']);
+                    if (type_param_global === 'Grassroots:Study' && plotsModalInfo[plotId] !== undefined) {
+                        var popupContent = plotsModalInfo[plotId];
+                    }
                     layer.bindPopup(popupContent, {maxWidth: 800, maxHeight: 400});
                     // layer.bindPopup('<p>Plot No.:</p>');
                 }
