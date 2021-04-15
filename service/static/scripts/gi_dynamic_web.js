@@ -1996,7 +1996,7 @@ function construct_parameters(form) {
                 //     }
             }
             // if (value !== null) {
-            if (type === 'boolean') {
+            if (type === 'boolean' || type === 'json') {
                 parameter['current_value'] = JSON.parse(value);
             } else if (type === 'integer') {
                 parameter['current_value'] = parseInt(value);
