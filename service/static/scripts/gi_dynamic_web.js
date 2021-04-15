@@ -960,10 +960,19 @@ function produce_one_parameter_form(parameter, repeatable, group_id, refreshed) 
             form_html.push('</div>');
         }
         // textarea
-        else if (grassroots_type == "params:large_string" || grassroots_type == "params:json") {
+        else if (grassroots_type == "params:large_string" ) {
             form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + required_param_name + '</label>');
             form_html.push('<textarea class="form-control ' + required + '" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '" rows="3" ' + required + '>' + default_value + '</textarea>');
+            form_html.push('</div>');
+            textareas.push(param.replace(/\s+/g, "_"));
+
+        }
+        //json textarae
+        else if (grassroots_type == "params:json") {
+            form_html.push('<div class="form-group ' + level + '">');
+            form_html.push('<label title="' + description + '">' + display_name + required_param_name + '</label>');
+            form_html.push('<textarea class="form-control ' + required + '" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '" rows="3" ' + required + '>' + JSON.stringify(default_value) + '</textarea>');
             form_html.push('</div>');
             textareas.push(param.replace(/\s+/g, "_"));
 
