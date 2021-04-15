@@ -66,13 +66,28 @@ function startFieldTrialGIS(jsonArray, type_param) {
         $('#title').append(' Study');
     }
     if (type_param === 'Grassroots:Study') {
-        jQuery('#tableWrapper').html('<br/><br/>' + create_study_info_html(jsonArray[0]['data']));
+        let experimental_area_json = jsonArray[0]['data'];
+        jQuery('#tableWrapper').html('<br/><br/>' + create_study_info_html(experimental_area_json));
         $('.table').DataTable({
             "ordering": false,
             "paging": false,
             "searching": false,
             "info": false
         });
+        formatted_treatments = generate_treatments_html(experimental_area_json);
+        if (experimental_area_json['plots'] !== undefined && experimental_area_json['plots'] !== null) {
+            for (j = 0; j < experimental_area_json['plots'].length; j++) {
+                let plot = experimental_area_json['plots'][j];
+                if (plot['rows'].length > 0) {
+                    if (plot['rows'][0]['study_index'] !== undefined) {
+                        let plotId = plot['rows'][0]['study_index'];
+                        plotsModalInfo[plotId] = formatPlotModal(plot);
+                    }
+                }
+            }
+        }
+
+
     } else {
         produceFieldtrialTable(filtered_data_without_location.concat(filtered_data_with_location), type_param);
 
@@ -844,7 +859,10 @@ function displayFTLocations(array, type_param) {
             markersGroup2.addLayer(shape_layer);
             var layerGroup = L.geoJson(geo_json, {
                 onEachFeature: function (feature, layer) {
-                    layer.bindPopup('Study: ' + SafePrint(geo_json['name']) + '<br/>Plot ID: ' + SafePrint(feature.properties['plot_id']));
+                    var plotId = feature.properties['plot_id'];
+                    // layer.bindPopup('Study: ' + SafePrint(geo_json['name']) + '<br/>Plot ID: ' + SafePrint(feature.properties['plot_id']));
+                    var popupContent = plotsModalInfo[plotId];
+                    layer.bindPopup(popupContent, {maxWidth: 800, maxHeight: 400});
                     // layer.bindPopup('<p>Plot No.:</p>');
                 }
             });
