@@ -169,13 +169,14 @@
 
             function locate() {
                 // map.locate({setView: true, maxZoom: 16});
-                map.locate();
+                map.locate({setView: false});
                 // console.log("updated location");
             }
 
 
             function update_map_location() {
                 map.locate({setView: true, maxZoom: 16});
+                // map.stopLocate();
                 locateIntervalId = setInterval(locate, 1000);
                 $('#locationButton').html('<button type="button" class="btn btn-default" onclick="stop_update_map_location();">Stop Location</button>');
             }
