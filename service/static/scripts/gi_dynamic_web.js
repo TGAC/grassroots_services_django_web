@@ -2370,11 +2370,14 @@ function display_result(json) {
     } else {
         $('#status').html('');
         var status_text_key = json['results'][0]['status_text'];
-        if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
+        if (status_text_key == 'Succeeded') {
             $('#result').html("Done");
             if (json['results'][0]['results'] !== undefined) {
                 downloadFile(json['results'][0]['results'][0]['data'], selected_service_name);
             }
+        } else if (status_text_key == 'Partially succeeded') {
+            $('#result').html("Done, but with errors.");
+            handle_errors(json['results'][0]);
         } else if (status_text_key == 'Failed' || status_text_key == 'Failed to start' || status_text_key == 'Error') {
             var general_error = get_general_errors(json['results'][0]);
             $('#result').html('Job ID: ' + json['results'][0]['job_uuid'] + ' ' + status_text_key + '<br/>  ' + general_error);
@@ -2522,42 +2525,62 @@ function handle_errors(json) {
                     var grassroots_type = data['grassroots_type'];
                     var elementId = key.replace(/\s+/g, "_");
                     if (grassroots_type === "params:tabular" || grassroots_type === "params:json_array") {
-                        var tabular_error_array = [];
+                        if (key === 'PL Upload') {
+                            var error_html = '';
+                            var tabular_error_array = [];
 
-                        if (data['errors'] != undefined) {
-                            tabular_error_array = data['errors'];
-                            if (tabular_error_array.length > 0) {
-                                // var error_table = $('#' + elementId + ' tbody');
-                                // var error_datatable = $('#' + elementId).DataTable();
+                            if (data['errors'] != undefined) {
 
-                                for (var t = 0; t < tabular_error_array.length; t++) {
-                                    var row = tabular_error_array[t]['row'];
-                                    var column = tabular_error_array[t]['column'];
-                                    var cell_error = tabular_error_array[t]['error'];
+                                tabular_error_array = data['errors'];
+                                if (tabular_error_array.length > 0) {
+                                    error_html += 'PL Upload Sheet: <br/>';
+                                    for (var t = 0; t < tabular_error_array.length; t++) {
+                                        var row = tabular_error_array[t]['row'];
+                                        var column = tabular_error_array[t]['column'];
+                                        var cell_error = tabular_error_array[t]['error'];
+                                        error_html += 'Row: ' + row + ' Column: ' + column + ' Error: ' + cell_error + '<br/>';
+                                    }
+                                }
+                            }
+                            $('#result').append('<br/>' + error_html);
 
-                                    // var cell = error_table.rows[row].cells[column];
-                                    // var cell = error_table.rows.eq(row).find(column);
-                                    var input_name = 'tabular^' + key + '^' + row + '^' + column;
-                                    console.log(input_name);
-                                    var cell = $("input[name='" + input_name + "']");
-                                    console.log(cell);
+                        } else {
+                            var tabular_error_array = [];
 
-                                    $(cell).css({'background-color': '#ff4d4d'});
-                                    $(cell).popover({
-                                        content: cell_error,
-                                        placement: 'top',
-                                        trigger: 'manual',
-                                        animation: false
-                                    }).popover('show');
-                                    $(cell).on('click', function () {
-                                        $(this).popover('toggle');
-                                    });
+                            if (data['errors'] != undefined) {
+                                tabular_error_array = data['errors'];
+                                if (tabular_error_array.length > 0) {
+                                    // var error_table = $('#' + elementId + ' tbody');
+                                    // var error_datatable = $('#' + elementId).DataTable();
+
+                                    for (var t = 0; t < tabular_error_array.length; t++) {
+                                        var row = tabular_error_array[t]['row'];
+                                        var column = tabular_error_array[t]['column'];
+                                        var cell_error = tabular_error_array[t]['error'];
+
+                                        // var cell = error_table.rows[row].cells[column];
+                                        // var cell = error_table.rows.eq(row).find(column);
+                                        var input_name = 'tabular^' + key + '^' + row + '^' + column;
+                                        console.log(input_name);
+                                        var cell = $("input[name='" + input_name + "']");
+                                        console.log(cell);
+
+                                        $(cell).css({'background-color': '#ff4d4d'});
+                                        $(cell).popover({
+                                            content: cell_error,
+                                            placement: 'top',
+                                            trigger: 'manual',
+                                            animation: false
+                                        }).popover('show');
+                                        $(cell).on('click', function () {
+                                            $(this).popover('toggle');
+                                        });
 
 
+                                    }
                                 }
                             }
                         }
-
                     } else {
                         var error_messages = '';
                         var element_error_array = [];
