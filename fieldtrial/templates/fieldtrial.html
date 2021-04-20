@@ -1,4 +1,9 @@
 {% include "header.html" %}
+{% load static %}
+<script type="text/javascript"
+        src="{% static 'scripts/jquery/jqrangeslider/jQAllRangeSliders-withRuler-min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'scripts/jquery/jqrangeslider/css/iThing.css' %}"
+      type="text/css"/>
 <!--content-->
 {% csrf_token %}
 <style type="text/css">
@@ -78,6 +83,14 @@
                </span>
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <div id="slider" style="margin-top:3px;margin-left:10px;margin-right:10px;z-index: 1000;"></div>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
         <div id="tableWrapper">
             <table id="resultTable"></table>
         </div>
@@ -108,6 +121,17 @@
                 $('#plots').html('<img src="../../static/images/ajax-loader.gif"/>');
                 $('#result').html('');
                 start_map({{ data|safe }}, '{{ type|safe }}');
+
+                jQuery("#slider").dateRangeSlider({
+                    bounds: {
+                        min: new Date(2014, 0, 1),
+                        max: new Date()
+                    },
+                    defaultValues: {
+                        min: new Date(2014, 0, 1),
+                        max: new Date()
+                    }
+                });
 
             });
 

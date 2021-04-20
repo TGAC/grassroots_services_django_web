@@ -300,43 +300,44 @@ function produceFieldtrialTable(data, type_param) {
 
     if (type_param === 'AllFieldTrials') {
         yrtable.column(10).visible(false);
-        console.log("server search here");
-        jQuery('#resultTable').on('search.dt', function () {
-            removePointers();
-            var search_value = $('.dataTables_filter input').val();
-            var req_json = CreatePlotsRequestForAllFieldTrials(search_value);
-
-            console.log("server search query " + JSON.stringify(req_json));
-
-            if (req_json) {
-                $.ajax({
-                    type: "POST",
-                    headers: {
-                        'X-CSRFToken': csrftoken
-                    },
-                    url: '/fieldtrial/ajax/get_fieldtrial/',
-                    data: {'search_str': search_value},
-                    dataType: "json",
-                    contentType: "application/json; charset=utf-8"
-                }).done(function (ft_json) {
-                    console.log("server search response " + JSON.stringify(ft_json));
-                    if (ft_json['results'][0]['results'] != undefined) {
-
-                        // yrtable.destroy();
-                        $('#tableWrapper').html('  <div id="tableWrapper">\n' +
-                            '            <table id="resultTable"></table>\n' +
-                            '        </div>');
-                        startFieldTrialGIS(ft_json['results'][0]['results'], type_param);
-                        $('.dataTables_filter input').val(search_value);
-                    }
-                }).fail(function (req, status, error) {
-                    console.info("req " + "status " + status + " error " + error);
-                });
-            }
-
-
-        });
-    } else {
+    //     console.log("server search here");
+        // jQuery('#resultTable').on('search.dt', function () {
+        //     removePointers();
+        //     var search_value = $('.dataTables_filter input').val();
+        //     var req_json = CreatePlotsRequestForAllFieldTrials(search_value);
+        //
+        //     console.log("server search query " + JSON.stringify(req_json));
+        //
+        //     if (req_json) {
+        //         $.ajax({
+        //             type: "POST",
+        //             headers: {
+        //                 'X-CSRFToken': csrftoken
+        //             },
+        //             url: '/fieldtrial/ajax/get_fieldtrial/',
+        //             data: {'search_str': search_value},
+        //             dataType: "json",
+        //             contentType: "application/json; charset=utf-8"
+        //         }).done(function (ft_json) {
+        //             console.log("server search response " + JSON.stringify(ft_json));
+        //             if (ft_json['results'][0]['results'] != undefined) {
+        //
+        //                 // yrtable.destroy();
+        //                 $('#tableWrapper').html('  <div id="tableWrapper">\n' +
+        //                     '            <table id="resultTable"></table>\n' +
+        //                     '        </div>');
+        //                 startFieldTrialGIS(ft_json['results'][0]['results'], type_param);
+        //                 $('.dataTables_filter input').val(search_value);
+        //             }
+        //         }).fail(function (req, status, error) {
+        //             console.info("req " + "status " + status + " error " + error);
+        //         });
+        //     }
+        //
+        //
+        // });
+    }
+        // else {
         jQuery('#resultTable').on('search.dt', function () {
             removePointers();
             var searchData = yrtable.rows({filter: 'applied'}).data().toArray();
@@ -351,20 +352,34 @@ function produceFieldtrialTable(data, type_param) {
             displayFTLocations(search_data, type_param);
         });
 
-    }
-
-
-    // jQuery("#slider").bind("valuesChanging", function (e, data) {
-    //     datemin = Date.parse(data.values.min);
-    //     datemax = Date.parse(data.values.max);
-    //
-    //     yrtable.draw();
-    // });
-    //
-    // if (!isCompany) {
-    //     yrtable.column(13).visible(false);
     // }
+
+    jQuery("#slider").bind("valuesChanging", function (e, data) {
+        datemin = Date.parse(data.values.min);
+        datemax = Date.parse(data.values.max);
+
+        yrtable.draw();
+    });
+
+    jQuery.fn.dataTableExt.afnFiltering.push(
+    function (oSettings, aData, iDataIndex) {
+        var dateStart = datemin;
+        var dateEnd = datemax;
+
+        var evalDate = Date.parse(aData[6]);
+
+        if (((evalDate >= dateStart && evalDate <= dateEnd) || (evalDate >= dateStart && dateEnd == 0)
+            || (evalDate >= dateEnd && dateStart == 0)) || (dateStart == 0 && dateEnd == 0)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+
+    });
 }
+
+
 
 function get_study_address(full, link_bool) {
     var addressInfo = '';
