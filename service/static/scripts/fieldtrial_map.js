@@ -366,7 +366,7 @@ function produceFieldtrialTable(data, type_param) {
             var dateStart = datemin;
             var dateEnd = datemax;
 
-            var evalDate = Date.parse(aData[6]);
+            var evalDate = aData[6];
 
             if (((evalDate >= dateStart && evalDate <= dateEnd) || (evalDate >= dateStart && dateEnd == 0)
                 || (evalDate >= dateEnd && dateStart == 0)) || (dateStart == 0 && dateEnd == 0)) {
