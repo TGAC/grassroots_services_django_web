@@ -524,8 +524,7 @@ function format_study_contact(full) {
     var study_result = '';
     if (full['contact'] !== undefined && full['contact'] !== null) {
         let contact_name = full['contact']['so:name'];
-        if (full['contact']['so:email'] !== undefined && full['contact']['so:email'] !== null
-        ) {
+        if (full['contact']['so:email'] !== undefined && full['contact']['so:email'] !== null) {
             let contact_email = full['contact']['so:email'];
             study_result = '<a href="mailto:' + contact_email + '" target="_blank">' + SafePrint(contact_name) + '</a>';
         } else {
