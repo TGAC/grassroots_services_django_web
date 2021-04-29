@@ -593,23 +593,23 @@ function create_study_info_html(studyJson) {
     }
 
 
-    htmlarray.push('<tr>');
-    htmlarray.push('<td>');
-    htmlarray.push('<b>Min pH:</b> ');
-    htmlarray.push('</td>');
-    htmlarray.push('<td>');
-    htmlarray.push(SafePrint(studyJson['min_ph']));
-    htmlarray.push('</td>');
-    htmlarray.push('</tr>');
-
-    htmlarray.push('<tr>');
-    htmlarray.push('<td>');
-    htmlarray.push('<b>Max pH:</b> ');
-    htmlarray.push('</td>');
-    htmlarray.push('<td>');
-    htmlarray.push(SafePrint(studyJson['max_ph']));
-    htmlarray.push('</td>');
-    htmlarray.push('</tr>');
+    // htmlarray.push('<tr>');
+    // htmlarray.push('<td>');
+    // htmlarray.push('<b>Min pH:</b> ');
+    // htmlarray.push('</td>');
+    // htmlarray.push('<td>');
+    // htmlarray.push(SafePrint(studyJson['min_ph']));
+    // htmlarray.push('</td>');
+    // htmlarray.push('</tr>');
+    //
+    // htmlarray.push('<tr>');
+    // htmlarray.push('<td>');
+    // htmlarray.push('<b>Max pH:</b> ');
+    // htmlarray.push('</td>');
+    // htmlarray.push('<td>');
+    // htmlarray.push(SafePrint(studyJson['max_ph']));
+    // htmlarray.push('</td>');
+    // htmlarray.push('</tr>');
 
     htmlarray.push('<tr>');
     htmlarray.push('<td>');
@@ -638,15 +638,15 @@ function create_study_info_html(studyJson) {
     htmlarray.push(SafePrint(studyJson['phenotype_gathering_notes']));
     htmlarray.push('</td>');
     htmlarray.push('</tr>');
-
-    htmlarray.push('<tr>');
-    htmlarray.push('<td>');
-    htmlarray.push('<b>Soil:</b> ');
-    htmlarray.push('</td>');
-    htmlarray.push('<td>');
-    htmlarray.push(SafePrint(studyJson['soil']));
-    htmlarray.push('</td>');
-    htmlarray.push('</tr>');
+    //
+    // htmlarray.push('<tr>');
+    // htmlarray.push('<td>');
+    // htmlarray.push('<b>Soil:</b> ');
+    // htmlarray.push('</td>');
+    // htmlarray.push('<td>');
+    // htmlarray.push(SafePrint(studyJson['soil']));
+    // htmlarray.push('</td>');
+    // htmlarray.push('</tr>');
 
     htmlarray.push('<tr>');
     htmlarray.push('<td>');
@@ -699,19 +699,19 @@ function create_study_info_html(studyJson) {
 
     htmlarray.push('<tr>');
     htmlarray.push('<td>');
-    htmlarray.push('<b>Sowing Date:</b> ');
+    htmlarray.push('<b>Sowing Year:</b> ');
     htmlarray.push('</td>');
     htmlarray.push('<td>');
-    htmlarray.push(SafePrint(studyJson['sowing_date']));
+    htmlarray.push(SafePrint(studyJson['sowing_year']));
     htmlarray.push('</td>');
     htmlarray.push('</tr>');
 
     htmlarray.push('<tr>');
     htmlarray.push('<td>');
-    htmlarray.push('<b>Harvest Date:</b> ');
+    htmlarray.push('<b>Harvest Year:</b> ');
     htmlarray.push('</td>');
     htmlarray.push('<td>');
-    htmlarray.push(SafePrint(studyJson['harvest_date']));
+    htmlarray.push(SafePrint(studyJson['harvest_year']));
     htmlarray.push('</td>');
     htmlarray.push('</tr>');
 
