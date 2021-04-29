@@ -157,20 +157,20 @@ function produceFieldtrialTable(data, type_param) {
                 }
             },
             {
-                title: "Sowing Date",
+                title: "Sowing Year",
                 "render": function (data, type, full, meta) {
-                    if (full['sowing_date'] != undefined) {
-                        return full['sowing_date'];
+                    if (full['sowing_year'] != undefined) {
+                        return full['sowing_year'];
                     } else {
                         return '';
                     }
                 }
             },
             {
-                title: "Harvest Date",
+                title: "Harvest Year",
                 "render": function (data, type, full, meta) {
-                    if (full['harvest_date'] != undefined) {
-                        return full['harvest_date'];
+                    if (full['harvest_year'] != undefined) {
+                        return full['harvest_year'];
                     } else {
                         return '';
                     }
