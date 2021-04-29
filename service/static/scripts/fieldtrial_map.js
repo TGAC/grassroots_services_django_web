@@ -216,27 +216,27 @@ function produceFieldtrialTable(data, type_param) {
             {
                 title: "Contacts",
                 "render": function (data, type, full, meta) {
-                    var study_result = '';
-
-                    if (full['curator'] !== undefined) {
-                        let curator_name = full['curator']['so:name'];
-                        if (full['curator']['so:email'] !== undefined) {
-                            let curator_email = full['curator']['so:email'];
-                            study_result = study_result + 'Curator: <a href="mailto:' + curator_email + '" target="_blank">' + curator_name + '</a>';
-                        } else {
-                            study_result = study_result + 'Curator: ' + curator_name;
-                        }
-                    }
-                    if (full['contact'] !== undefined) {
-                        let contact_name = full['contact']['so:name'];
-                        if (full['contact']['so:email'] !== undefined) {
-                            let contact_email = full['contact']['so:email'];
-                            study_result = study_result + '<br/>Contact: <a href="mailto:' + contact_email + '" target="_blank">' + contact_name + '</a>';
-                        } else {
-                            study_result = study_result + '<br/>Contact: ' + contact_name;
-                        }
-                    }
-                    return study_result;
+                    // var study_result = '';
+                    return format_study_curator(full) + '<br/>' + format_study_contact(full);
+                    // if (full['curator'] !== undefined) {
+                    //     let curator_name = full['curator']['so:name'];
+                    //     if (full['curator']['so:email'] !== undefined) {
+                    //         let curator_email = full['curator']['so:email'];
+                    //         study_result = study_result + 'Curator: <a href="mailto:' + curator_email + '" target="_blank">' + curator_name + '</a>';
+                    //     } else {
+                    //         study_result = study_result + 'Curator: ' + curator_name;
+                    //     }
+                    // }
+                    // if (full['contact'] !== undefined) {
+                    //     let contact_name = full['contact']['so:name'];
+                    //     if (full['contact']['so:email'] !== undefined) {
+                    //         let contact_email = full['contact']['so:email'];
+                    //         study_result = study_result + '<br/>Contact: <a href="mailto:' + contact_email + '" target="_blank">' + contact_name + '</a>';
+                    //     } else {
+                    //         study_result = study_result + '<br/>Contact: ' + contact_name;
+                    //     }
+                    // }
+                    // return study_result;
                 }
             },
             {
@@ -355,8 +355,8 @@ function produceFieldtrialTable(data, type_param) {
     // }
 
     jQuery("#slider").bind("valuesChanging", function (e, data) {
-        datemin = Date.parse(data.values.min);
-        datemax = Date.parse(data.values.max);
+        datemin = data.values.min;
+        datemax = data.values.max;
 
         yrtable.draw();
     });
@@ -377,6 +377,24 @@ function produceFieldtrialTable(data, type_param) {
         }
 
     });
+
+    // jQuery.fn.dataTableExt.afnFiltering.push(
+    // function (oSettings, aData, iDataIndex) {
+    //     var dateStart = datemin;
+    //     var dateEnd = datemax;
+    //
+    //     var evalDate = Date.parse(aData[6]);
+    //
+    //     if (((evalDate >= dateStart && evalDate <= dateEnd) || (evalDate >= dateStart && dateEnd == 0)
+    //         || (evalDate >= dateEnd && dateStart == 0)) || (dateStart == 0 && dateEnd == 0)) {
+    //         return true;
+    //     }
+    //     else {
+    //         return false;
+    //     }
+    //
+    // });
+
 }
 
 
