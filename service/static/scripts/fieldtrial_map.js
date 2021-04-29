@@ -300,7 +300,7 @@ function produceFieldtrialTable(data, type_param) {
 
     if (type_param === 'AllFieldTrials') {
         yrtable.column(10).visible(false);
-    //     console.log("server search here");
+        //     console.log("server search here");
         // jQuery('#resultTable').on('search.dt', function () {
         //     removePointers();
         //     var search_value = $('.dataTables_filter input').val();
@@ -337,20 +337,20 @@ function produceFieldtrialTable(data, type_param) {
         //
         // });
     }
-        // else {
-        jQuery('#resultTable').on('search.dt', function () {
-            removePointers();
-            var searchData = yrtable.rows({filter: 'applied'}).data().toArray();
-            var search_data = [];
-            for (i = 0; i < searchData.length; i++) {
-                if (searchData[i]['address']['address'] != undefined) {
-                    if (searchData[i]['address']['address']['location']['centre'] != undefined) {
-                        search_data.push(searchData[i]);
-                    }
+    // else {
+    jQuery('#resultTable').on('search.dt', function () {
+        removePointers();
+        var searchData = yrtable.rows({filter: 'applied'}).data().toArray();
+        var search_data = [];
+        for (i = 0; i < searchData.length; i++) {
+            if (searchData[i]['address']['address'] != undefined) {
+                if (searchData[i]['address']['address']['location']['centre'] != undefined) {
+                    search_data.push(searchData[i]);
                 }
             }
-            displayFTLocations(search_data, type_param);
-        });
+        }
+        displayFTLocations(search_data, type_param);
+    });
 
     // }
 
@@ -362,21 +362,20 @@ function produceFieldtrialTable(data, type_param) {
     });
 
     jQuery.fn.dataTableExt.afnFiltering.push(
-    function (oSettings, aData, iDataIndex) {
-        var dateStart = datemin;
-        var dateEnd = datemax;
+        function (oSettings, aData, iDataIndex) {
+            var dateStart = datemin;
+            var dateEnd = datemax;
 
-        var evalDate = Date.parse(aData[6]);
+            var evalDate = Date.parse(aData[6]);
 
-        if (((evalDate >= dateStart && evalDate <= dateEnd) || (evalDate >= dateStart && dateEnd == 0)
-            || (evalDate >= dateEnd && dateStart == 0)) || (dateStart == 0 && dateEnd == 0)) {
-            return true;
-        }
-        else {
-            return false;
-        }
+            if (((evalDate >= dateStart && evalDate <= dateEnd) || (evalDate >= dateStart && dateEnd == 0)
+                || (evalDate >= dateEnd && dateStart == 0)) || (dateStart == 0 && dateEnd == 0)) {
+                return true;
+            } else {
+                return false;
+            }
 
-    });
+        });
 
     // jQuery.fn.dataTableExt.afnFiltering.push(
     // function (oSettings, aData, iDataIndex) {
@@ -396,7 +395,6 @@ function produceFieldtrialTable(data, type_param) {
     // });
 
 }
-
 
 
 function get_study_address(full, link_bool) {
@@ -495,12 +493,12 @@ function format_study_contacts(full) {
     var curator = format_study_curator(full);
     var contact = format_study_contact(full);
 
-    if (curator !== ''){
-        curator = 'Curator: ' +  curator;
+    if (curator !== '') {
+        curator = 'Curator: ' + curator;
     }
 
-    if (contact !== ''){
-        contact = 'Contact: ' +  contact;
+    if (contact !== '') {
+        contact = 'Contact: ' + contact;
     }
 
     return curator + '<br/>' + contact;
@@ -526,7 +524,8 @@ function format_study_contact(full) {
     var study_result = '';
     if (full['contact'] !== undefined && full['contact'] !== null) {
         let contact_name = full['contact']['so:name'];
-        if (full['contact']['so:email'] !== undefined full['contact']['so:email'] !== null) {
+        if (full['contact']['so:email'] !== undefined && full['contact']['so:email'] !== null
+        ) {
             let contact_email = full['contact']['so:email'];
             study_result = '<a href="mailto:' + contact_email + '" target="_blank">' + SafePrint(contact_name) + '</a>';
         } else {
