@@ -217,7 +217,7 @@ function produceFieldtrialTable(data, type_param) {
                 title: "Contacts",
                 "render": function (data, type, full, meta) {
                     // var study_result = '';
-                    return format_study_curator(full) + '<br/>' + format_study_contact(full);
+                    return format_study_contacts(full);
                     // if (full['curator'] !== undefined) {
                     //     let curator_name = full['curator']['so:name'];
                     //     if (full['curator']['so:email'] !== undefined) {
@@ -492,14 +492,25 @@ function format_study_parent_program(full) {
 }
 
 function format_study_contacts(full) {
-    return 'Curator: ' + format_study_curator(full) + '<br/>Contact: ' + format_study_contact(full);
+    var curator = format_study_curator(full);
+    var contact = format_study_contact(full);
+
+    if (curator !== ''){
+        curator = 'Curator: ' +  curator;
+    }
+
+    if (contact !== ''){
+        contact = 'Contact: ' +  contact;
+    }
+
+    return curator + '<br/>' + contact;
 }
 
 function format_study_curator(full) {
     var study_result = '';
     if (full['curator'] !== undefined && full['curator'] !== null) {
         let curator_name = full['curator']['so:name'];
-        if (full['curator']['so:email'] !== undefined) {
+        if (full['curator']['so:email'] !== undefined && full['curator']['so:email'] !== null) {
             let curator_email = full['curator']['so:email'];
             study_result = '<a href="mailto:' + curator_email + '" target="_blank">' + SafePrint(curator_name) + '</a>';
         } else {
@@ -515,7 +526,7 @@ function format_study_contact(full) {
     var study_result = '';
     if (full['contact'] !== undefined && full['contact'] !== null) {
         let contact_name = full['contact']['so:name'];
-        if (full['contact']['so:email'] !== undefined) {
+        if (full['contact']['so:email'] !== undefined full['contact']['so:email'] !== null) {
             let contact_email = full['contact']['so:email'];
             study_result = '<a href="mailto:' + contact_email + '" target="_blank">' + SafePrint(contact_name) + '</a>';
         } else {
