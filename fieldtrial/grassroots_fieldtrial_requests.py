@@ -1,7 +1,7 @@
 import requests
 import json
 
-server_url = "https://grassroots.tools/dev/public_backend"
+server_url = "https://grassroots.tools/public_backend"
 
 
 def get_all_fieldtrials():
