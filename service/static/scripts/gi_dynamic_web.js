@@ -2460,11 +2460,11 @@ function format_grassroots_search_result(this_result) {
     if (json['@type'] == 'Grassroots:Study') {
         var study_id = json['id'];
         var study_name = json['so:name'];
-        grassroots_search_html.push(img_html + 'Grassroots Study: <a style="color:#18bc9c ! important;" href="' + dev + '/public/dynamic/fieldtrial_dynamic.html?id=' + study_id + '&type=Grassroots:Study" target="_blank" >' + study_name + '</a>');
+        grassroots_search_html.push(img_html + 'Grassroots Study: <a style="color:#18bc9c ! important;" href="' + dev + '/fieldtrial/study' + study_id + '" target="_blank" >' + study_name + '</a>');
     } else if (json['@type'] == 'Grassroots:FieldTrial') {
         var ft_id = json['id'];
         var ft_name = json['so:name'];
-        grassroots_search_html.push(img_html + 'Grassroots Field Trial: <a style="color:#18bc9c ! important;" class="newstyle_link" href="' + dev + '/public/dynamic/fieldtrial_dynamic.html?id=' + ft_id + '&type=Grassroots:FieldTrial" target="_blank" >' + ft_name + '</a>');
+        grassroots_search_html.push(img_html + 'Grassroots Field Trial: <a style="color:#18bc9c ! important;" class="newstyle_link" href="' + dev + '/fieldtrial/' + ft_id + '" target="_blank" >' + ft_name + '</a>');
     } else if (json['@type'] == 'Grassroots:Service') {
         title = this_result['data']['service'];
         var service = json['so:name'];
@@ -2699,8 +2699,11 @@ function format_fieldtrial_result(array) {
             typeText = 'Phenotype';
             info = array[i]['data']['trait']['so:name'];
         }
-        if (type === 'Grassroots:FieldTrial' || type === 'Grassroots:Study') {
-            doi = '<a target="_blank" href="../dynamic/fieldtrial_dynamic.html?id=' + id + '&type=' + type + '">View ' + typeText + '</a>';
+        if (type === 'Grassroots:FieldTrial') {
+            doi = '<a target="_blank" href="/fieldtrial/' + id + '">View ' + typeText + '</a>';
+        }
+        if (type === 'Grassroots:Study') {
+            doi = '<a target="_blank" href="/fieldtrial/study/' + id + '">View ' + typeText + '</a>';
         }
         html.push('<tr>');
         html.push('<td>');
