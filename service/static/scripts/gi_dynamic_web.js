@@ -1274,7 +1274,7 @@ function do_ajax_search(type) {
 
     if (input.length > 1) {
 
-        $('#ajax_result').html('Searching <img src='+root_dir+'static/images/ajax-loader.gif"/>');
+        $('#ajax_result').html('Searching...');
         var timer;
 
         var submit_json = {
