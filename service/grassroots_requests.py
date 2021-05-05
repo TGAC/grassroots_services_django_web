@@ -17,9 +17,7 @@ def get_service(service_alt_name):
 
 
 def interact_backend(data):
-    print(json.loads(data))
     res = requests.post(server_url, data=data)
-    print(res)
     return json.dumps(res.json())
 
 
