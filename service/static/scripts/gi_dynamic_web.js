@@ -409,11 +409,14 @@ function populateService(service_altname) {
         $('#form').html(form_html.join(' '));
 
     } else {
+        var post_data = '{"services": [{"so:alternateName":"'+service_altname+'"}], "operations": {"operation": "get_named_service"}}';
         $.ajax({
-            url: server_url,
-            data: '{"services": [{"so:alternateName":"' + service_altname + '"}], "operations": {"operation": "get_named_service"}}',
-            // data:'{"services": [{"so:name":"' + service_altname + '"}], "operations": {"operation": "get_named_service"}}',
+            url: "/service/ajax/interact_backend/",
             type: "POST",
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            data: post_data,
             dataType: "json",
             success: function (json) {
                 populate_page_with_json(json, false);

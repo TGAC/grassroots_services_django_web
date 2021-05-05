@@ -91,7 +91,7 @@
     var parameters;
     var groups;
     $(document).ready(function () {
-        populateService('{{ service_name }}');
+        populateService('{{ service_alt_name | safe }}');
         var yrtable;
 
         var markersGroup;

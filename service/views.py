@@ -10,6 +10,7 @@ from .grassroots_requests import search_treatment
 from .grassroots_requests import submit_form
 from .grassroots_requests import check_result
 from .grassroots_requests import search_treatment_return_ols
+from .grassroots_requests import interact_backend
 
 
 def index(request):
@@ -21,8 +22,8 @@ def index_ajax(request):
     return HttpResponse(service_list_json)
 
 
-def single_service(request, service_name):
-    return render(request, 'service.html', {'service_name': service_name})
+def single_service(request, service_alt_name):
+    return render(request, 'service.html', {'service_alt_name': service_alt_name})
 
 
 def single_service_ajax(request):
@@ -32,7 +33,7 @@ def single_service_ajax(request):
 
 
 def interact_with_apache(request):
-    data = request.POST['data']
+    data = request.body
     response_json = interact_backend(data)
     return HttpResponse(response_json)
 

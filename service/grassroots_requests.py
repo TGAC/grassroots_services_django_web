@@ -10,14 +10,16 @@ def get_all_services():
     return json.dumps(res.json())
 
 
-def get_service(service_name):
-    get_service_req = {"services": [{"so:name": service_name}], "operations": {"operation": "get_named_service"}}
+def get_service(service_alt_name):
+    get_service_req = {"services": [{"so:alternateName": service_alt_name}], "operations": {"operation": "get_named_service"}}
     res = requests.post(server_url, data=json.dumps(get_service_req))
     return json.dumps(res.json())
 
 
 def interact_backend(data):
-    res = requests.post(server_url, data=json.dumps(data))
+    print(json.loads(data))
+    res = requests.post(server_url, data=data)
+    print(res)
     return json.dumps(res.json())
 
 
