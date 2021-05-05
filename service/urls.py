@@ -15,5 +15,6 @@ urlpatterns = [
     path('ajax/check_result/', views.check_result_ajax),
 
     path('api/co_ols', views.crop_ontology_search),
+    path('payload/<payload>', views.single_service_with_payload),
     re_path(r'(?P<service_alt_name>[A-z0-9-\w%]+)$', views.single_service),
 ]

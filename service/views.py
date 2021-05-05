@@ -25,6 +25,8 @@ def index_ajax(request):
 def single_service(request, service_alt_name):
     return render(request, 'service.html', {'service_alt_name': service_alt_name})
 
+def single_service_with_payload(request, payload):
+    return render(request, 'service_payload.html', {'payload': payload})
 
 def single_service_ajax(request):
     service_name = request.POST['service_name']
