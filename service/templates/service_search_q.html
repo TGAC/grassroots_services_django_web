@@ -24,7 +24,7 @@
                 <table id="listTable"></table>
             </div>
         </form>
-        <div id="status"></div>
+        <div id="status"><img src="{% static "images/ajax-loader.gif" %}"/></div>
         <div id="output_format_div" style="display:none; float:right;">
             <p>Download job format
                 <select id="output_format" onchange="changeDownloadFormat();">
@@ -34,7 +34,7 @@
         </div>
         <div style="clear:both;"></div>
 
-        <div id="result"><img src="{% static "images/ajax-loader.gif" %}"/></div>
+        <div id="result"></div>
 
         <div id="map" style="display: none"></div>
 
