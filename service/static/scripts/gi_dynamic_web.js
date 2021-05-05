@@ -118,7 +118,7 @@ function get_all_services_as_table() {
     // $('#form').html("<table id=\"listTable\">Loading services...</table>");
 
     $.ajax({
-            url: "/service/ajax/interact_backend/",
+            url: root_dir + "service/ajax/interact_backend/",
             type: "POST",
             headers: {
                 'X-CSRFToken': csrftoken
@@ -321,16 +321,6 @@ function display_all_services_as_table(json) {
 
         ]
     });
-    // listTable.row.add([
-    //     '<a class="newstyle_link" href="/service/Search%20Treatment"><img src="https://grassroots.tools/grassroots-test/5/images/polygonchange"> <u>Search Treatment</u></a>',
-    //     'Search field trial treatment',
-    //     '',
-    //     '',
-    //     '',
-    //     'Keyword',
-    //     'Treatment'
-    // ]).draw(false);
-
 
     $('#back_link').css('visibility', 'hidden');
 }
@@ -341,30 +331,6 @@ function ontology_links(context_json, ontology_ref) {
     // console.log(prefix);
     return context_json[prefix] + ontology_array[1];
 }
-
-// //deprecated
-// function get_all_services() {
-//     $('#form').html("Getting service...");
-//     $.ajax({
-//         url: server_url,
-//         data: services,
-//         type: "POST",
-//         dataType: "json",
-//         success: function (json) {
-//             console.info(JSON.stringify(json));
-//             var list_html = [];
-//             list_html.push('<h3>Click any of the service to load the form</h3>');
-//             list_html.push('<ul>');
-//             for (var j = 0; j < json['services'].length; j++) {
-//                 var service_name = json['services'][j]['so:name'];
-//                 var icon_uri = json['services'][j]['operations']['icon_uri'];
-//                 list_html.push('<li class="newstyle_link" onclick="populateService(\'' + service_name + '\')"><img src="' + icon_uri + '"/><u>' + service_name + '</u></li>');
-//             }
-//             list_html.push('</ul>');
-//             $('#form').html(list_html.join(' '));
-//         }
-//     });
-// }
 
 function populateService(service_altname) {
     $('#back_link').css('visibility', 'visible');
@@ -414,7 +380,7 @@ function populateService(service_altname) {
     } else {
         var post_data = '{"services": [{"so:alternateName":"'+service_altname+'"}], "operations": {"operation": "get_named_service"}}';
         $.ajax({
-            url: "/service/ajax/interact_backend/",
+            url: root_dir + "service/ajax/interact_backend/",
             type: "POST",
             headers: {
                 'X-CSRFToken': csrftoken
@@ -437,7 +403,7 @@ function populateServiceWithPayload(payload) {
     var data = decodeURIComponent(payload);
     console.log('payload sent to server: ' + data);
     $.ajax({
-        url: "/service/ajax/interact_backend/",
+        url: root_dir + "service/ajax/interact_backend/",
         type: "POST",
         headers: {
             'X-CSRFToken': csrftoken
@@ -463,7 +429,7 @@ function populateSearchWithQ(q) {
 
     // var data = decodeURIComponent(payload);
     $.ajax({
-            url: "/service/ajax/interact_backend/",
+            url: root_dir + "service/ajax/interact_backend/",
             type: "POST",
             headers: {
                 'X-CSRFToken': csrftoken
@@ -477,7 +443,7 @@ function populateSearchWithQ(q) {
         }
     });
     $.ajax({
-            url: "/service/ajax/interact_backend/",
+            url: root_dir + "service/ajax/interact_backend/",
             type: "POST",
             headers: {
                 'X-CSRFToken': csrftoken
@@ -1215,7 +1181,7 @@ function refresh_service(input) {
 
     console.info(JSON.stringify(submission));
     $.ajax({
-            url: "/service/ajax/interact_backend/",
+            url: root_dir + "service/ajax/interact_backend/",
             type: "POST",
             headers: {
                 'X-CSRFToken': csrftoken
@@ -1313,7 +1279,7 @@ function do_ajax_search(type) {
 
         timer = setTimeout(function () {
             $.ajax({
-            url: "/service/ajax/interact_backend/",
+            url: root_dir + "service/ajax/interact_backend/",
             type: "POST",
             headers: {
                 'X-CSRFToken': csrftoken
@@ -1937,7 +1903,7 @@ function submit_form() {
 
         console.info(JSON.stringify(submission));
         $.ajax({
-            url: "/service/ajax/interact_backend/",
+            url: root_dir + "service/ajax/interact_backend/",
             type: "POST",
             headers: {
                 'X-CSRFToken': csrftoken
@@ -2750,7 +2716,7 @@ function checkResult(each_result) {
         Utils.ui.reenableButton('submit_button', 'Submit');
     } else {
         $.ajax({
-            url: "/service/ajax/interact_backend/",
+            url: root_dir + "service/ajax/interact_backend/",
             type: "POST",
             headers: {
                 'X-CSRFToken': csrftoken
@@ -3048,7 +3014,7 @@ function downloadJobFromServer(id) {
     };
     console.info(JSON.stringify(previousjob_request_json));
     $.ajax({
-            url: "/service/ajax/interact_backend/",
+            url: root_dir + "service/ajax/interact_backend/",
             type: "POST",
             headers: {
                 'X-CSRFToken': csrftoken
@@ -3078,7 +3044,7 @@ function run_linked_service(id) {
     console.info(JSON.stringify({"services": [linked_service_request_json]}));
 
     $.ajax({
-            url: "/service/ajax/interact_backend/",
+            url: root_dir + "service/ajax/interact_backend/",
             type: "POST",
             headers: {
                 'X-CSRFToken': csrftoken
@@ -3105,7 +3071,7 @@ function run_linked_service_with_redirect(id) {
     var service_name = linked_service_request_json['so:name'];
 
     $.ajax({
-            url: "/service/ajax/interact_backend/",
+            url: root_dir + "service/ajax/interact_backend/",
             type: "POST",
             headers: {
                 'X-CSRFToken': csrftoken
