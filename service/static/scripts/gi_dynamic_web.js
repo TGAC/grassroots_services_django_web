@@ -139,10 +139,10 @@ function get_all_services_as_table() {
             // $('#form').html(list_html.join(' '));
             var service_list_json = [];
             service_list_json = json['services'];
-            if (server_url !== "/private_backend") {
+            // if (server_url !== "/private_backend") {
                 service_list_json.push(search_measured_variables_json);
                 service_list_json.push(search_treatments_json);
-            }
+            // }
             var context_json = json['@context'];
             var listTable = jQuery('#listTable').DataTable({
                 data: service_list_json,
@@ -1214,7 +1214,6 @@ function refresh_service(input) {
 
 
     console.info(JSON.stringify(submission));
-    console.info(server_url);
     $.ajax({
             url: "/service/ajax/interact_backend/",
             type: "POST",
@@ -1937,7 +1936,6 @@ function submit_form() {
 
 
         console.info(JSON.stringify(submission));
-        console.info(server_url);
         $.ajax({
             url: "/service/ajax/interact_backend/",
             type: "POST",
@@ -2431,7 +2429,7 @@ function format_grassroots_search_results_ul(facets) {
 
 function format_grassroots_search_result(this_result) {
     var dev = '';
-    if (server_url === '/dev/public_backend') {
+    if (root_dir === '/dev/') {
         dev = '/dev'
     }
 
