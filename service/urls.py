@@ -16,5 +16,6 @@ urlpatterns = [
 
     path('api/co_ols', views.crop_ontology_search),
     path('payload/<payload>', views.single_service_with_payload),
+    path('search/<search_q>', views.single_service_search_q),
     re_path(r'(?P<service_alt_name>[A-z0-9-\w%]+)$', views.single_service),
 ]

@@ -28,6 +28,9 @@ def single_service(request, service_alt_name):
 def single_service_with_payload(request, payload):
     return render(request, 'service_payload.html', {'payload': payload})
 
+def single_service_search_q(request, search_q):
+    return render(request, 'service_search_q.html', {'q': search_q})
+
 def single_service_ajax(request):
     service_name = request.POST['service_name']
     service_json = get_service(service_name)
