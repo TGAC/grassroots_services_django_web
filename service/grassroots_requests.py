@@ -1,7 +1,8 @@
 import requests
 import json
+from django.conf import settings
 
-server_url = "https://grassroots.tools/public_backend"
+server_url = settings.SERVER_URL
 
 
 def get_all_services():

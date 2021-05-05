@@ -122,3 +122,5 @@ USE_TZ = True
 STATIC_ROOT = "/opt/apache/htdocs/static/"
 
 STATIC_URL = '/static/'
+
+SERVER_URL = "https://grassroots.tools/public_backend"
