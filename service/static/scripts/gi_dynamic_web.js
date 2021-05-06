@@ -2407,10 +2407,6 @@ function sortResults(arr, prop, asc) {
 }
 
 function format_grassroots_search_result(this_result) {
-    var dev = '';
-    if (root_dir === '/dev/') {
-        dev = '/dev'
-    }
 
     var grassroots_search_html = [];
 
