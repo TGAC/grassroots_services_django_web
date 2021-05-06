@@ -2440,20 +2440,20 @@ function format_grassroots_search_result(this_result) {
         var study_id = json['id'];
         var study_name = json['so:name'];
         var desc = json['so:description'];
-        grassroots_search_html.push(img_html + 'Grassroots Study: <a style="color:#18bc9c ! important;" href="' + dev + root_dir + 'fieldtrial/study/' + study_id + '" target="_blank" >' + study_name + '</a>');
+        grassroots_search_html.push(img_html + 'Grassroots Study: <a style="color:#18bc9c ! important;" href="' + root_dir + 'fieldtrial/study/' + study_id + '" target="_blank" >' + study_name + '</a>');
         grassroots_search_html.push('<br/>' + SafePrint(desc));
     } else if (json['@type'] == 'Grassroots:FieldTrial') {
         var ft_id = json['id'];
         var ft_name = json['so:name'];
         var desc = json['so:description'];
-        grassroots_search_html.push(img_html + 'Grassroots Field Trial: <a style="color:#18bc9c ! important;" class="newstyle_link" href="' + dev + root_dir + 'fieldtrial/' + ft_id + '" target="_blank" >' + ft_name + '</a>');
+        grassroots_search_html.push(img_html + 'Grassroots Field Trial: <a style="color:#18bc9c ! important;" class="newstyle_link" href="' + root_dir + 'fieldtrial/' + ft_id + '" target="_blank" >' + ft_name + '</a>');
         grassroots_search_html.push('<br/>' + SafePrint(desc));
     } else if (json['@type'] == 'Grassroots:Service') {
         title = this_result['data']['service'];
         var service = json['so:name'];
         var description = json['so:description'];
         var payload_uri = encodeURIComponent(JSON.stringify(json['payload']));
-        grassroots_search_html.push('<a style="color:#18bc9c ! important;" class="newstyle_link" href="' + dev + root_dir + 'service/payload/' + payload_uri + '" target="_blank">' + img_html + ' ' + title + '</a><br/>');
+        grassroots_search_html.push('<a style="color:#18bc9c ! important;" class="newstyle_link" href="' + root_dir + 'service/payload/' + payload_uri + '" target="_blank">' + img_html + ' ' + title + '</a><br/>');
         grassroots_search_html.push('<b>' + service + '</b><br/>');
         grassroots_search_html.push('' + description + '<br/>');
         //when alt name available need to make it dynamic
