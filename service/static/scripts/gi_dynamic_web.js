@@ -2439,11 +2439,15 @@ function format_grassroots_search_result(this_result) {
     if (json['@type'] == 'Grassroots:Study') {
         var study_id = json['id'];
         var study_name = json['so:name'];
+        var desc = json['so:description'];
         grassroots_search_html.push(img_html + 'Grassroots Study: <a style="color:#18bc9c ! important;" href="' + dev + root_dir + 'fieldtrial/study/' + study_id + '" target="_blank" >' + study_name + '</a>');
+        grassroots_search_html.push('<br/>' + SafePrint(desc));
     } else if (json['@type'] == 'Grassroots:FieldTrial') {
         var ft_id = json['id'];
         var ft_name = json['so:name'];
+        var desc = json['so:description'];
         grassroots_search_html.push(img_html + 'Grassroots Field Trial: <a style="color:#18bc9c ! important;" class="newstyle_link" href="' + dev + root_dir + 'fieldtrial/' + ft_id + '" target="_blank" >' + ft_name + '</a>');
+        grassroots_search_html.push('<br/>' + SafePrint(desc));
     } else if (json['@type'] == 'Grassroots:Service') {
         title = this_result['data']['service'];
         var service = json['so:name'];
