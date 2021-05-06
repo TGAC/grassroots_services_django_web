@@ -2378,9 +2378,11 @@ function display_result(json) {
 }
 
 function format_grassroots_search_results_ul(facets) {
+    console.log(JSON.stringify(facets));
+    var sorted_facets = sortResults(facets, 'so:name', true);
     var grassroots_search_html = [];
-    for (i = 0; i < facets.length; i++) {
-        var this_facet = facets[i];
+    for (i = 0; i < sorted_facets.length; i++) {
+        var this_facet = sorted_facets[i];
         var this_facet_count = this_facet['count'];
         var this_facet_name = this_facet['so:name'];
         var result_name = 'result';
@@ -2391,6 +2393,17 @@ function format_grassroots_search_results_ul(facets) {
     }
     return grassroots_search_html.join(' ');
 
+}
+
+function sortResults(arr, prop, asc) {
+    arr.sort(function(a, b) {
+        if (asc) {
+            return (a[prop] > b[prop]) ? 1 : ((a[prop] < b[prop]) ? -1 : 0);
+        } else {
+            return (b[prop] > a[prop]) ? 1 : ((b[prop] < a[prop]) ? -1 : 0);
+        }
+    });
+    return arr;
 }
 
 function format_grassroots_search_result(this_result) {
