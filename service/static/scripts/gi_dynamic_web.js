@@ -1416,7 +1416,7 @@ function format_treatment_ajax_result(array, type) {
     console.log(JSON.stringify(array));
     if (type === 'Measured Variable') {
 
-        html.push('<table class="display" id="treatment_result" width="100%">');
+        html.push('<table class="display" id="treatment_result" style="font-size: 0.8em;" width="100%">');
         html.push('<thead>');
         html.push('<tr>');
         html.push('<th>Trait name</th>');
@@ -1486,7 +1486,7 @@ function format_treatment_ajax_result(array, type) {
         html.push('</table>');
 
     } else if (type === 'Treatment') {
-        html.push('<table class="display" id="treatments_result" width="100%">');
+        html.push('<table class="display" id="treatments_result" style="font-size: 0.8em;" width="100%">');
         html.push('<thead>');
         html.push('<tr>');
         html.push('<th>Treatment name</th>');
@@ -2213,7 +2213,7 @@ function display_result(json) {
 
                         // grassroots_search_html.push('<p>' + this_facet_name + ': ' + this_facet_count + ' result(s)<p>');
 
-                        grassroots_search_html.push('<div id="' + this_facet_name.replace(/\s+/g, "_") + '">');
+                        grassroots_search_html.push('<div id="' + this_facet_name.replace(/\s+/g, "_") + '"  style="overflow: auto;">');
                         if (this_facet_name === 'Measured Variable') {
                             measured_variable_found = true;
                             grassroots_search_html.push('<i>Measured Variables</i><br/>');
