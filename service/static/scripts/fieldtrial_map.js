@@ -787,7 +787,7 @@ function create_study_info_html(studyJson) {
     htmlarray.push('</td>');
     htmlarray.push('</tr>');
 
-    if (studyJson['so:url'] !== undefined) {
+    if (studyJson['so:url'] !== undefined && studyJson['so:url'] !== null ) {
         htmlarray.push('<tr>');
         htmlarray.push('<td>');
         htmlarray.push('<b>More info:</b> ');
