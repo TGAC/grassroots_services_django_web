@@ -245,7 +245,7 @@ function produceFieldtrialTable(data, type_param) {
                     var download = '';
                     if (full['so:contentUrl'] !== undefined) {
                         var link = full['so:contentUrl'];
-                        download = '<a  class="newstyle_link" target="_blank" href="' + link + '">Frictionless Data Package</a>'
+                        download = '<a  class="newstyle_link" target="_blank" href="' + link + '" download>Frictionless Data Package</a>'
                     }
                     return download;
                 }
@@ -804,7 +804,7 @@ function create_study_info_html(studyJson) {
         htmlarray.push('<b>Download:</b> ');
         htmlarray.push('</td>');
         htmlarray.push('<td>');
-        htmlarray.push('<a href="' + studyJson['so:contentUrl'] + '" target="_blank" style="newstyle_link">Frictionless Data Package</a>');
+        htmlarray.push('<a href="' + studyJson['so:contentUrl'] + '" target="_blank" style="newstyle_link" download>Frictionless Data Package</a>');
         htmlarray.push('</td>');
         htmlarray.push('</tr>');
     }
