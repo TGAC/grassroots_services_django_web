@@ -97,6 +97,19 @@ function startFieldTrialGIS(jsonArray, type_param) {
     if (type_param !== 'AllFieldTrials') {
         create_study_modal_html(filtered_data_without_location.concat(filtered_data_with_location));
     }
+    $('#download_question').popover({
+        content: '<a class="newstyle_link" href="#" target="_blank">How to use Frictionless Data Package</a>',
+        html: true,
+        placement: 'top',
+        trigger: 'manual',
+        animation: false
+    });
+    $('#download_question').on('click', function () {
+        $(this).popover('toggle');
+    });
+    $('#download_question').on('mouseover', function () {
+        $(this).popover('show');
+    });
 }
 
 function produceFieldtrialTable(data, type_param) {
@@ -240,7 +253,7 @@ function produceFieldtrialTable(data, type_param) {
                 }
             },
             {
-                title: "Download",
+                title: 'Download<i id="download_question" class="fas fa-question newstyle_link"></i>',
                 "render": function (data, type, full, meta) {
                     var download = '';
                     if (full['so:contentUrl'] !== undefined) {
@@ -254,6 +267,7 @@ function produceFieldtrialTable(data, type_param) {
         ]
 
     });
+
 
     jQuery('#resultTable tbody').on('click', 'td', function () {
         var cellIdx = yrtable.cell(this).index();
@@ -787,7 +801,7 @@ function create_study_info_html(studyJson) {
     htmlarray.push('</td>');
     htmlarray.push('</tr>');
 
-    if (studyJson['so:url'] !== undefined && studyJson['so:url'] !== null ) {
+    if (studyJson['so:url'] !== undefined && studyJson['so:url'] !== null) {
         htmlarray.push('<tr>');
         htmlarray.push('<td>');
         htmlarray.push('<b>More info:</b> ');
@@ -799,14 +813,14 @@ function create_study_info_html(studyJson) {
     }
 
     if (studyJson['so:contentUrl'] !== undefined) {
-        htmlarray.push('<tr>');
-        htmlarray.push('<td>');
-        htmlarray.push('<b>Download:</b> ');
-        htmlarray.push('</td>');
-        htmlarray.push('<td>');
-        htmlarray.push('<a href="' + studyJson['so:contentUrl'] + '" target="_blank" style="newstyle_link" download>Frictionless Data Package</a>');
-        htmlarray.push('</td>');
-        htmlarray.push('</tr>');
+    htmlarray.push('<tr>');
+    htmlarray.push('<td>');
+    htmlarray.push('<b>Download <i id="download_question" class="fas fa-question newstyle_link"></i>:</b> ');
+    htmlarray.push('</td>');
+    htmlarray.push('<td>');
+    htmlarray.push('<a href="' + studyJson['so:contentUrl'] + '" target="_blank" style="newstyle_link" download>Frictionless Data Package</a>');
+    htmlarray.push('</td>');
+    htmlarray.push('</tr>');
     }
 
     htmlarray.push('</tbody>');
