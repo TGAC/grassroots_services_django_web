@@ -98,7 +98,7 @@ function startFieldTrialGIS(jsonArray, type_param) {
         create_study_modal_html(filtered_data_without_location.concat(filtered_data_with_location));
     }
     $('#download_question').popover({
-        content: 'Frictionless Data Package lets you download all data associated with this study, including its parent field trial and programme, download the tool <a class="newstyle_link" href="https://grassroots.tools/frictionless-data/client" target="_blank">here</a>',
+        content: 'Frictionless Data Package lets you download all data associated with this study, including its parent field trial and programme, for more info and the tool go to <a class="newstyle_link" href="https://grassroots.tools/frictionless-data/grassroots-fd-client.md" target="_blank">here</a>',
         html: true,
         placement: 'top',
         trigger: 'manual',
