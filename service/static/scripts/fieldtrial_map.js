@@ -135,6 +135,7 @@ function produceFieldtrialTable(data, type_param) {
     yrtable = jQuery('#resultTable').DataTable({
         data: data,
         "ordering": false,
+        "scrollX": true,
         "columns": [
             {
                 title: "Programme",
