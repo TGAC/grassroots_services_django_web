@@ -334,3 +334,10 @@ table.plots td {
 .leaflet-popup-content {
     min-width: 400px;
 }
+
+.dataTables_scrollBody {
+    transform:rotateX(180deg);
+}
+.dataTables_scrollBody table {
+    transform:rotateX(180deg);
+}
