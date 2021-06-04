@@ -6,9 +6,9 @@ import json
 from django.http import HttpResponse
 from .grassroots_requests import get_all_services
 from .grassroots_requests import get_service
-from .grassroots_requests import search_treatment
-from .grassroots_requests import submit_form
-from .grassroots_requests import check_result
+# from .grassroots_requests import search_treatment
+# from .grassroots_requests import submit_form
+# from .grassroots_requests import check_result
 from .grassroots_requests import search_treatment_return_ols
 from .grassroots_requests import interact_backend
 
