@@ -12,22 +12,34 @@ from .grassroots_requests import check_result
 from .grassroots_requests import search_treatment_return_ols
 from .grassroots_requests import interact_backend
 
-
+'''
+index page
+'''
 def index(request):
     return render(request, 'index.html', {})
 
-
+'''
+Get all services as a json array
+'''
 def index_ajax(request):
     service_list_json = get_all_services()
     return HttpResponse(service_list_json)
 
-
+'''
+Get one named service
+'''
 def single_service(request, service_alt_name):
     return render(request, 'service.html', {'service_alt_name': service_alt_name})
 
+'''
+Get one named service with payload
+'''
 def single_service_with_payload(request, payload):
     return render(request, 'service_payload.html', {'payload': payload})
 
+'''
+Get search grassroots service with a query
+'''
 def single_service_search_q(request, search_q):
     return render(request, 'service_search_q.html', {'q': search_q})
 
@@ -62,7 +74,9 @@ def interact_with_apache(request):
 #     response_json = check_result(json.loads(data))
 #     return HttpResponse(response_json)
 
-
+'''
+GET request for ontology look up service for COPO
+'''
 def crop_ontology_search(request):
     search_string = request.GET['q']
     response_json = search_treatment_return_ols(search_string)
