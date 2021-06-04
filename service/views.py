@@ -36,29 +36,31 @@ def single_service_ajax(request):
     service_json = get_service(service_name)
     return HttpResponse(service_json)
 
-
+'''
+Post request from front-end to the backend
+'''
 def interact_with_apache(request):
     data = request.body
     response_json = interact_backend(data)
     return HttpResponse(response_json)
 
 
-def search_treatment_ajax(request):
-    data = request.POST['data']
-    response_json = search_treatment(data)
-    return HttpResponse(response_json)
-
-
-def submit_form_ajax(request):
-    data = request.POST['data']
-    response_json = submit_form(json.loads(data))
-    return HttpResponse(response_json)
-
-
-def check_result_ajax(request):
-    data = request.POST['data']
-    response_json = check_result(json.loads(data))
-    return HttpResponse(response_json)
+# def search_treatment_ajax(request):
+#     data = request.POST['data']
+#     response_json = search_treatment(data)
+#     return HttpResponse(response_json)
+#
+#
+# def submit_form_ajax(request):
+#     data = request.POST['data']
+#     response_json = submit_form(json.loads(data))
+#     return HttpResponse(response_json)
+#
+#
+# def check_result_ajax(request):
+#     data = request.POST['data']
+#     response_json = check_result(json.loads(data))
+#     return HttpResponse(response_json)
 
 
 def crop_ontology_search(request):

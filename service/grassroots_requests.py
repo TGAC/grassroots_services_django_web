@@ -4,39 +4,51 @@ from django.conf import settings
 
 server_url = settings.SERVER_URL
 
-
+'''
+Get all services
+returns JSON from backend and send to the model
+'''
 def get_all_services():
     list_services_req = {"operations": {"operation": "get_all_services"}}
     res = requests.post(server_url, data=json.dumps(list_services_req))
     return json.dumps(res.json())
 
-
+'''
+Get one service with an alternative name
+returns JSON from backend and send to the model
+'''
 def get_service(service_alt_name):
     get_service_req = {"services": [{"so:alternateName": service_alt_name}], "operations": {"operation": "get_named_service"}}
     res = requests.post(server_url, data=json.dumps(get_service_req))
     return json.dumps(res.json())
 
-
+'''
+Send request to apache backend
+returns JSON from backend
+'''
 def interact_backend(data):
     res = requests.post(server_url, data=data)
     return json.dumps(res.json())
 
 
-def search_treatment(data):
-    res = requests.post(server_url, data=json.dumps(data))
-    return json.dumps(res.json())
+# def search_treatment(data):
+#     res = requests.post(server_url, data=json.dumps(data))
+#     return json.dumps(res.json())
+#
+#
+# def submit_form(data):
+#     res = requests.post(server_url, data=json.dumps(data))
+#     return json.dumps(res.json())
+#
+#
+# def check_result(data):
+#     res = requests.post(server_url, data=json.dumps(data))
+#     return json.dumps(res.json())
 
-
-def submit_form(data):
-    res = requests.post(server_url, data=json.dumps(data))
-    return json.dumps(res.json())
-
-
-def check_result(data):
-    res = requests.post(server_url, data=json.dumps(data))
-    return json.dumps(res.json())
-
-
+'''
+Provides ols for phenotype search with a string, for COPO
+returns formatted JSON from backend to conform the OLS standard
+'''
 def search_treatment_return_ols(string):
     submit_json = {
         "services": [
