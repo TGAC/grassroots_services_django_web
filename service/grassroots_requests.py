@@ -3,14 +3,18 @@ import json
 from django.conf import settings
 
 server_url = settings.SERVER_URL
+private_server_url = settings.PRIVATE_SERVER_URL
 
 '''
 Get all services
 returns JSON from backend and send to the model
 '''
-def get_all_services():
+def get_all_services(str):
     list_services_req = {"operations": {"operation": "get_all_services"}}
-    res = requests.post(server_url, data=json.dumps(list_services_req))
+    if str == 'public':
+        res = requests.post(server_url, data=json.dumps(list_services_req))
+    elif str == 'private':
+        res = requests.post(private_server_url, data=json.dumps(list_services_req))
     return json.dumps(res.json())
 
 '''
@@ -30,20 +34,6 @@ def interact_backend(data):
     res = requests.post(server_url, data=data)
     return json.dumps(res.json())
 
-
-# def search_treatment(data):
-#     res = requests.post(server_url, data=json.dumps(data))
-#     return json.dumps(res.json())
-#
-#
-# def submit_form(data):
-#     res = requests.post(server_url, data=json.dumps(data))
-#     return json.dumps(res.json())
-#
-#
-# def check_result(data):
-#     res = requests.post(server_url, data=json.dumps(data))
-#     return json.dumps(res.json())
 
 '''
 Provides ols for phenotype search with a string, for COPO

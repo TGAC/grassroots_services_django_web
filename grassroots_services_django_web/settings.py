@@ -124,3 +124,4 @@ STATIC_ROOT = "/opt/apache/htdocs/static/"
 STATIC_URL = '/static/'
 
 SERVER_URL = "https://grassroots.tools/public_backend"
+PRIVATE_SERVER_URL = "https://grassroots.tools/private_backend"

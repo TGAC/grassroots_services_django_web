@@ -6,9 +6,6 @@ import json
 from django.http import HttpResponse
 from .grassroots_requests import get_all_services
 from .grassroots_requests import get_service
-# from .grassroots_requests import search_treatment
-# from .grassroots_requests import submit_form
-# from .grassroots_requests import check_result
 from .grassroots_requests import search_treatment_return_ols
 from .grassroots_requests import interact_backend
 
@@ -16,13 +13,25 @@ from .grassroots_requests import interact_backend
 index page
 '''
 def index(request):
-    return render(request, 'index.html', {})
+    return render(request, 'index.html', {'private': ''})
+'''
+Private services index page
+'''
+def private_index(request):
+    return render(request, 'index.html', {'private': 'private/'})
 
 '''
 Get all services as a json array
 '''
 def index_ajax(request):
-    service_list_json = get_all_services()
+    service_list_json = get_all_services('public')
+    return HttpResponse(service_list_json)
+
+'''
+Get all private services as a json array
+'''
+def private_index_ajax(request):
+    service_list_json = get_all_services('private')
     return HttpResponse(service_list_json)
 
 '''
