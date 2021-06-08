@@ -677,7 +677,7 @@ function produce_form(div, parameters, groups, refreshed) {
                         }
                     }
                 }
-                if (this_group_repeat_no > 0) {
+                if (this_group_repeat_no > 1) {
                     for (var r = 0; r < this_group_repeat_no; r++) {
                         repeatable_groups[group_random_id]['counter'] = r;
                         for (var i = 0; i < parameters.length; i++) {
