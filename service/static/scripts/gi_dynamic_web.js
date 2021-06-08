@@ -665,7 +665,13 @@ function produce_form(div, parameters, groups, refreshed) {
                     for (var i = 0; i < parameters.length; i++) {
                         if (groups[j]['so:name'] == parameters[i]['group']) {
                             if (parameters[i]['current_value'] !== null) {
-                                this_group_repeat_no = parameters[i]['current_value'].length;
+                                if (parameters[i]['grassroots_type'] === "xsd:string") {
+                                    this_group_repeat_no = 1;
+                                } else {
+                                    this_group_repeat_no = parameters[i]['current_value'].length;
+
+                                    console.log("repeat: " + this_group_repeat_no);
+                                }
                             }
                             break;
                         }
@@ -692,6 +698,39 @@ function produce_form(div, parameters, groups, refreshed) {
                                     this_parameter['param'] = parameters[i]['param'] + '-' + r;
                                 } else {
                                     this_parameter['param'] = parameters[i]['param'];
+                                }
+
+                                form_html.push(produce_one_parameter_form(this_parameter, true, group_random_id, true));
+                                parameters_added.push(parameters[i]['param']);
+                                if (r === 0) {
+                                    this_group_parameters.push(parameters[i]);
+                                }
+                            }
+                        }
+                    }
+                } else if (this_group_repeat_no === 1) {
+                    for (var r = 0; r < this_group_repeat_no; r++) {
+                        repeatable_groups[group_random_id]['counter'] = r;
+                        for (var i = 0; i < parameters.length; i++) {
+                            if (groups[j]['so:name'] == parameters[i]['group']) {
+                                var this_parameter = {};
+                                this_parameter['group'] = parameters[i]['group'];
+                                this_parameter['grassroots_type'] = parameters[i]['grassroots_type'];
+
+                                // this_parameter['grassroots_type'] = "xsd:string";
+
+                                this_parameter['level'] = parameters[i]['level'];
+                                this_parameter['so:description'] = parameters[i]['so:description'];
+                                this_parameter['so:name'] = parameters[i]['so:name'];
+                                if (this_parameter['grassroots_type'] === "params:tabular" || this_parameter['grassroots_type'] === "params:json_array") {
+                                    this_parameter['store'] = parameters[i]['store'];
+                                    this_parameter['param'] = parameters[i]['param'] + '-' + r;
+                                    this_parameter['current_value'] = parameters[i]['current_value']['values'];
+                                    this_parameter['default_value'] = parameters[i]['default_value']['values'];
+                                } else {
+                                    this_parameter['param'] = parameters[i]['param'];
+                                    this_parameter['current_value'] = parameters[i]['current_value'];
+                                    this_parameter['default_value'] = parameters[i]['default_value'];
                                 }
 
                                 form_html.push(produce_one_parameter_form(this_parameter, true, group_random_id, true));
