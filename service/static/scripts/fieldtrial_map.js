@@ -19,6 +19,9 @@ var plotsModalInfo = {};
 var formatted_treatments = [];
 var type_param_global = '';
 
+var datemin = 0;
+var datemax = 0;
+
 function startFieldTrialGIS(jsonArray, type_param) {
     type_param_global = type_param;
     console.log(JSON.stringify(jsonArray));
