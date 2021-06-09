@@ -380,7 +380,7 @@ function populateService(service_altname) {
     } else {
         var post_data = '{"services": [{"so:alternateName":"'+service_altname+'"}], "operations": {"operation": "get_named_service"}}';
         $.ajax({
-            url: root_dir + "service/ajax/interact_backend/",
+            url: root_dir + "service/"+ publicOrPrivate +"ajax/interact_backend/",
             type: "POST",
             headers: {
                 'X-CSRFToken': csrftoken
@@ -1220,7 +1220,7 @@ function refresh_service(input) {
 
     console.info(JSON.stringify(submission));
     $.ajax({
-            url: root_dir + "service/ajax/interact_backend/",
+            url: root_dir + "service/"+ publicOrPrivate +"ajax/interact_backend/",
             type: "POST",
             headers: {
                 'X-CSRFToken': csrftoken
@@ -1942,7 +1942,7 @@ function submit_form() {
 
         console.info(JSON.stringify(submission));
         $.ajax({
-            url: root_dir + "service/ajax/interact_backend/",
+            url: root_dir + "service/"+ publicOrPrivate +"ajax/interact_backend/",
             type: "POST",
             headers: {
                 'X-CSRFToken': csrftoken
@@ -2768,7 +2768,7 @@ function checkResult(each_result) {
         Utils.ui.reenableButton('submit_button', 'Submit');
     } else {
         $.ajax({
-            url: root_dir + "service/ajax/interact_backend/",
+            url: root_dir + "service/"+ publicOrPrivate +"ajax/interact_backend/",
             type: "POST",
             headers: {
                 'X-CSRFToken': csrftoken
@@ -3066,7 +3066,7 @@ function downloadJobFromServer(id) {
     };
     console.info(JSON.stringify(previousjob_request_json));
     $.ajax({
-            url: root_dir + "service/ajax/interact_backend/",
+            url: root_dir + "service/"+ publicOrPrivate +"ajax/interact_backend/",
             type: "POST",
             headers: {
                 'X-CSRFToken': csrftoken
@@ -3096,7 +3096,7 @@ function run_linked_service(id) {
     console.info(JSON.stringify({"services": [linked_service_request_json]}));
 
     $.ajax({
-            url: root_dir + "service/ajax/interact_backend/",
+            url: root_dir + "service/"+ publicOrPrivate +"ajax/interact_backend/",
             type: "POST",
             headers: {
                 'X-CSRFToken': csrftoken
@@ -3123,7 +3123,7 @@ function run_linked_service_with_redirect(id) {
     var service_name = linked_service_request_json['so:name'];
 
     $.ajax({
-            url: root_dir + "service/ajax/interact_backend/",
+            url: root_dir + "service/"+ publicOrPrivate +"ajax/interact_backend/",
             type: "POST",
             headers: {
                 'X-CSRFToken': csrftoken

@@ -21,17 +21,23 @@ def get_all_services(str):
 Get one service with an alternative name
 returns JSON from backend and send to the model
 '''
-def get_service(service_alt_name):
+def get_service(service_alt_name, str):
     get_service_req = {"services": [{"so:alternateName": service_alt_name}], "operations": {"operation": "get_named_service"}}
-    res = requests.post(server_url, data=json.dumps(get_service_req))
+    if str == 'public':
+        res = requests.post(server_url, data=json.dumps(get_service_req))
+    elif str == 'private':
+        res = requests.post(private_server_url, data=json.dumps(get_service_req))
     return json.dumps(res.json())
 
 '''
 Send request to apache backend
 returns JSON from backend
 '''
-def interact_backend(data):
-    res = requests.post(server_url, data=data)
+def interact_backend(data, str):
+    if str == 'public':
+        res = requests.post(server_url, data=data)
+    elif str == 'private':
+        res = requests.post(private_server_url, data=data)
     return json.dumps(res.json())
 
 

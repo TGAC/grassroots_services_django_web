@@ -13,9 +13,9 @@ urlpatterns = [
 
     path('private/', views.private_index),
     path('private/ajax/get_all_services/', views.private_index_ajax),
-    path('private/ajax/get_one_service/', views.single_service_ajax),
-    path('private/ajax/interact_backend/', views.interact_with_apache),
-    re_path(r'private/(?P<service_alt_name>[A-z0-9-\w%]+)$', views.single_service),
+    path('private/ajax/get_one_service/', views.private_single_service_ajax),
+    path('private/ajax/interact_backend/', views.private_interact_with_apache),
+    re_path(r'private/(?P<service_alt_name>[A-z0-9-\w%]+)$', views.private_single_service),
 
     path('api/co_ols', views.crop_ontology_search),
     path('payload/<payload>', views.single_service_with_payload),
