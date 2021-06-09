@@ -379,6 +379,8 @@ function populateService(service_altname) {
         form_html.push('</div>');
         $('#form').html(form_html.join(' '));
 
+    } else if (selected_service_name === 'private') {
+        window.location.href = root_dir + "service/private/";
     } else {
         var post_data = '{"services": [{"so:alternateName":"' + service_altname + '"}], "operations": {"operation": "get_named_service"}}';
         $.ajax({
