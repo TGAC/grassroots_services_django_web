@@ -29,100 +29,100 @@ const grassroots_search = 'search';
 
 
 var search_measured_variables_json = {
-        "@type": "grassroots_service",
-        "so:name": "Search Measured Phenotype Variables",
-        "so:description": "Search field trial measured phenotype variables",
-        "so:alternateName": "field_trial-search_measured_variables",
-        "provider": {
-            "@type": "so:Organization",
-            "so:name": "EI Grassroots server",
-            "so:description": "The Earlham Institute Grassroots server",
-            "so:url": "https://grassroots.tools/",
-            "so:logo": "https://www.earlham.ac.uk/sites/default/files/favicon_1_0.jpg"
+    "@type": "grassroots_service",
+    "so:name": "Search Measured Phenotype Variables",
+    "so:description": "Search field trial measured phenotype variables",
+    "so:alternateName": "field_trial-search_measured_variables",
+    "provider": {
+        "@type": "so:Organization",
+        "so:name": "EI Grassroots server",
+        "so:description": "The Earlham Institute Grassroots server",
+        "so:url": "https://grassroots.tools/",
+        "so:logo": "https://www.earlham.ac.uk/sites/default/files/favicon_1_0.jpg"
+    },
+    "category": {
+        "application_category": {
+            "so:sameAs": "eo:topic_3810",
+            "so:name": "Agricultural science",
+            "so:description": "Multidisciplinary study, research and development within the field of agriculture."
         },
-        "category": {
-            "application_category": {
-                "so:sameAs": "eo:topic_3810",
-                "so:name": "Agricultural science",
-                "so:description": "Multidisciplinary study, research and development within the field of agriculture."
-            },
-            "application_subcategory": {
-                "so:sameAs": "eo:operation_3431",
-                "so:name": "Deposition",
-                "so:description": "Deposit some data in a database or some other type of repository or software system."
-            },
-            "input": [
-                {
-                    "so:sameAs": "eo:data_0968",
-                    "so:name": "Keyword",
-                    "so:description": "Boolean operators (AND, OR and NOT) and wildcard characters may be allowed. Keyword(s) or phrase(s) used (typically) for text-searching purposes."
-                }
-            ],
-            "output": [
-                {
-                    "so:sameAs": "so:measurementTechnique",
-                    "so:name": "measurementTechnique",
-                    "so:description": "Measurement technique."
-                }
-            ]
+        "application_subcategory": {
+            "so:sameAs": "eo:operation_3431",
+            "so:name": "Deposition",
+            "so:description": "Deposit some data in a database or some other type of repository or software system."
         },
-        "operation": {
-            "so:image": "https://grassroots.tools/grassroots/images/aiss/polygonchange"
-        }
-    };
+        "input": [
+            {
+                "so:sameAs": "eo:data_0968",
+                "so:name": "Keyword",
+                "so:description": "Boolean operators (AND, OR and NOT) and wildcard characters may be allowed. Keyword(s) or phrase(s) used (typically) for text-searching purposes."
+            }
+        ],
+        "output": [
+            {
+                "so:sameAs": "so:measurementTechnique",
+                "so:name": "measurementTechnique",
+                "so:description": "Measurement technique."
+            }
+        ]
+    },
+    "operation": {
+        "so:image": "https://grassroots.tools/grassroots/images/aiss/polygonchange"
+    }
+};
 var search_treatments_json = {
-        "@type": "grassroots_service",
-        "so:name": "Search Treatments",
-        "so:description": "Search field trial treatments",
-        "so:alternateName": "field_trial-search_treatments",
-        "provider": {
-            "@type": "so:Organization",
-            "so:name": "EI Grassroots server",
-            "so:description": "The Earlham Institute Grassroots server",
-            "so:url": "https://grassroots.tools/",
-            "so:logo": "https://www.earlham.ac.uk/sites/default/files/favicon_1_0.jpg"
+    "@type": "grassroots_service",
+    "so:name": "Search Treatments",
+    "so:description": "Search field trial treatments",
+    "so:alternateName": "field_trial-search_treatments",
+    "provider": {
+        "@type": "so:Organization",
+        "so:name": "EI Grassroots server",
+        "so:description": "The Earlham Institute Grassroots server",
+        "so:url": "https://grassroots.tools/",
+        "so:logo": "https://www.earlham.ac.uk/sites/default/files/favicon_1_0.jpg"
+    },
+    "category": {
+        "application_category": {
+            "so:sameAs": "eo:topic_3810",
+            "so:name": "Agricultural science",
+            "so:description": "Multidisciplinary study, research and development within the field of agriculture."
         },
-        "category": {
-            "application_category": {
-                "so:sameAs": "eo:topic_3810",
-                "so:name": "Agricultural science",
-                "so:description": "Multidisciplinary study, research and development within the field of agriculture."
-            },
-            "application_subcategory": {
-                "so:sameAs": "eo:operation_3431",
-                "so:name": "Deposition",
-                "so:description": "Deposit some data in a database or some other type of repository or software system."
-            },
-            "input": [
-                {
-                    "so:sameAs": "eo:data_0968",
-                    "so:name": "Keyword",
-                    "so:description": "Boolean operators (AND, OR and NOT) and wildcard characters may be allowed. Keyword(s) or phrase(s) used (typically) for text-searching purposes."
-                }
-            ],
-            "output": [
-                {
-                    "so:sameAs": "so:measurementTechnique",
-                    "so:name": "measurementTechnique",
-                    "so:description": "Measurement technique."
-                }
-            ]
+        "application_subcategory": {
+            "so:sameAs": "eo:operation_3431",
+            "so:name": "Deposition",
+            "so:description": "Deposit some data in a database or some other type of repository or software system."
         },
-        "operation": {
-            "so:image": "https://grassroots.tools/grassroots/images/aiss/polygonchange"
-        }
-    };
+        "input": [
+            {
+                "so:sameAs": "eo:data_0968",
+                "so:name": "Keyword",
+                "so:description": "Boolean operators (AND, OR and NOT) and wildcard characters may be allowed. Keyword(s) or phrase(s) used (typically) for text-searching purposes."
+            }
+        ],
+        "output": [
+            {
+                "so:sameAs": "so:measurementTechnique",
+                "so:name": "measurementTechnique",
+                "so:description": "Measurement technique."
+            }
+        ]
+    },
+    "operation": {
+        "so:image": "https://grassroots.tools/grassroots/images/aiss/polygonchange"
+    }
+};
 
 function get_all_services_as_table() {
 
     // $('#form').html("<table id=\"listTable\">Loading services...</table>");
 
     $.ajax({
-            url: root_dir + "service/ajax/interact_backend/",
-            type: "POST",
-            headers: {
-                'X-CSRFToken': csrftoken
-            },
+        url: root_dir + "service/ajax/interact_backend/",
+        type: "POST",
+        headers: {
+            'X-CSRFToken': csrftoken
+        },
         data: services,
         dataType: "json",
         success: function (json) {
@@ -140,8 +140,8 @@ function get_all_services_as_table() {
             var service_list_json = [];
             service_list_json = json['services'];
             // if (server_url !== "/private_backend") {
-                service_list_json.push(search_measured_variables_json);
-                service_list_json.push(search_treatments_json);
+            service_list_json.push(search_measured_variables_json);
+            service_list_json.push(search_treatments_json);
             // }
             var context_json = json['@context'];
             var listTable = jQuery('#listTable').DataTable({
@@ -237,15 +237,17 @@ function display_all_services_as_table(json) {
 
     console.info(JSON.stringify(json));
     var service_list = json['services'];
-
-                service_list.push(search_measured_variables_json);
-                service_list.push(search_treatments_json);
+    if (publicOrPrivate === '') {
+        service_list.push(search_measured_variables_json);
+        service_list.push(search_treatments_json);
+    }
     var context_json = json['@context'];
     var listTable = jQuery('#listTable').DataTable({
         data: service_list,
         searchHighlight: true,
         scrollX: true,
         scrollCollapse: true,
+        "paging": false,
         "columns": [
             {
                 title: "Service",
@@ -378,9 +380,9 @@ function populateService(service_altname) {
         $('#form').html(form_html.join(' '));
 
     } else {
-        var post_data = '{"services": [{"so:alternateName":"'+service_altname+'"}], "operations": {"operation": "get_named_service"}}';
+        var post_data = '{"services": [{"so:alternateName":"' + service_altname + '"}], "operations": {"operation": "get_named_service"}}';
         $.ajax({
-            url: root_dir + "service/"+ publicOrPrivate +"ajax/interact_backend/",
+            url: root_dir + "service/" + publicOrPrivate + "ajax/interact_backend/",
             type: "POST",
             headers: {
                 'X-CSRFToken': csrftoken
@@ -429,11 +431,11 @@ function populateSearchWithQ(q) {
 
     // var data = decodeURIComponent(payload);
     $.ajax({
-            url: root_dir + "service/ajax/interact_backend/",
-            type: "POST",
-            headers: {
-                'X-CSRFToken': csrftoken
-            },
+        url: root_dir + "service/ajax/interact_backend/",
+        type: "POST",
+        headers: {
+            'X-CSRFToken': csrftoken
+        },
         data: '{"services": [{"so:alternateName":"search"}], "operations": {"operation": "get_named_service"}}',
         dataType: "json",
         success: function (json) {
@@ -443,11 +445,11 @@ function populateSearchWithQ(q) {
         }
     });
     $.ajax({
-            url: root_dir + "service/ajax/interact_backend/",
-            type: "POST",
-            headers: {
-                'X-CSRFToken': csrftoken
-            },
+        url: root_dir + "service/ajax/interact_backend/",
+        type: "POST",
+        headers: {
+            'X-CSRFToken': csrftoken
+        },
         data: '{"services":[{"start_service":true,"so:alternateName":"search","parameter_set":{"level":"simple","parameters":[{"param":"SS Keyword Search","current_value":"' + q + '"},{"param":"SS Facet","current_value":"<ANY>"},{"param":"SS Results Page Number","current_value":0},{"param":"SS Results Page Size","current_value":500}]}}]}',
         type: "POST",
         dataType: "json",
@@ -981,7 +983,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id, refreshed) 
             form_html.push('</div>');
         }
         // textarea
-        else if (grassroots_type == "params:large_string" ) {
+        else if (grassroots_type == "params:large_string") {
             form_html.push('<div class="form-group ' + level + '">');
             form_html.push('<label title="' + description + '">' + display_name + required_param_name + '</label>');
             form_html.push('<textarea class="form-control ' + required + '" name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param.replace(/\s+/g, "_") + '" rows="3" ' + required + '>' + default_value + '</textarea>');
@@ -1120,7 +1122,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id, refreshed) 
 function refresh_service(input) {
     // console.log(input);
 
-    $('#status').html('<img src="'+root_dir+'static/images/ajax-loader.gif"/>');
+    $('#status').html('<img src="' + root_dir + 'static/images/ajax-loader.gif"/>');
     Utils.ui.disableButton('submit_button');
     var form = jQuery('#form').serializeArray();
     form = form.concat(
@@ -1220,11 +1222,11 @@ function refresh_service(input) {
 
     console.info(JSON.stringify(submission));
     $.ajax({
-            url: root_dir + "service/"+ publicOrPrivate +"ajax/interact_backend/",
-            type: "POST",
-            headers: {
-                'X-CSRFToken': csrftoken
-            },
+        url: root_dir + "service/" + publicOrPrivate + "ajax/interact_backend/",
+        type: "POST",
+        headers: {
+            'X-CSRFToken': csrftoken
+        },
         data: JSON.stringify(submission),
         dataType: "json",
         success: function (json) {
@@ -1318,11 +1320,11 @@ function do_ajax_search(type) {
 
         timer = setTimeout(function () {
             $.ajax({
-            url: root_dir + "service/ajax/interact_backend/",
-            type: "POST",
-            headers: {
-                'X-CSRFToken': csrftoken
-            },
+                url: root_dir + "service/ajax/interact_backend/",
+                type: "POST",
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
                 data: JSON.stringify(submit_json),
                 dataType: "json",
                 success: function (json) {
@@ -1912,7 +1914,7 @@ function submit_form() {
     if (!allRequired) {
         alert('Please fill all required fields with *');
     } else {
-        $('#status').html('<img src="'+root_dir+'static/images/ajax-loader.gif"/>');
+        $('#status').html('<img src="' + root_dir + 'static/images/ajax-loader.gif"/>');
         Utils.ui.disableButton('submit_button');
         var form = jQuery('#form').serializeArray();
         form = form.concat(
@@ -1942,7 +1944,7 @@ function submit_form() {
 
         console.info(JSON.stringify(submission));
         $.ajax({
-            url: root_dir + "service/"+ publicOrPrivate +"ajax/interact_backend/",
+            url: root_dir + "service/" + publicOrPrivate + "ajax/interact_backend/",
             type: "POST",
             headers: {
                 'X-CSRFToken': csrftoken
@@ -2076,10 +2078,10 @@ function process_repeatable_parameters(input_parameters) {
                     console.log(input_parameter['current_value']);
 
                     if (table_bool) {
-                        if (input_parameter['current_value'].length >0) {
+                        if (input_parameter['current_value'].length > 0) {
                             current_value.push(input_parameter['current_value']);
                         }
-                    }else{
+                    } else {
                         current_value.push(input_parameter['current_value']);
                     }
 
@@ -2104,7 +2106,7 @@ function process_repeatable_parameters(input_parameters) {
 function get_api_result(service, previousID) {
     selected_service_name = service;
     $('#title').html(service);
-    $('#status').html('<img src="'+root_dir+'static/images/ajax-loader.gif"/>');
+    $('#status').html('<img src="' + root_dir + 'static/images/ajax-loader.gif"/>');
     $.ajax({
         url: server_url + '/service/' + encodeURIComponent(service) + '?Previous%20results=' + previousID,
         // type: "GET",
@@ -2139,7 +2141,7 @@ function display_result(json) {
             var each_result = json['results'][i];
             var uuid = each_result['job_uuid'];
             var dbname = each_result['so:name'];
-            $('#result').append('<fieldset><legend>' + dbname + '</legend><div><p><b>Job ID: ' + uuid + '</b></p><div id=\"' + uuid + '\">Job Submitted <img src="'+root_dir+'static/images/ajax-loader.gif"/></div></div></br></fieldset>');
+            $('#result').append('<fieldset><legend>' + dbname + '</legend><div><p><b>Job ID: ' + uuid + '</b></p><div id=\"' + uuid + '\">Job Submitted <img src="' + root_dir + 'static/images/ajax-loader.gif"/></div></div></br></fieldset>');
 
             checkResult(each_result);
         }
@@ -2152,7 +2154,7 @@ function display_result(json) {
             var each_result = json['results'][i];
             var uuid = each_result['job_uuid'];
             var dbname = each_result['so:name'];
-            $('#result').append('<fieldset><legend>' + dbname + '</legend><div><p><b>Job ID: ' + uuid + '</b></p><div id=\"' + uuid + '\">Job Submitted <img src="'+root_dir+'static/images/ajax-loader.gif"/></div></div></br></fieldset>');
+            $('#result').append('<fieldset><legend>' + dbname + '</legend><div><p><b>Job ID: ' + uuid + '</b></p><div id=\"' + uuid + '\">Job Submitted <img src="' + root_dir + 'static/images/ajax-loader.gif"/></div></div></br></fieldset>');
 
             checkResult(each_result);
         }
@@ -2435,7 +2437,7 @@ function format_grassroots_search_results_ul(facets) {
 }
 
 function sortResults(arr, prop, asc) {
-    arr.sort(function(a, b) {
+    arr.sort(function (a, b) {
         if (asc) {
             return (a[prop] > b[prop]) ? 1 : ((a[prop] < b[prop]) ? -1 : 0);
         } else {
@@ -2768,11 +2770,11 @@ function checkResult(each_result) {
         Utils.ui.reenableButton('submit_button', 'Submit');
     } else {
         $.ajax({
-            url: root_dir + "service/"+ publicOrPrivate +"ajax/interact_backend/",
-            type: "POST",
-            headers: {
-                'X-CSRFToken': csrftoken
-            },
+                url: root_dir + "service/" + publicOrPrivate + "ajax/interact_backend/",
+                type: "POST",
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
                 data: '{"operations": {"operation": "get_service_results"}, "services": ["' + uuid + '"]}',
                 dataType: "json",
                 success: function (json) {
@@ -2792,7 +2794,7 @@ function checkResult(each_result) {
                             downloadFile(json[0]['results'][0]['data'], selected_service_name);
                         }
                     } else if (status_text_key == 'Idle' || status_text_key == 'Pending' || status_text_key == 'Started' || status_text_key == 'Finished') {
-                        jQuery('#' + uuid).html('Job ' + status_text_key + ' <img src="'+root_dir+'static/images/ajax-loader.gif"/>');
+                        jQuery('#' + uuid).html('Job ' + status_text_key + ' <img src="' + root_dir + 'static/images/ajax-loader.gif"/>');
                         var timer;
                         clearTimeout(timer);
                         timer = setTimeout(function () {
@@ -3043,7 +3045,7 @@ function changeDownloadFormat() {
 }
 
 function downloadJobFromServer(id) {
-    $('#' + id + 'status').html('<img src="'+root_dir+'static/images/ajax-loader.gif"/>');
+    $('#' + id + 'status').html('<img src="' + root_dir + 'static/images/ajax-loader.gif"/>');
     $('#' + id + 'dl').removeAttr('onclick');
     var outfmt = parseInt($('#output_format').val());
 
@@ -3066,11 +3068,11 @@ function downloadJobFromServer(id) {
     };
     console.info(JSON.stringify(previousjob_request_json));
     $.ajax({
-            url: root_dir + "service/"+ publicOrPrivate +"ajax/interact_backend/",
-            type: "POST",
-            headers: {
-                'X-CSRFToken': csrftoken
-            },
+        url: root_dir + "service/" + publicOrPrivate + "ajax/interact_backend/",
+        type: "POST",
+        headers: {
+            'X-CSRFToken': csrftoken
+        },
         data: JSON.stringify(previousjob_request_json),
         dataType: "json",
         success: function (json) {
@@ -3089,18 +3091,18 @@ function downloadJobFromServer(id) {
 
 
 function run_linked_service(id) {
-    $('#' + id + 'status').html('<img src="'+root_dir+'static/images/ajax-loader.gif"/>');
+    $('#' + id + 'status').html('<img src="' + root_dir + 'static/images/ajax-loader.gif"/>');
     $('#' + id).removeAttr('onclick');
 
     var linked_service_request_json = linked_services_global[id];
     console.info(JSON.stringify({"services": [linked_service_request_json]}));
 
     $.ajax({
-            url: root_dir + "service/"+ publicOrPrivate +"ajax/interact_backend/",
-            type: "POST",
-            headers: {
-                'X-CSRFToken': csrftoken
-            },
+        url: root_dir + "service/" + publicOrPrivate + "ajax/interact_backend/",
+        type: "POST",
+        headers: {
+            'X-CSRFToken': csrftoken
+        },
         data: JSON.stringify({"services": [linked_service_request_json]}),
         dataType: "json",
         success: function (json) {
@@ -3115,7 +3117,7 @@ function run_linked_service(id) {
 
 
 function run_linked_service_with_redirect(id) {
-    $('#' + id + 'status').html('<img src="'+root_dir+'static/images/ajax-loader.gif"/>');
+    $('#' + id + 'status').html('<img src="' + root_dir + 'static/images/ajax-loader.gif"/>');
     $('#' + id).removeAttr('onclick');
 
     var linked_service_request_json = linked_services_global[id];
@@ -3123,11 +3125,11 @@ function run_linked_service_with_redirect(id) {
     var service_name = linked_service_request_json['so:name'];
 
     $.ajax({
-            url: root_dir + "service/"+ publicOrPrivate +"ajax/interact_backend/",
-            type: "POST",
-            headers: {
-                'X-CSRFToken': csrftoken
-            },
+        url: root_dir + "service/" + publicOrPrivate + "ajax/interact_backend/",
+        type: "POST",
+        headers: {
+            'X-CSRFToken': csrftoken
+        },
         data: JSON.stringify({"services": [linked_service_request_json]}),
         dataType: "json",
         success: function (json) {
