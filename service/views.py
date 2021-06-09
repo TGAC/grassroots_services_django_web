@@ -19,6 +19,11 @@ Private services index page
 '''
 def private_index(request):
     return render(request, 'index.html', {'private': 'private/'})
+'''
+Private services index page
+'''
+def queen_index(request):
+    return render(request, 'index.html', {'private': 'queen/'})
 
 '''
 Get all services as a json array
@@ -35,6 +40,13 @@ def private_index_ajax(request):
     return HttpResponse(service_list_json)
 
 '''
+Get all private services as a json array
+'''
+def queen_index_ajax(request):
+    service_list_json = get_all_services('queen')
+    return HttpResponse(service_list_json)
+
+'''
 Get one named service
 '''
 def single_service(request, service_alt_name):
@@ -45,6 +57,12 @@ Get one named service
 '''
 def private_single_service(request, service_alt_name):
     return render(request, 'service.html', {'service_alt_name': service_alt_name, 'private': 'private/'})
+
+'''
+Get one named service
+'''
+def queen_single_service(request, service_alt_name):
+    return render(request, 'service.html', {'service_alt_name': service_alt_name, 'private': 'queen/'})
 
 '''
 Get one named service with payload
@@ -75,6 +93,15 @@ def private_single_service_ajax(request):
     return HttpResponse(service_json)
 
 '''
+Get search grassroots service with a query
+'''
+def queen_single_service_ajax(request):
+    service_name = request.POST['service_name']
+    service_json = get_service(service_name, 'queen')
+    return HttpResponse(service_json)
+
+
+'''
 Post request from front-end to the backend
 '''
 def interact_with_apache(request):
@@ -89,6 +116,15 @@ def private_interact_with_apache(request):
     data = request.body
     response_json = interact_backend(data, 'private')
     return HttpResponse(response_json)
+
+'''
+Post request from front-end to the backend
+'''
+def queen_interact_with_apache(request):
+    data = request.body
+    response_json = interact_backend(data, 'queen')
+    return HttpResponse(response_json)
+
 
 
 # def search_treatment_ajax(request):

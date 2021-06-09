@@ -4,6 +4,7 @@ from django.conf import settings
 
 server_url = settings.SERVER_URL
 private_server_url = settings.PRIVATE_SERVER_URL
+queen_server_url = settings.QUEEN_SERVER_URL
 
 '''
 Get all services
@@ -15,6 +16,8 @@ def get_all_services(str):
         res = requests.post(server_url, data=json.dumps(list_services_req))
     elif str == 'private':
         res = requests.post(private_server_url, data=json.dumps(list_services_req))
+    elif str == 'queen':
+        res = requests.post(queen_server_url, data=json.dumps(list_services_req))
     return json.dumps(res.json())
 
 '''
@@ -27,6 +30,8 @@ def get_service(service_alt_name, str):
         res = requests.post(server_url, data=json.dumps(get_service_req))
     elif str == 'private':
         res = requests.post(private_server_url, data=json.dumps(get_service_req))
+    elif str == 'queen':
+        res = requests.post(queen_server_url, data=json.dumps(get_service_req))
     return json.dumps(res.json())
 
 '''
@@ -38,6 +43,8 @@ def interact_backend(data, str):
         res = requests.post(server_url, data=data)
     elif str == 'private':
         res = requests.post(private_server_url, data=data)
+    elif str == 'queen':
+        res = requests.post(queen_server_url, data=data)
     return json.dumps(res.json())
 
 

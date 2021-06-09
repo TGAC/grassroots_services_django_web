@@ -125,4 +125,5 @@ STATIC_URL = '/static/'
 
 SERVER_URL = "https://grassroots.tools/public_backend"
 PRIVATE_SERVER_URL = "https://grassroots.tools/private_backend"
+QUEEN_SERVER_URL = "http://10.0.152.54/grassroots/queen_bee_backend"
 # PRIVATE_SERVER_URL = "https://grassroots.tools/dev/public_backend" #dev

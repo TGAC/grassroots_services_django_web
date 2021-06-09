@@ -381,6 +381,8 @@ function populateService(service_altname) {
 
     } else if (selected_service_name === 'private') {
         window.location.href = root_dir + "service/private/";
+    } else if (selected_service_name === 'queen') {
+        window.location.href = root_dir + "service/queen/";
     } else {
         var post_data = '{"services": [{"so:alternateName":"' + service_altname + '"}], "operations": {"operation": "get_named_service"}}';
         $.ajax({
