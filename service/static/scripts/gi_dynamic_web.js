@@ -113,6 +113,10 @@ var search_treatments_json = {
     }
 };
 
+/**
+ * Get all services from backend and list them as a table
+ *
+ */
 function get_all_services_as_table() {
 
     // $('#form').html("<table id=\"listTable\">Loading services...</table>");
@@ -231,6 +235,11 @@ function get_all_services_as_table() {
     $('#back_link').css('visibility', 'hidden');
 }
 
+/**
+ * Display all services as a table with given JSON
+ *
+ * @param {JSON} json - All services JSON.
+ */
 function display_all_services_as_table(json) {
 
     // $('#form').html("<table id=\"listTable\">Loading services...</table>");
@@ -327,6 +336,12 @@ function display_all_services_as_table(json) {
     $('#back_link').css('visibility', 'hidden');
 }
 
+/**
+ * Format ontology links
+ *
+ * @param {JSON} context_json - Ontology context JSON.
+ * @param {String} ontology_ref - Ontology reference string.
+ */
 function ontology_links(context_json, ontology_ref) {
     var ontology_array = ontology_ref.split(':');
     var prefix = ontology_array[0] + ':';
@@ -334,6 +349,11 @@ function ontology_links(context_json, ontology_ref) {
     return context_json[prefix] + ontology_array[1];
 }
 
+/**
+ * Populate a service with a give alternative name
+ *
+ * @param {String} service_altname - service alternative string.
+ */
 function populateService(service_altname) {
     $('#back_link').css('visibility', 'visible');
     // $('#title').html('Search Treatment');
@@ -400,6 +420,11 @@ function populateService(service_altname) {
     }
 }
 
+/**
+ * Populate a service with a payload for opening a new service page with predefined parameters
+ *
+ * @param {String} payload - Payload string from backend.
+ */
 function populateServiceWithPayload(payload) {
     $('#back_link').css('visibility', 'visible');
     // $('#title').html('Search Treatment');
@@ -427,6 +452,11 @@ function populateServiceWithPayload(payload) {
 }
 
 
+/**
+ * Populate the search service with a string
+ *
+ * @param {String} q - search string.
+ */
 function populateSearchWithQ(q) {
     $('#back_link').css('visibility', 'visible');
     // $('#title').html('Search Treatment');
@@ -466,24 +496,44 @@ function populateSearchWithQ(q) {
 
 var MAX_BYTES = 409600; // 100 KB
 
+/**
+ * Handle dragging enter
+ *
+ * @param {Event} event - dragging event.
+ */
 function dragEnter(event) {
     console.log('dragEnter', event);
     event.stopPropagation();
     event.preventDefault();
 }
 
+/**
+ * Handle dragging exit
+ *
+ * @param {Event} event - dragging event.
+ */
 function dragExit(event) {
     console.log('dragExit', event);
     event.stopPropagation();
     event.preventDefault();
 }
 
+/**
+ * Handle dragging over
+ *
+ * @param {Event} event - dragging event.
+ */
 function dragOver(event) {
     console.log('dragOver', event);
     event.stopPropagation();
     event.preventDefault();
 }
 
+/**
+ * Handle drop
+ *
+ * @param {Event} event - drop event.
+ */
 function drop(event) {
 
     console.log('drop', event);
@@ -510,12 +560,24 @@ function drop(event) {
     }
 }
 
+/**
+ * Handle loading file
+ *
+ * @param {Event} event - dragging event.
+ * @param {String} tid - textarea id.
+ */
 function onFileLoaded(event, tid) {
     console.log('onFileLoaded', event);
     var initialData = event.currentTarget.result.substr(0, MAX_BYTES);
     $('#' + tid).text(initialData);
 }
 
+/**
+ * Populate page with service JSON from backend
+ *
+ * @param {JSON} json - JSON from backend.
+ * @param {Boolean} refreshed - Boolean to show if this page was refreshed from one of the parameters.
+ */
 function populate_page_with_json(json, refreshed) {
     response = json;
     console.info(JSON.stringify(json));
@@ -615,6 +677,12 @@ var buttonCommon = {
     }
 };
 
+/**
+ * Query SeedStor API given an accession
+ *
+ * @param {String} accession - Accession name.
+ * @param {String} name - Input name.
+ */
 function check_GRU_by_accession(accession, name) {
     console.log('check gru ' + accession);
     var bool = false;
@@ -636,6 +704,14 @@ function check_GRU_by_accession(accession, name) {
     return bool;
 }
 
+/**
+ * Produce form for a given service
+ *
+ * @param {String} div - div id.
+ * @param {JSONArray} parameters - Parameters JSONArray.
+ * @param {JSONArray} groups - Groups JSONArray.
+ * @param {Boolean} refreshed - Refreshed boolean to show if the page was refreshed.
+ */
 function produce_form(div, parameters, groups, refreshed) {
     repeatable_groups = {};
     datatable_param_list = [];
@@ -822,6 +898,11 @@ function produce_form(div, parameters, groups, refreshed) {
     });
 }
 
+/**
+ * Add a parameter to repeatable_groups global var
+ *
+ * @param {String} group_id - Group id.
+ */
 function add_group_parameter(group_id) {
     // console.log(JSON.stringify(repeatable_groups));
     // var counter = repeatable_groups[group_id]['counter']++;
@@ -868,6 +949,13 @@ function add_group_parameter(group_id) {
 
 }
 
+/**
+ * Handles options html form with selection
+ *
+ * @param {String} default_value - Default value.
+ * @param {String} current_value - Current vale.
+ * @param {Boolean} select_bool - Boolean to show if this is selected.
+ */
 function selected_option(default_value, current_value, select_bool) {
     if (default_value == current_value) {
         if (select_bool) {
@@ -880,6 +968,14 @@ function selected_option(default_value, current_value, select_bool) {
     }
 }
 
+/**
+ * Produce a single parameter
+ *
+ * @param {JSON} parameter -Parameter JSON.
+ * @param {Boolean} repeatable - Boolean to show if this is repeatable.
+ * @param {String} group_id - Group id this parameter belongs to.
+ * @param {Boolean} refreshed - Refreshed boolean to show if the page was refreshed.
+ */
 function produce_one_parameter_form(parameter, repeatable, group_id, refreshed) {
     var form_html = [];
     var param = parameter['param'];
@@ -1123,6 +1219,11 @@ function produce_one_parameter_form(parameter, repeatable, group_id, refreshed) 
     return form_html.join(' ');
 }
 
+/**
+ * Refresh the whole service, triggered by a refreshable parameter
+ *
+ * @param {String} input - Parameter input.
+ */
 function refresh_service(input) {
     // console.log(input);
 
@@ -1265,10 +1366,20 @@ function refresh_service(input) {
 // }
 
 
+/**
+ * Check the number is odd
+ *
+ * @param {Int} n - Number input.
+ */
 function isOdd(n) {
     return Math.abs(n % 2) == 1;
 }
 
+/**
+ * Ajax search services for searching Treatments and Measured Variables
+ *
+ * @param {String} type - Define Treatments or Measured Variables.
+ */
 function do_ajax_search(type) {
     var input = $('#ft_ajax_search').val();
 
@@ -1436,6 +1547,11 @@ function do_ajax_search(type) {
 
 }
 
+/**
+ * Copy text to clipboard
+ *
+ * @param {String} text - Text to be copied.
+ */
 function copyToClipboard(text) {
 
     var textArea = document.createElement("textarea");
@@ -1455,7 +1571,12 @@ function copyToClipboard(text) {
     document.body.removeChild(textArea);
 }
 
-
+/**
+ * Format result for searching Treatments and Measured Variables
+ *
+ * @param {JSONArray} array - Result array from backend.
+ * @param {String} type - Define Treatments or Measured Variables.
+ */
 function format_treatment_ajax_result(array, type) {
     var html = [];
     console.log(JSON.stringify(array));
@@ -1568,6 +1689,11 @@ function format_treatment_ajax_result(array, type) {
     return html.join(' ');
 }
 
+/**
+ * For tabular parameter, format table headings with cHeadings JSONArray
+ *
+ * @param {JSONArray} cHeadings - Column array from backend.
+ */
 function table_thead_formatter(cHeadings) {
     var thead_html = [];
     // thead_html.push('<thead>');
@@ -1587,6 +1713,16 @@ function table_thead_formatter(cHeadings) {
     return thead_html.join(' ');
 }
 
+/**
+ * For tabular parameter, format table body
+ *
+ * @param {JSONArray} cHeadings - Column array from backend.
+ * @param {JSONArray} tbody_values - Values array from backend.
+ * @param {String} real_param - Original parameter name.
+ * @param {Boolean} repeatable - Boolean to show if this is repeated.
+ * @param {Int} counter - Repeat counter.
+ * @param {Boolean} refreshed - Boolean to show if this was refreshed.
+ */
 function table_body_formatter(cHeadings, tbody_values, real_param, repeatable, counter, refreshed) {
     var tbody_html = [];
     tbody_html.push('<tbody>');
@@ -1621,6 +1757,12 @@ function table_body_formatter(cHeadings, tbody_values, real_param, repeatable, c
     return tbody_html.join(' ');
 }
 
+/**
+ * For tabular parameter, add one row
+ *
+ * @param {string} table_id_drop - Table id with ^drop.
+ * @param {JSON} json - Row data.
+ */
 function table_add_rows(table_id_drop, json) {
     var name = table_id_drop.split('^');
     var table_id = name[0];
@@ -1640,6 +1782,12 @@ function table_add_rows(table_id_drop, json) {
 
 }
 
+/**
+ * For tabular parameter, add one row with csv
+ *
+ * @param {string} table_id_drop - Table id with ^drop.
+ * @param {String} csv - Row data in csv.
+ */
 function table_add_rows_csv(table_id_drop, csv) {
 
     $('#' + table_id + 'dropstatus').html('Processing...');
@@ -1704,6 +1852,11 @@ function table_add_rows_csv(table_id_drop, csv) {
 
 }
 
+/**
+ * For tabular parameter, add one empty row
+ *
+ * @param {string} table_id - Table id .
+ */
 function table_add_new_row(table_id) {
     var t = $('#' + table_id).DataTable();
     var row_index = t.rows().count();
@@ -1733,12 +1886,22 @@ function table_add_new_row(table_id) {
     t.row.add(row_array).draw(false);
 }
 
+/**
+ * Add treatment (renamed to measured variable) and show a message modal
+ *
+ * @param {string} table_id - Table id .
+ */
 function table_add_teatment_columns_modal(table_id) {
     $('#modal-body').html('<p><a href="https://grassroots.tools/public/service/field_trial-search_measured_variables" class="newstyle_link" target="_blank">Search Measured Variables</a> and paste below</p><input id="add_treatment" type="text" class="form-control"><br/><p>Note: current data in table will be wiped</p>');
     $('#modal-footer').html('<div class="modal-footer"><button type="button" class="btn btn-primary" onclick="table_add_teatment_columns(\'' + table_id + '\');">Add Measured Variables</button></div>');
     $('#treatmentModal').modal('show');
 }
 
+/**
+ * Add treatment (renamed to measured variable) columns
+ *
+ * @param {string} table_id - Table id .
+ */
 function table_add_teatment_columns(table_id) {
     var column_name = $('#add_treatment').val();
     if (column_name === '') {
@@ -1784,6 +1947,11 @@ function table_add_teatment_columns(table_id) {
 
 }
 
+/**
+ * Add plots datatable
+ *
+ * @param {string} table_id - Table id .
+ */
 function add_plot_datatable(table_id) {
 
     // var cHeadings = [];
@@ -1846,10 +2014,19 @@ function add_plot_datatable(table_id) {
     });
 }
 
+/**
+ * Using the form input to determine if show simple or advanced parameters
+ *
+ */
 function get_simpleOrAdvanced() {
     return $('input[name="simpleadvanced"]:checked').val();
 }
 
+/**
+ * Set show simple or advanced parameters
+ *
+ * @param {string} string - show_simple or show_advanced.
+ */
 function simpleOrAdvanced(string) {
     if (selected_service_name === 'field_trial-search_measured_variables') {
         var treatment_table = $('#treatment_result').DataTable();
@@ -1887,7 +2064,10 @@ function simpleOrAdvanced(string) {
     }
 }
 
-
+/**
+ * Submit the whole form to backend
+ *
+ */
 function submit_form() {
     var all_parameter = $('input,textarea,select');
     $('.popover').each(function () {
@@ -1970,6 +2150,11 @@ function submit_form() {
     }
 }
 
+/**
+ * Construct parameters into JSON from HTML form
+ *
+ * @param {Form} form - html form.
+ */
 function construct_parameters(form) {
     var parameters = [];
     // not getting the sheet of plots from the form but from memory
@@ -2054,6 +2239,11 @@ function construct_parameters(form) {
     return process_repeatable_parameters(parameters);
 }
 
+/**
+ * Process repeated parameters
+ *
+ * @param {JSONArray} input_parameters - all parameters.
+ */
 function process_repeatable_parameters(input_parameters) {
     let remove_indices = [];
     $.each(repeatable_groups, function (index, group) {
@@ -2107,6 +2297,12 @@ function process_repeatable_parameters(input_parameters) {
     return input_parameters;
 }
 
+/**
+ * Get result from a previous job id
+ *
+ * @param {String} service - Service name.
+ * @param {String} previousID - Previous JOB id.
+ */
 function get_api_result(service, previousID) {
     selected_service_name = service;
     $('#title').html(service);
@@ -2132,6 +2328,11 @@ function get_api_result(service, previousID) {
 }
 
 
+/**
+ * Display results from backend
+ *
+ * @param {JSON} json - Result JSON from backend.
+ */
 function display_result(json) {
     Utils.ui.reenableButton('submit_button', 'Submit');
     // response = json;
