@@ -2623,6 +2623,11 @@ function display_result(json) {
     }
 }
 
+/**
+ * Format search result tabs
+ *
+ * @param {JSON} facets - Facet result JSON from backend.
+ */
 function format_grassroots_search_results_ul(facets) {
     console.log(JSON.stringify(facets));
     var sorted_facets = sortResults(facets, 'so:name', true);
@@ -2641,6 +2646,13 @@ function format_grassroots_search_results_ul(facets) {
 
 }
 
+/**
+ * Sort search result
+ *
+ * @param {JSONArray} arr - Facet result JSON from backend.
+ * @param {String} prop - JSON property to sort.
+ * @param {Boolean} asc - Boolean for ascending.
+ */
 function sortResults(arr, prop, asc) {
     arr.sort(function (a, b) {
         if (asc) {
@@ -2652,6 +2664,11 @@ function sortResults(arr, prop, asc) {
     return arr;
 }
 
+/**
+ * Format one search result
+ *
+ * @param {JSON} this_result - A result JSON from backend.
+ */
 function format_grassroots_search_result(this_result) {
 
     var grassroots_search_html = [];
@@ -2746,6 +2763,11 @@ function format_grassroots_search_result(this_result) {
 }
 
 
+/**
+ * Show errors from backend
+ *
+ * @param {JSON} json - A result JSON from backend.
+ */
 function get_general_errors(json) {
     var html = [];
     var general_error_array = []
@@ -2764,6 +2786,11 @@ function get_general_errors(json) {
     return html.join(' ');
 }
 
+/**
+ * Format erros from result
+ *
+ * @param {JSON} this_result - A result JSON from backend.
+ */
 function handle_errors(json) {
     if (json['errors'] != undefined) {
         $.each(json['errors'], function (key, data) {
@@ -2869,6 +2896,11 @@ function handle_errors(json) {
 
 }
 
+/**
+ * Format field trial search result
+ *
+ * @param {JSONArray} array - Field trial result JSONArray from backend.
+ */
 function format_fieldtrial_result(array) {
     var html = [];
 
@@ -2954,6 +2986,11 @@ function format_fieldtrial_result(array) {
     return html.join(' ');
 }
 
+/**
+ * Check result after form submission
+ *
+ * @param {JSON} each_result - A result JSON from backend.
+ */
 function checkResult(each_result) {
     var uuid = each_result['job_uuid'];
     var status_text_key = each_result['status_text'];
@@ -3018,6 +3055,11 @@ function checkResult(each_result) {
 }
 
 
+/**
+ * Display BLAST result with grassroots markup
+ *
+ * @param {JSON} json - A BLAST result JSON from backend.
+ */
 function display_blast_result_grassroots_markup(json) {
 
     var result_html = [];
@@ -3033,6 +3075,11 @@ function display_blast_result_grassroots_markup(json) {
     changeDownloadFormat();
 }
 
+/**
+ * Display one DB BLAST result with grassroots markup
+ *
+ * @param {JSON} each_db_result - Each BLAST database result JSON from backend.
+ */
 function display_each_blast_result_grasroots_markup(each_db_result) {
 
     var result_html = [];
@@ -3153,18 +3200,37 @@ function display_each_blast_result_grasroots_markup(each_db_result) {
     return result_html.join(' ');
 }
 
+/**
+ * Handle mouse over a SNP
+ *
+ * @param {String} hit_num - Hit number.
+ * @param {String} hsp_num - HSP number (BLAST result).
+ * @param {String} polymorphism_position - Polymorphism position number.
+ */
 function mouseover_locus(hit_num, hsp_num, polymorphism_position) {
     $('#' + hit_num + '-' + hsp_num + '-' + polymorphism_position + 'q').addClass('highlightSNP');
     $('#' + hit_num + '-' + hsp_num + '-' + polymorphism_position + 'm').addClass('highlightSNP');
     $('#' + hit_num + '-' + hsp_num + '-' + polymorphism_position + 'h').addClass('highlightSNP');
 }
 
+/**
+ * Handle mouse out a SNP
+ *
+ * @param {String} hit_num - Hit number.
+ * @param {String} hsp_num - HSP number (BLAST result).
+ * @param {String} polymorphism_position - Polymorphism position number.
+ */
 function mouseout_locus(hit_num, hsp_num, polymorphism_position) {
     $('#' + hit_num + '-' + hsp_num + '-' + polymorphism_position + 'q').removeClass('highlightSNP');
     $('#' + hit_num + '-' + hsp_num + '-' + polymorphism_position + 'm').removeClass('highlightSNP');
     $('#' + hit_num + '-' + hsp_num + '-' + polymorphism_position + 'h').removeClass('highlightSNP');
 }
 
+/**
+ * Display polymarker table
+ *
+ * @param {JSON} jsonResult - Polymarker result JSON from backend.
+ */
 function display_polymarker_table(jsonResult) {
     // console.log('>>>' + JSON.stringify(jsonResult));
     var uuid = jsonResult['job_uuid'];
@@ -3194,6 +3260,11 @@ function display_polymarker_table(jsonResult) {
     // });
 }
 
+/**
+ * Display faldo strand type
+ *
+ * @param {String} faldo_type - Faldo type.
+ */
 function get_faldo_strand(faldo_type) {
     var strand;
     if ($.inArray("faldo:ForwardStrandPosition", faldo_type) >= 0) {
@@ -3206,6 +3277,15 @@ function get_faldo_strand(faldo_type) {
     return strand;
 }
 
+/**
+ * Display BLAST result alignment
+ *
+ * @param {String} qseq - Query sequence.
+ * @param {String} midline - Midline string.
+ * @param {String} hseq - Hit sequence.
+ * @param {String} hit_num - Hit number.
+ * @param {String} hsp_num - Hsp number.
+ */
 function alignment_formatter(qseq, midline, hseq, hit_num, hsp_num) {
     var alignment_html = [];
     alignment_html.push('<div class="pre-format">');
@@ -3223,6 +3303,15 @@ function alignment_formatter(qseq, midline, hseq, hit_num, hsp_num) {
 
 }
 
+/**
+ * Display BLAST result alignment
+ *
+ * @param {String} seq - Sequence.
+ * @param {String} row_index - Row index.
+ * @param {String} hit_num - Hit number.
+ * @param {String} hsp_num - Hsp number.
+ * @param {String} qORh - Query or hit.
+ */
 function add_span_with_position(seq, row_index, hit_num, hsp_num, qORh) {
     var chars = seq.split('');
     var html = [];
@@ -3232,6 +3321,11 @@ function add_span_with_position(seq, row_index, hit_num, hsp_num, qORh) {
     return html.join('');
 }
 
+/**
+ * Remove strange char which might cause problem with html
+ *
+ * @param {String} str - Input string.
+ */
 function remove_strange_char(str) {
     str = str.replace(/\\n/g, "\\n")
         .replace(/\\'/g, "\\'")
@@ -3245,10 +3339,19 @@ function remove_strange_char(str) {
     return str.replace(/[\u0000-\u0019]+/g, "");
 }
 
+/**
+ * Change BLAST download format based on a html selector
+ *
+ */
 function changeDownloadFormat() {
     $('.dlformat').html(jQuery("#output_format option:selected").text());
 }
 
+/**
+ * Download BLAST result from server
+ *
+ * @param {String} id - BLAST job uuid.
+ */
 function downloadJobFromServer(id) {
     $('#' + id + 'status').html('<img src="' + root_dir + 'static/images/ajax-loader.gif"/>');
     $('#' + id + 'dl').removeAttr('onclick');
@@ -3295,6 +3398,11 @@ function downloadJobFromServer(id) {
 }
 
 
+/**
+ * Run a linked service in result
+ *
+ * @param {String} id - Job uuid.
+ */
 function run_linked_service(id) {
     $('#' + id + 'status').html('<img src="' + root_dir + 'static/images/ajax-loader.gif"/>');
     $('#' + id).removeAttr('onclick');
@@ -3320,7 +3428,11 @@ function run_linked_service(id) {
     });
 }
 
-
+/**
+ * Run a linked service in result
+ *
+ * @param {String} id - Job uuid.
+ */
 function run_linked_service_with_redirect(id) {
     $('#' + id + 'status').html('<img src="' + root_dir + 'static/images/ajax-loader.gif"/>');
     $('#' + id).removeAttr('onclick');
@@ -3348,11 +3460,21 @@ function run_linked_service_with_redirect(id) {
     });
 }
 
+/**
+ * Make a text as a downloadble file
+ *
+ * @param {String} text - File content text.
+ * @param {String} filename - File name.
+ */
 function downloadFile(text, filename) {
     var blob = new Blob([text], {type: "text/plain;charset=utf-8"});
     saveAs(blob, filename + ".txt");
 }
 
+/**
+ * Generate a random text id
+ *
+ */
 function generate_random_id() {
     var id = "";
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -3364,6 +3486,11 @@ function generate_random_id() {
 }
 
 
+/**
+ * Validate a fasta input text
+ *
+ * @param {String} fasta - Fasta input text.
+ */
 function validateFasta(fasta) {
     if (!fasta) { // check there is something first of all
         return false;
@@ -3397,6 +3524,11 @@ function validateFasta(fasta) {
 
 }
 
+/**
+ * Handle a file select event
+ *
+ * @param {event} evt - File select event.
+ */
 function handleFileSelect(evt) {
     evt.stopPropagation();
     evt.preventDefault();
@@ -3426,12 +3558,22 @@ function handleFileSelect(evt) {
     }
 }
 
+/**
+ * Handle a file dragover event
+ *
+ * @param {event} evt - File select event.
+ */
 function handleDragOver(evt) {
     evt.stopPropagation();
     evt.preventDefault();
     evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
 }
 
+/**
+ * Handle an excel file select event
+ *
+ * @param {event} evt - File select event.
+ */
 function handleXlsxFileSelect(evt) {
     Utils.ui.disableButton('submit_button');
     evt.stopPropagation();
@@ -3552,6 +3694,12 @@ function handleXlsxFileSelect(evt) {
 //     $('#result').html(result_html.join(' '));
 // }
 
+/**
+ * Check if an element is in an array
+ *
+ * @param {string} value - A value.
+ * @param {array} array - An array to check.
+ */
 function isInArray(value, array) {
     return array.indexOf(value) > -1;
 }
