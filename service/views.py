@@ -20,13 +20,13 @@ Private services index page
 def private_index(request):
     return render(request, 'index.html', {'private': 'private/'})
 '''
-Private services index page
+Queen services index page
 '''
 def queen_index(request):
     return render(request, 'index.html', {'private': 'queen/'})
 
 '''
-Get all services as a json array
+Get all public services as a json array
 '''
 def index_ajax(request):
     service_list_json = get_all_services('public')
@@ -40,7 +40,7 @@ def private_index_ajax(request):
     return HttpResponse(service_list_json)
 
 '''
-Get all private services as a json array
+Get all queen services as a json array
 '''
 def queen_index_ajax(request):
     service_list_json = get_all_services('queen')
@@ -53,13 +53,13 @@ def single_service(request, service_alt_name):
     return render(request, 'service.html', {'service_alt_name': service_alt_name, 'private': ''})
 
 '''
-Get one named service
+Get one named private service
 '''
 def private_single_service(request, service_alt_name):
     return render(request, 'service.html', {'service_alt_name': service_alt_name, 'private': 'private/'})
 
 '''
-Get one named service
+Get one named queen service
 '''
 def queen_single_service(request, service_alt_name):
     return render(request, 'service.html', {'service_alt_name': service_alt_name, 'private': 'queen/'})
@@ -77,7 +77,7 @@ def single_service_search_q(request, search_q):
     return render(request, 'service_search_q.html', {'q': search_q})
 
 '''
-Get search grassroots service with a query
+Get one public grassroots service with a service name
 '''
 def single_service_ajax(request):
     service_name = request.POST['service_name']
@@ -85,7 +85,7 @@ def single_service_ajax(request):
     return HttpResponse(service_json)
 
 '''
-Get search grassroots service with a query
+Get one private grassroots service with a service name
 '''
 def private_single_service_ajax(request):
     service_name = request.POST['service_name']
@@ -93,7 +93,7 @@ def private_single_service_ajax(request):
     return HttpResponse(service_json)
 
 '''
-Get search grassroots service with a query
+Get one queen grassroots service with a service name
 '''
 def queen_single_service_ajax(request):
     service_name = request.POST['service_name']
@@ -102,7 +102,7 @@ def queen_single_service_ajax(request):
 
 
 '''
-Post request from front-end to the backend
+Post request from front-end to the public backend
 '''
 def interact_with_apache(request):
     data = request.body
@@ -110,7 +110,7 @@ def interact_with_apache(request):
     return HttpResponse(response_json)
 
 '''
-Post request from front-end to the backend
+Post request from front-end to the private backend
 '''
 def private_interact_with_apache(request):
     data = request.body
@@ -118,31 +118,13 @@ def private_interact_with_apache(request):
     return HttpResponse(response_json)
 
 '''
-Post request from front-end to the backend
+Post request from front-end to the queen backend
 '''
 def queen_interact_with_apache(request):
     data = request.body
     response_json = interact_backend(data, 'queen')
     return HttpResponse(response_json)
 
-
-
-# def search_treatment_ajax(request):
-#     data = request.POST['data']
-#     response_json = search_treatment(data)
-#     return HttpResponse(response_json)
-#
-#
-# def submit_form_ajax(request):
-#     data = request.POST['data']
-#     response_json = submit_form(json.loads(data))
-#     return HttpResponse(response_json)
-#
-#
-# def check_result_ajax(request):
-#     data = request.POST['data']
-#     response_json = check_result(json.loads(data))
-#     return HttpResponse(response_json)
 
 '''
 GET request for ontology look up service for COPO
