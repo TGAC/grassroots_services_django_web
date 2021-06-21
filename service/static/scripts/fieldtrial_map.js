@@ -22,6 +22,12 @@ var type_param_global = '';
 var datemin = 0;
 var datemax = 0;
 
+/**
+ * Start field trial map and table
+ *
+ * @param {JSONArray} jsonArray - JSONArray from backend containing all field trial info.
+ * @param {string} type_param - type of the display, can be Grassroots:FieldTrial, Grassroots:Study or AllFieldTrials.
+ */
 function startFieldTrialGIS(jsonArray, type_param) {
     type_param_global = type_param;
     console.log(JSON.stringify(jsonArray));
@@ -133,6 +139,12 @@ function startFieldTrialGIS(jsonArray, type_param) {
     // });
 }
 
+/**
+ * Create field trial DataTable
+ *
+ * @param {JSONArray} data - JSONArray from backend containing all field trial info.
+ * @param {string} type_param - type of the display, can be Grassroots:FieldTrial, Grassroots:Study or AllFieldTrials.
+ */
 function produceFieldtrialTable(data, type_param) {
     // yrtable.destroy();
     yrtable = jQuery('#resultTable').DataTable({
@@ -454,6 +466,12 @@ function produceFieldtrialTable(data, type_param) {
 }
 
 
+/**
+ * Get study address and return formatted string
+ *
+ * @param {JSON} full - Study JSON.
+ * @param {bool} link_bool - Boolean to make returned text formatted as a link with styling.
+ */
 function get_study_address(full, link_bool) {
     var addressInfo = '';
     if (full['address'] !== undefined && full['address']['address'] !== "undefined") {
@@ -474,6 +492,12 @@ function get_study_address(full, link_bool) {
     return addressInfo;
 }
 
+
+/**
+ * Create study plots page link, if no plots it will return an empty string
+ *
+ * @param {JSON} full - Study JSON.
+ */
 function get_study_plots_link(full) {
     if (check_plots(full)) {
         var id = full['_id']['$oid'];
@@ -487,6 +511,11 @@ function get_study_plots_link(full) {
     }
 }
 
+/**
+ * Check if study has plots, return a boolean
+ *
+ * @param {JSON} full - Study JSON.
+ */
 function check_plots(full) {
     if (full['_id'] != undefined) {
         if (full['number_of_plots'] != undefined) {
@@ -506,6 +535,11 @@ function check_plots(full) {
     }
 }
 
+/**
+ * Create modal html and stored in plotsModalInfo global var.
+ *
+ * @param {JSONArray} array - JSONArray of studies.
+ */
 function create_study_modal_html(array) {
     for (i = 0; i < array.length; i++) {
         var studyJson = array[i];
@@ -524,6 +558,11 @@ function create_study_modal_html(array) {
 
 }
 
+/**
+ * Format programme info for a given study
+ *
+ * @param {JSON} full - Study JSON.
+ */
 function format_study_parent_program(full) {
     let result = '';
     if (full['parent_program'] !== undefined && full['parent_program'] !== null) {
@@ -546,6 +585,11 @@ function format_study_parent_program(full) {
     return result;
 }
 
+/**
+ * Format both contact and curator info for a given study
+ *
+ * @param {JSON} full - Study JSON.
+ */
 function format_study_contacts(full) {
     var curator = format_study_curator(full);
     var contact = format_study_contact(full);
@@ -561,6 +605,11 @@ function format_study_contacts(full) {
     return curator + '<br/>' + contact;
 }
 
+/**
+ * Format curator info for a given study
+ *
+ * @param {JSON} full - Study JSON.
+ */
 function format_study_curator(full) {
     var study_result = '';
     if (full['curator'] !== undefined && full['curator'] !== null) {
@@ -577,6 +626,11 @@ function format_study_curator(full) {
 
 }
 
+/**
+ * Format contacts info for a given study
+ *
+ * @param {JSON} full - Study JSON.
+ */
 function format_study_contact(full) {
     var study_result = '';
     if (full['contact'] !== undefined && full['contact'] !== null) {
@@ -592,6 +646,11 @@ function format_study_contact(full) {
 
 }
 
+/**
+ * Format treatments link info for a given study
+ *
+ * @param {JSON} full - Study JSON.
+ */
 function format_study_treatment_facotrs_link(full) {
     var studyId = full['_id']['$oid'];
     var treatment = '';
@@ -603,6 +662,11 @@ function format_study_treatment_facotrs_link(full) {
     return treatment;
 }
 
+/**
+ * Format crop info for a given study
+ *
+ * @param {JSON} crop_json - Study crop JSON.
+ */
 function format_crop(crop_json) {
     var crop = '';
     if (crop_json !== undefined && crop_json !== null) {
@@ -616,6 +680,11 @@ function format_crop(crop_json) {
     return crop;
 }
 
+/**
+ * Format all info for a given study into a table, this is used in the study page and map marker popup info
+ *
+ * @param {JSON} studyJson - Study JSON.
+ */
 function create_study_info_html(studyJson) {
     var htmlarray = [];
     htmlarray.push('<table class="table table-bordered">');
@@ -676,25 +745,6 @@ function create_study_info_html(studyJson) {
         htmlarray.push('</tr>');
     }
 
-
-    // htmlarray.push('<tr>');
-    // htmlarray.push('<td>');
-    // htmlarray.push('<b>Min pH:</b> ');
-    // htmlarray.push('</td>');
-    // htmlarray.push('<td>');
-    // htmlarray.push(SafePrint(studyJson['min_ph']));
-    // htmlarray.push('</td>');
-    // htmlarray.push('</tr>');
-    //
-    // htmlarray.push('<tr>');
-    // htmlarray.push('<td>');
-    // htmlarray.push('<b>Max pH:</b> ');
-    // htmlarray.push('</td>');
-    // htmlarray.push('<td>');
-    // htmlarray.push(SafePrint(studyJson['max_ph']));
-    // htmlarray.push('</td>');
-    // htmlarray.push('</tr>');
-
     htmlarray.push('<tr>');
     htmlarray.push('<td>');
     htmlarray.push('<b>Study Design:</b> ');
@@ -722,15 +772,6 @@ function create_study_info_html(studyJson) {
     htmlarray.push(SafePrint(studyJson['phenotype_gathering_notes']));
     htmlarray.push('</td>');
     htmlarray.push('</tr>');
-    //
-    // htmlarray.push('<tr>');
-    // htmlarray.push('<td>');
-    // htmlarray.push('<b>Soil:</b> ');
-    // htmlarray.push('</td>');
-    // htmlarray.push('<td>');
-    // htmlarray.push(SafePrint(studyJson['soil']));
-    // htmlarray.push('</td>');
-    // htmlarray.push('</tr>');
 
     htmlarray.push('<tr>');
     htmlarray.push('<td>');
@@ -869,46 +910,28 @@ function create_study_info_html(studyJson) {
     htmlarray.push('</tbody>');
     htmlarray.push('</table>');
 
-    // htmlarray.push('</div>');
     htmlarray.push('<hr/>');
-    // console.log(generate_treatments_html(studyJson));
     return htmlarray.join("");
 
 }
 
 
+/**
+ * Remove all markers and geoJSON on the map
+ *
+ */
 function removePointers() {
     map.removeLayer(markersGroup2);
-    // if (pie_view) {
-    //     markersGroup = new L.MarkerClusterGroup({
-    //         maxClusterRadius: 2 * 30,
-    //         iconCreateFunction: defineClusterIcon
-    //     });
-    // }
-    // else {
     markersGroup2 = new L.MarkerClusterGroup();
-    // }
 }
 
-//
-// jQuery.fn.dataTableExt.afnFiltering.push(
-//     function (oSettings, aData, iDataIndex) {
-//         var dateStart = datemin;
-//         var dateEnd = datemax;
-//
-//         var evalDate = Date.parse(aData[5]);
-//
-//         if (((evalDate >= dateStart && evalDate <= dateEnd) || (evalDate >= dateStart && dateEnd == 0)
-//                 || (evalDate >= dateEnd && dateStart == 0)) || (dateStart == 0 && dateEnd == 0)) {
-//             return true;
-//         }
-//         else {
-//             return false;
-//         }
-//
-//     });
 
-
+/**
+ * Display all field trials on the map
+ *
+ * @param {JSONArray} array - JSONArray from backend containing all field tria (with locations) info.
+ * @param {string} type_param - type of the display, can be Grassroots:FieldTrial, Grassroots:Study or AllFieldTrials.
+ */
 function displayFTLocations(array, type_param) {
     for (i = 0; i < array.length; i++) {
         var la = '';
@@ -976,6 +999,11 @@ function displayFTLocations(array, type_param) {
 
 }
 
+/**
+ * Display colorbox of a given plot
+ *
+ * @param {string} id - id of the plot.
+ */
 function plot_colorbox(id) {
     var plot_data = plotsHTMLArray[id];
 
@@ -985,8 +1013,14 @@ function plot_colorbox(id) {
 }
 
 
+/**
+ * Add a pointer to the map
+ *
+ * @param {string} la - latitude of the pointer.
+ * @param {string} lo - longitude of the pointer.
+ * @param {string} note - popup notes of the pointer.
+ */
 function addFTPointer(la, lo, note) {
-
     var blueIcon = new L.Icon({
         iconUrl: 'scripts/leaflet/images/marker-icon-2x-blue.png',
         shadowUrl: 'scripts/leaflet/images/marker-shadow.png',
@@ -1059,60 +1093,19 @@ function addFTPointer(la, lo, note) {
         shadowSize: [41, 41]
     });
     var markerLayer;
-    // if (type === 'Breeder') {
-    //     markerLayer = L.marker([la, lo], {icon: greenIcon}).bindPopup(note);
-    // }
-    // else {
     var popup = L.popup({maxHeight: 400}).setContent(note);
     markerLayer = L.marker([la, lo]).bindPopup(popup).openPopup();
-    // }
-    // markers.push(markerLayer);
     markersGroup2.addLayer(markerLayer);
 
 }
 
-
-// function popup(msg) {
-//     L.popup()
-//         .setLatLng([52.621615, 8.219])
-//         .setContent(msg)
-//         .openOn(map);
-// }
-
-
-// function createPlotsHTML(array) {
-//     for (i = 0; i < array.length; i++) {
-//         var expAreaId = array[i]['_id']['$oid'];
-//         var plots = array[i]['plots'];
-//         var htmlarray = [];
-//
-//         var row = 1;
-//         var column = 1;
-//
-//         for (j = 0; j < plots.length; j++) {
-//
-//             if (plots[j]['row_index'] === row) {
-//                 if (plots[j]['column_index'] === column) {
-//                     htmlarray.push(formatPlot(plots[j]));
-//                     column++;
-//                 }
-//             } else if (plots[j]['row_index'] > row) {
-//
-//                 row++;
-//                 column = 2;
-//                 htmlarray.push('</tr><tr>');
-//                 htmlarray.push('<td>' + row + '</td>');
-//                 htmlarray.push(formatPlot(plots[j]));
-//             }
-//         }
-//         var tableString = '<td>1</td>' + htmlarray.join("");
-//         var tableArray = tableString.split("</tr><tr>");
-//         var reversedString = tableArray.reverse().join("</tr><tr>");
-//         plotsHTMLArray[expAreaId] = '<div id="plot"><table class="table " id="' + expAreaId + '" style="margin:20px;"><tr>' + reversedString + '</tr></table></div>';
-//     }
-//
-// }
-
+/**
+ * Format a given plot and stored in the plotsModalInfo global var
+ *
+ * @param {JSON} plot - JSON of the give plot.
+ * @param {string} plot_block_rows - number of rows in block.
+ * @param {string} plot_block_columns - number of columns in block.
+ */
 function formatPlot(plot, plot_block_rows, plot_block_columns) {
     let plotId = plot['_id']['$oid'];
     let current_row = parseInt(plot['row_index']);
@@ -1121,26 +1114,21 @@ function formatPlot(plot, plot_block_rows, plot_block_columns) {
     for (r = 0; r < plot['rows'].length; r++) {
         accession += " " + plot['rows'][r]['material']['accession'];
     }
-
-    // return '<td>' + accession + '</td>';
-    // var replicate_index = plot['replicate'];
     var color;
-    // if (colorJSON[replicate_index]==undefined){
-    //    color = getRandomColor();
-    //    colorJSON[replicate_index] = color;
-    // } else {
-    // color = colorJSON[replicate_index];
     color = '#ABEBC6';
-    // }
     plotsModalInfo[plotId] = formatPlotModal(plot);
-
-    // return '<td style="cursor:pointer; font-size: 0.8rem; background-color:' + color + '" onclick="plotModal(\'' + plotId + '\')">' + replicate_index + '/' + accession + '</td>';
-    // return '<td class="plot" id="' + plotId + '" style="cursor:pointer; font-size: 0.8rem;  background-color:' + color + '" onclick="plotModal(\'' + plotId + '\')">Row:' + plot['row_index'] + ' Column:' + plot['column_index'] + '</td>';
-
     let padding = plot_gap_calculator(current_column, current_row, plot_block_columns, plot_block_rows);
     return '<td style="' + padding + '"><div class="plot" id="' + plotId + '" style="padding:5px; cursor:pointer; font-size: 0.8rem;  background-color:' + color + '" onclick="plotModal(\'' + plotId + '\')">Row:' + current_row + ' Column:' + current_column + '</div></td>';
 }
 
+/**
+ * Calculate gaps in the plot view
+ *
+ * @param {string} current_column - current number of column.
+ * @param {string} current_row - current number of row.
+ * @param {string} plot_block_rows - number of rows in block.
+ * @param {string} plot_block_columns - number of columns in block.
+ */
 function plot_gap_calculator(current_column, current_row, plot_block_columns, plot_block_rows) {
     let padding = 'padding:5px;';
     if (current_column % plot_block_columns === 0 && current_row % plot_block_rows === 0) {
@@ -1156,6 +1144,12 @@ function plot_gap_calculator(current_column, current_row, plot_block_columns, pl
     return padding;
 }
 
+
+/**
+ * Display plot modal with a given id
+ *
+ * @param {string} plotId - Plot id.
+ */
 function plotModal(plotId) {
     $('#modal-body').html(plotsModalInfo[plotId]);
     $('#plotModal').modal('show');
@@ -1193,6 +1187,11 @@ function plotModal(plotId) {
 
 }
 
+/**
+ * Format plot modal in html
+ *
+ * @param {JSON} plot - Plot JSON.
+ */
 function formatPlotModal(plot) {
 
     let htmlarray = [];
@@ -1250,6 +1249,12 @@ function formatPlotModal(plot) {
 
 }
 
+/**
+ * Format plot rows
+ *
+ * @param {JSON} plot - Plot JSON.
+ * @param {Boolean} replicate_bool - Boolean if it is a replicate.
+ */
 function format_plot_rows(plot, replicate_bool) {
     let plotId = plot['_id']['$oid'];
     let formatted_plot = {};
@@ -1328,6 +1333,12 @@ function format_plot_rows(plot, replicate_bool) {
     return formatted_plot;
 }
 
+
+/**
+ * Format treatments
+ *
+ * @param {JSON} treatments - Treatment JSON.
+ */
 function format_plot_treatment(treatments) {
     let htmlarray = [];
     for (i = 0; i < treatments.length; i++) {
@@ -1337,7 +1348,14 @@ function format_plot_treatment(treatments) {
     return htmlarray.join(' ');
 }
 
-// function get_GRU_by_accession(accession) {
+
+/**
+ * Query SeedStor API given an accession
+ *
+ * @param {String} accession - Accession name.
+ * @param {String} plotId - Plot id.
+ * @param {String} r - replicate number.
+ */
 function get_GRU_by_accession(accession, plotId, r) {
     $.ajax({
         type: "GET",
@@ -1357,8 +1375,11 @@ function get_GRU_by_accession(accession, plotId, r) {
 }
 
 
-// }
-
+/**
+ * Format SeedStor GRU JSON into html
+ *
+ * @param {String} gru_json - GRU returned JSON.
+ */
 function format_gru_json(gru_json) {
     var htmlarray = [];
     if (gru_json != undefined && gru_json.length > 0) {
@@ -1376,7 +1397,7 @@ function format_gru_json(gru_json) {
 /**
  * Get empty strings instead of undefeined variables
  *
- * @param obj The object to check.
+ * @param {JSONObject} obj - The object to check.
  */
 function SafePrint(obj) {
     if (obj === undefined || obj === null) {
@@ -1386,6 +1407,12 @@ function SafePrint(obj) {
     }
 }
 
+/**
+ * Return defined string instead of undefeined variables
+ *
+ * @param {JSONObject} obj - The object to check.
+ * @param {String} value - Display value if null or undefined.
+ */
 function SafePrint_with_value(obj, value) {
     if (obj === undefined || obj === null) {
         return value;
@@ -1396,6 +1423,11 @@ function SafePrint_with_value(obj, value) {
 }
 
 
+/**
+ * Create request JSON to send to the apache backend for a given study id
+ *
+ * @param {String} exp_area_id - Study id.
+ */
 function CreatePlotsRequestForExperimentalArea(exp_area_id) {
 
     var request =
@@ -1423,6 +1455,11 @@ function CreatePlotsRequestForExperimentalArea(exp_area_id) {
     return request;
 }
 
+/**
+ * Create request JSON to send to the apache backend for a given field trial id
+ *
+ * @param {String} fieldtrial_id - Study id.
+ */
 function CreatePlotsRequestForFieldTrial(fieldtrial_id) {
 
     var request = {
@@ -1459,6 +1496,11 @@ function CreatePlotsRequestForFieldTrial(fieldtrial_id) {
 
 }
 
+/**
+ * Create request JSON to send to the apache backend for a given string
+ *
+ * @param {String} keyword - Search string.
+ */
 function CreatePlotsRequestForAllFieldTrials(keyword) {
     // let facet = 'Study';
     // if (keyword === '') {
@@ -1508,6 +1550,11 @@ let default_design = "";
 let default_sowing_date = "";
 let default_harvest_date = "";
 
+/**
+ * Create Plots table
+ *
+ * @param {JSON} experimental_area_json - Study JSON.
+ */
 function LoadTable(experimental_area_json) {
     $('#control').show();
     console.log(JSON.stringify(experimental_area_json));
@@ -1548,6 +1595,11 @@ function LoadTable(experimental_area_json) {
 
 }
 
+/**
+ * Create Plots table elements
+ *
+ * @param {JSON} experimental_area_json - Study JSON.
+ */
 function GeneratePlotsForExperimentalArea(experimental_area_json) {
     console.log(JSON.stringify(experimental_area_json));
 
@@ -1596,6 +1648,11 @@ function GeneratePlotsForExperimentalArea(experimental_area_json) {
     }
 }
 
+/**
+ * Create Treatments table
+ *
+ * @param {JSON} experimental_area_json - Study JSON.
+ */
 function generate_treatments_html(experimental_area_json) {
     var htmlarray = [];
     if (experimental_area_json['treatment_factors'] !== undefined && experimental_area_json['treatment_factors'] !== null) {
@@ -1628,6 +1685,10 @@ function generate_treatments_html(experimental_area_json) {
 
 }
 
+/**
+ * Search plots accessions with a given string from the page form input
+ *
+ */
 function filter_plot() {
     $('.plot').css('background-color', '#ABEBC6');
     $('#filter_result').html('');
