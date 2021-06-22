@@ -92,6 +92,15 @@ function startFieldTrialGIS(jsonArray, type_param) {
                         let plotId = plot['rows'][0]['study_index'];
                         plotsModalInfo[plotId] = formatPlotModal(plot);
                         // show other plots info, but performance issue
+                        // let searchStr = '';
+                        //
+                        // for (r = 0; r < plot['rows'].length; r++) {
+                        //     let this_accession = SafePrint(plot['rows'][r]['material']['accession']);
+                        //     get_GRU_by_accession(this_accession, plotId, r);
+                        //     searchStr = this_accession;
+                        // }
+                        //
+                        //
                         // for (j = 0; j < plot_json.length; j++) {
                         //     const loop_plotId = plot_json[j]['_id']['$oid'];
                         //     if (loop_plotId !== plotId) {
@@ -110,6 +119,16 @@ function startFieldTrialGIS(jsonArray, type_param) {
                         //     }
                         //
                         // }
+
+                        //
+                        // $('#plots_table').DataTable({
+                        //     "aaSorting": [],
+                        //     "lengthMenu": [[100, 500, -1], [100, 500, "All"]]
+                        // });
+                        // $('#plots_table_rows').DataTable({
+                        //     "aaSorting": [],
+                        //     "lengthMenu": [[100, 500, -1], [100, 500, "All"]]
+                        // });
                     }
                 }
             }
@@ -1212,6 +1231,8 @@ function plotModal(plotId) {
         "aaSorting": [],
         "lengthMenu": [[100, 500, -1], [100, 500, "All"]]
     });
+    simpleOrAdvanced_pheno('show_simple');
+    simpleOrAdvanced_rows('show_simple');
 
 }
 
@@ -1239,6 +1260,31 @@ function formatPlotModal(plot) {
 
     rowsInfoarray = rowsInfoarray.concat(formatted_plot['rowsInfo']);
     phenotypearray = phenotypearray.concat(formatted_plot['phenotypes']);
+    //
+    // let searchStr = '';
+    //         for (r = 0; r < plot['rows'].length; r++) {
+    //             let this_accession = SafePrint(plot['rows'][r]['material']['accession']);
+    //             searchStr = this_accession;
+    //         }
+    //
+    // for (j = 0; j < plot_json.length; j++) {
+    //     const loop_plotId = plot_json[j]['_id']['$oid'];
+    //     if (loop_plotId !== plotId) {
+    //         var rows = plot_json[j]['rows'];
+    //         for (jr = 0; jr < rows.length; jr++) {
+    //             var accession = rows[jr]['material']['accession'];
+    //             if (accession != undefined) {
+    //                 if (searchStr === accession && searchStr !== '') {
+    //                     let formatted_plot = format_plot_rows(plot_json[j], true);
+    //                     rowsInfoarray = rowsInfoarray.concat(formatted_plot['rowsInfo']);
+    //                     phenotypearray = phenotypearray.concat(formatted_plot['phenotypes']);
+    //                     break;
+    //                 }
+    //             }
+    //         }
+    //     }
+    //
+    // }
 
     rowsInfoarray.push('</tbody></table>');
     phenotypearray.push('</tbody></table>');
@@ -1274,9 +1320,28 @@ function formatPlotModal(plot) {
     htmlarray.push('</div>');
     htmlarray.push(formatted_treatments);
     htmlarray.push('<hr/>');
+    htmlarray.push('<h5>Rows:</h5>');
+    htmlarray.push('        <div id="simpleAdvanceWrapper1" style="display:none;" >\n' +
+        '            <label class="radio-inline" style="margin-right: 20px;"><input type="radio" name="simpleadvancedrows"\n' +
+        '                                                                           value="show_simple"\n' +
+        '                                                                           onclick="simpleOrAdvanced_rows(this.value)"\n' +
+        '                                                                           checked>\n' +
+        '                Simple view </label>\n' +
+        '            <label class="radio-inline"><input type="radio" name="simpleadvancedrows" value="show_advanced"\n' +
+        '                                               onclick="simpleOrAdvanced_rows(this.value)"> Advanced view</label>\n' +
+        '        </div>');
     htmlarray.push(rowsInfoarray.join(""));
     htmlarray.push('<hr/>');
     htmlarray.push('<h5>Phenotypes</h5>');
+    htmlarray.push('        <div id="simpleAdvanceWrapper2" style="display:none;"  >\n' +
+        '            <label class="radio-inline" style="margin-right: 20px;"><input type="radio" name="simpleadvanced"\n' +
+        '                                                                           value="show_simple"\n' +
+        '                                                                           onclick="simpleOrAdvanced_pheno(this.value)"\n' +
+        '                                                                           checked>\n' +
+        '                Simple view </label>\n' +
+        '            <label class="radio-inline"><input type="radio" name="simpleadvanced" value="show_advanced"\n' +
+        '                                               onclick="simpleOrAdvanced_pheno(this.value)"> Advanced view</label>\n' +
+        '        </div>');
     htmlarray.push(phenotypearray.join(""));
 
     return htmlarray.join("");
@@ -1303,7 +1368,7 @@ function format_plot_rows(plot, replicate_bool) {
     let rowsInfoarray = [];
     // rowsInfoarray.push('<table class="table racks"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th><th>Links</th></tr></thead><tbody>');
     // phenotypearray.push('<table class="table plots"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th></tr></thead><tbody>');
-    let replicate = ' Plot ' + plot_actual_id + ' (Current Plot)';
+    let replicate = ' (Plot ' + plot_actual_id + ' Row:' + plot['row_index'] + ' - Col:' + plot['column_index'] + ')(Current)';
     if (replicate_bool) {
         replicate = ' <u style="cursor:pointer;" onclick="plotModal(\'' + plotId + '\')">(Plot ' + plot_actual_id + ' Row:' + plot['row_index'] + ' - Col:' + plot['column_index'] + ')</u>';
     }
@@ -1372,6 +1437,46 @@ function format_plot_rows(plot, replicate_bool) {
     formatted_plot['phenotypes'] = phenotypearray;
 
     return formatted_plot;
+}
+
+/**
+ * Set show simple or advanced parameters for plots phenotype table
+ *
+ * @param {string} string - show_simple or show_advanced.
+ */
+function simpleOrAdvanced_pheno(string) {
+    $('#simpleAdvanceWrapper1').show();
+    var pheno_table = $('#plots_table').DataTable();
+    if (string === 'show_simple') {
+        pheno_table.column(1).visible(false);
+        pheno_table.column(2).visible(false);
+        pheno_table.column(4).visible(false);
+        pheno_table.column(6).visible(false);
+    } else if (string === 'show_advanced') {
+        pheno_table.column(1).visible(true);
+        pheno_table.column(2).visible(true);
+        pheno_table.column(4).visible(true);
+        pheno_table.column(6).visible(true);
+    }
+
+}
+
+/**
+ * Set show simple or advanced parameters for plots rows table
+ *
+ * @param {string} string - show_simple or show_advanced.
+ */
+function simpleOrAdvanced_rows(string) {
+    $('#simpleAdvanceWrapper2').show();
+    var pheno_table = $('#plots_table_rows').DataTable();
+    if (string === 'show_simple') {
+        pheno_table.column(1).visible(false);
+        pheno_table.column(4).visible(false);
+    } else if (string === 'show_advanced') {
+        pheno_table.column(1).visible(true);
+        pheno_table.column(4).visible(true);
+    }
+
 }
 
 
