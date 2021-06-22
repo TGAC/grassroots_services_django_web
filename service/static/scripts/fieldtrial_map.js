@@ -1204,9 +1204,13 @@ function plotModal(plotId) {
 
     }
 
-    // $('#plots_table_rows').DataTable();
     $('#plots_table').DataTable({
-        "paging": false
+        "aaSorting": [],
+        "lengthMenu": [[100, 500, -1], [100, 500, "All"]]
+    });
+    $('#plots_table_rows').DataTable({
+        "aaSorting": [],
+        "lengthMenu": [[100, 500, -1], [100, 500, "All"]]
     });
 
 }
@@ -1324,7 +1328,7 @@ function format_plot_rows(plot, replicate_bool) {
         } else {
             rowsInfoarray.push('<td></td>');
         }
-        rowsInfoarray.push('<tr>');
+        rowsInfoarray.push('</tr>');
         // get_GRU_by_accession(accession, plotId, random_id);
 
         if (plot['rows'][r]['observations'] != undefined) {
