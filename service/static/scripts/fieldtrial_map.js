@@ -1337,7 +1337,7 @@ function format_plot_rows(plot, replicate_bool) {
 /**
  * Format treatments
  *
- * @param {JSON} treatments - Treatment JSON.
+ * @param {JSONArray} treatments - Treatment JSONArray.
  */
 function format_plot_treatment(treatments) {
     let htmlarray = [];
