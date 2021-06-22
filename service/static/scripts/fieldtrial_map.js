@@ -1299,7 +1299,7 @@ function format_plot_rows(plot, replicate_bool) {
     let rowsInfoarray = [];
     // rowsInfoarray.push('<table class="table racks"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th><th>Links</th></tr></thead><tbody>');
     // phenotypearray.push('<table class="table plots"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th></tr></thead><tbody>');
-    let replicate = ' ' + plot_actual_id + ' (Current Plot)';
+    let replicate = ' Plot ' + plot_actual_id + ' (Current Plot)';
     if (replicate_bool) {
         replicate = ' <u style="cursor:pointer;" onclick="plotModal(\'' + plotId + '\')">(Plot ' + plot_actual_id + ' Row:' + plot['row_index'] + ' - Col:' + plot['column_index'] + ')</u>';
     }
