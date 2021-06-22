@@ -91,6 +91,25 @@ function startFieldTrialGIS(jsonArray, type_param) {
                     if (plot['rows'][0]['study_index'] !== undefined) {
                         let plotId = plot['rows'][0]['study_index'];
                         plotsModalInfo[plotId] = formatPlotModal(plot);
+                        // show other plots info, but performance issue
+                        // for (j = 0; j < plot_json.length; j++) {
+                        //     const loop_plotId = plot_json[j]['_id']['$oid'];
+                        //     if (loop_plotId !== plotId) {
+                        //         var rows = plot_json[j]['rows'];
+                        //         for (jr = 0; jr < rows.length; jr++) {
+                        //             var accession = rows[jr]['material']['accession'];
+                        //             if (accession != undefined) {
+                        //                 if (searchStr === accession && searchStr !== '') {
+                        //                     let formatted_plot = format_plot_rows(plot_json[j], true);
+                        //                     $('#rowsInfo').append(formatted_plot['rowsInfo'].join(""));
+                        //                     $('#phenotypes').append(formatted_plot['phenotypes'].join(""));
+                        //                     break;
+                        //                 }
+                        //             }
+                        //         }
+                        //     }
+                        //
+                        // }
                     }
                 }
             }
@@ -1185,6 +1204,11 @@ function plotModal(plotId) {
 
     }
 
+    // $('#plots_table_rows').DataTable();
+    $('#plots_table').DataTable({
+        "paging": false
+    });
+
 }
 
 /**
@@ -1198,8 +1222,14 @@ function formatPlotModal(plot) {
     let phenotypearray = [];
     let rowsInfoarray = [];
 
-    rowsInfoarray.push('<table class="table racks"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th><th>Links</th><th>Treatments</th></tr></thead><tbody id="rowsInfo">');
-    phenotypearray.push('<table class="table plots"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th></tr></thead><tbody id="phenotypes">');
+    let plot_actual_id = '';
+
+    if (plot['rows'][0]['study_index'] !== undefined) {
+        plot_actual_id = plot['rows'][0]['study_index'];
+    }
+
+    rowsInfoarray.push('<table class="table racks" id="plots_table_rows"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th><th>Links</th><th>Treatments</th></tr></thead><tbody id="rowsInfo">');
+    phenotypearray.push('<table class="table plots" id="plots_table"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th></tr></thead><tbody id="phenotypes">');
 
     let formatted_plot = format_plot_rows(plot, false);
 
@@ -1210,6 +1240,7 @@ function formatPlotModal(plot) {
     phenotypearray.push('</tbody></table>');
     htmlarray.push('<div class="row justify-content-between">');
     htmlarray.push('<div class="col-4">');
+    htmlarray.push('Plot ID: ' + plot_actual_id + '<br/>');
     htmlarray.push('Row: ' + plot['row_index'] + '<br/>');
     htmlarray.push('Column: ' + plot['column_index'] + '<br/>');
     htmlarray.push('Length: ' + SafePrint_with_value(plot['length'], default_length) + 'm<br/>');
@@ -1257,14 +1288,20 @@ function formatPlotModal(plot) {
  */
 function format_plot_rows(plot, replicate_bool) {
     let plotId = plot['_id']['$oid'];
+
+    let plot_actual_id = '';
+
+    if (plot['rows'][0]['study_index'] !== undefined) {
+        plot_actual_id = plot['rows'][0]['study_index'];
+    }
     let formatted_plot = {};
     let phenotypearray = [];
     let rowsInfoarray = [];
     // rowsInfoarray.push('<table class="table racks"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th><th>Links</th></tr></thead><tbody>');
     // phenotypearray.push('<table class="table plots"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th></tr></thead><tbody>');
-    let replicate = ' (Current Plot)';
+    let replicate = ' ' + plot_actual_id + ' (Current Plot)';
     if (replicate_bool) {
-        replicate = ' <u style="cursor:pointer;" onclick="plotModal(\'' + plotId + '\')">(Plot Row:' + plot['row_index'] + ' - Col:' + plot['column_index'] + ')</u>';
+        replicate = ' <u style="cursor:pointer;" onclick="plotModal(\'' + plotId + '\')">(Plot ' + plot_actual_id + ' Row:' + plot['row_index'] + ' - Col:' + plot['column_index'] + ')</u>';
     }
 
     for (r = 0; r < plot['rows'].length; r++) {
