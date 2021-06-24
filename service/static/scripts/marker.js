@@ -1,3 +1,8 @@
+/**
+ * Richardo's polymarker stuff
+ *
+ */
+
 (function($){
     $.fn.jExpand = function(){
         var element = this;
