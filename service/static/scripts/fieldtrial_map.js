@@ -187,28 +187,8 @@ function produceFieldtrialTable(data, type_param) {
     // yrtable.destroy();
     yrtable = jQuery('#resultTable').DataTable({
         data: data,
-        "ordering": false,
+        "aaSorting": [],
         "scrollX": true,
-        // initComplete: function () {
-        //     this.api().columns().every( function () {
-        //         var column = this;
-        //         var select = $('<select><option value=""></option></select>')
-        //             .appendTo( $(column.footer()).empty() )
-        //             .on( 'change', function () {
-        //                 var val = $.fn.dataTable.util.escapeRegex(
-        //                     $(this).val()
-        //                 );
-        //
-        //                 column
-        //                     .search( val ? '^'+val+'$' : '', true, false )
-        //                     .draw();
-        //             } );
-        //
-        //         column.data().unique().sort().each( function ( d, j ) {
-        //             select.append( '<option value="'+d+'">'+d+'</option>' )
-        //         } );
-        //     } );
-        // },
         "columns": [
             {
                 title: "Programme",
@@ -243,18 +223,6 @@ function produceFieldtrialTable(data, type_param) {
                     return SafePrint(full['parent_field_trial']['team']);
                 }
             },
-            // {
-            //     title: "Study Design",
-            //     "render": function (data, type, full, meta) {
-            //         return SafePrint(full['study_design']);
-            //     }
-            // },
-            // {
-            //     title: "Phenotype Gathering Notes",
-            //     "render": function (data, type, full, meta) {
-            //         return SafePrint(full['phenotype_gathering_notes']);
-            //     }
-            // },
             {
                 title: "Description",
                 "render": function (data, type, full, meta) {
@@ -296,24 +264,18 @@ function produceFieldtrialTable(data, type_param) {
             {
                 title: "Shape Data",
                 "render": function (data, type, full, meta) {
-                    if (full['shape_data'] !== null && full['shape_data'] !== undefined && full['shape_data'] !== '') {
-                        return '<u class="newstyle_link">View</u>';
-                    } else {
-                        return '';
+                    let shape_link = '';
+                    if (full['has_shape_data'] !== null && full['has_shape_data'] !== undefined && full['has_shape_data'] !== '') {
+                        if (full['has_shape_data']) {
+                            shape_link = '<a href="' + root_dir + 'fieldtrial/study/' + studyId + '" target="_blank">View</a>';
+                        }
                     }
+                    return shape_link;
                 }
             },
             {
                 title: "Treatment Factors",
                 "render": function (data, type, full, meta) {
-                    // var studyId = full['_id']['$oid'];
-                    // var treatment = '';
-                    // if (full['treatment_factors'] !== undefined && full['treatment_factors'] !== null && type_param !== 'AllFieldTrials') {
-                    //     if (full['treatment_factors'].length > 0) {
-                    //         treatment = '<span style="cursor:pointer;" class="newstyle_link" onclick="plotModal(\'' + studyId + 'treatment\')">Treatment Factors</span>'
-                    //     }
-                    // }
-                    // return '<ul><li><span style="cursor:pointer;" class="newstyle_link" onclick="plotModal(\'' + studyId + '\')">Study Info</span></li>' + treatment + '</ul>';
                     return format_study_treatment_facotrs_link(full);
                 }
             }
@@ -323,25 +285,6 @@ function produceFieldtrialTable(data, type_param) {
                 "render": function (data, type, full, meta) {
                     // var study_result = '';
                     return format_study_contacts(full);
-                    // if (full['curator'] !== undefined) {
-                    //     let curator_name = full['curator']['so:name'];
-                    //     if (full['curator']['so:email'] !== undefined) {
-                    //         let curator_email = full['curator']['so:email'];
-                    //         study_result = study_result + 'Curator: <a href="mailto:' + curator_email + '" target="_blank">' + curator_name + '</a>';
-                    //     } else {
-                    //         study_result = study_result + 'Curator: ' + curator_name;
-                    //     }
-                    // }
-                    // if (full['contact'] !== undefined) {
-                    //     let contact_name = full['contact']['so:name'];
-                    //     if (full['contact']['so:email'] !== undefined) {
-                    //         let contact_email = full['contact']['so:email'];
-                    //         study_result = study_result + '<br/>Contact: <a href="mailto:' + contact_email + '" target="_blank">' + contact_name + '</a>';
-                    //     } else {
-                    //         study_result = study_result + '<br/>Contact: ' + contact_name;
-                    //     }
-                    // }
-                    // return study_result;
                 }
             },
             {
@@ -360,8 +303,6 @@ function produceFieldtrialTable(data, type_param) {
 
     });
 
-    // $('#resultTable tfoot tr').insertAfter($('#resultTable thead tr'));
-
     jQuery('#resultTable tbody').on('click', 'td', function () {
         var cellIdx = yrtable.cell(this).index();
         console.log(cellIdx);
@@ -376,29 +317,31 @@ function produceFieldtrialTable(data, type_param) {
                 $(window).scrollTop($('#map').offset().top - 90);
 
             }
-        } else if (json['shape_data'] !== null && json['shape_data'] !== undefined && json['shape_data'] !== '' && cellIdx['column'] === 9) {
-
-            if (json['address']['address']['location']['centre'] !== undefined) {
-                var la = json['address']['address']['location']['centre']['latitude'];
-                var lo = json['address']['address']['location']['centre']['longitude'];
-                lalo = [la, lo];
-            }
-
-            // let shape_data = JSON.parse(json['shape_data']);
-            let shape_data = json['shape_data'];
-            let coord = shape_data.features[0].geometry.coordinates;
-            let zoom = 18;
-            if (coord[0][0].length === 2) {
-                lalo = coord[0][0][0].reverse();
-                zoom = 22;
-            } else if (coord[0][0][0].length === 2) {
-                lalo = coord[0][0][0].reverse();
-                zoom = 22;
-            }
-
-            map.setView(lalo, zoom, {animate: true});
-            $(window).scrollTop($('#map').offset().top - 90);
         }
+        // Shape data listing page link
+        // else if (json['shape_data'] !== null && json['shape_data'] !== undefined && json['shape_data'] !== '' && cellIdx['column'] === 9) {
+        //
+        //     if (json['address']['address']['location']['centre'] !== undefined) {
+        //         var la = json['address']['address']['location']['centre']['latitude'];
+        //         var lo = json['address']['address']['location']['centre']['longitude'];
+        //         lalo = [la, lo];
+        //     }
+        //
+        //     // let shape_data = JSON.parse(json['shape_data']);
+        //     let shape_data = json['shape_data'];
+        //     let coord = shape_data.features[0].geometry.coordinates;
+        //     let zoom = 18;
+        //     if (coord[0][0].length === 2) {
+        //         lalo = coord[0][0][0].reverse();
+        //         zoom = 22;
+        //     } else if (coord[0][0][0].length === 2) {
+        //         lalo = coord[0][0][0].reverse();
+        //         zoom = 22;
+        //     }
+        //
+        //     map.setView(lalo, zoom, {animate: true});
+        //     $(window).scrollTop($('#map').offset().top - 90);
+        // }
     });
 
     // if (type_param === 'Grassroots:Study'){
@@ -407,7 +350,7 @@ function produceFieldtrialTable(data, type_param) {
 
     if (type_param === 'AllFieldTrials') {
         yrtable.column(10).visible(false);
-        //     console.log("server search here");
+        // console.log("server search here");
         // jQuery('#resultTable').on('search.dt', function () {
         //     removePointers();
         //     var search_value = $('.dataTables_filter input').val();
@@ -421,8 +364,8 @@ function produceFieldtrialTable(data, type_param) {
         //             headers: {
         //                 'X-CSRFToken': csrftoken
         //             },
-        //             url: '/fieldtrial/ajax/get_fieldtrial/',
-        //             data: {'search_str': search_value},
+        //             url: root_dir + "service/ajax/interact_backend/",
+        //             data: JSON.stringify(req_json),
         //             dataType: "json",
         //             contentType: "application/json; charset=utf-8"
         //         }).done(function (ft_json) {
@@ -440,8 +383,6 @@ function produceFieldtrialTable(data, type_param) {
         //             console.info("req " + "status " + status + " error " + error);
         //         });
         //     }
-        //
-        //
         // });
     }
     // else {
@@ -1011,26 +952,26 @@ function displayFTLocations(array, type_param) {
         // ;
         var popup_note = create_study_info_html(array[i])
         addFTPointer(la, lo, popup_note);
-        // if (type_param !== 'AllFieldTrials') {
-        if (array[i]['shape_data'] !== null && array[i]['shape_data'] !== undefined && array[i]['shape_data'] !== '') {
-            // let geo_json = JSON.parse(array[i]['shape_data']);
-            let geo_json = array[i]['shape_data'];
-            var shape_layer = L.geoJson(geo_json);
-            markersGroup2.addLayer(shape_layer);
-            var layerGroup = L.geoJson(geo_json, {
-                onEachFeature: function (feature, layer) {
-                    var plotId = feature.properties['plot_id'];
-                    var popupContent = 'Study: ' + SafePrint(geo_json['name']) + '<br/>Plot ID: ' + SafePrint(feature.properties['plot_id']);
-                    if (type_param_global === 'Grassroots:Study' && plotsModalInfo[plotId] !== undefined) {
-                        var popupContent = plotsModalInfo[plotId];
+        if (type_param === 'Grassroots:Study') {
+            if (array[i]['shape_data'] !== null && array[i]['shape_data'] !== undefined && array[i]['shape_data'] !== '') {
+                // let geo_json = JSON.parse(array[i]['shape_data']);
+                let geo_json = array[i]['shape_data'];
+                var shape_layer = L.geoJson(geo_json);
+                markersGroup2.addLayer(shape_layer);
+                var layerGroup = L.geoJson(geo_json, {
+                    onEachFeature: function (feature, layer) {
+                        var plotId = feature.properties['plot_id'];
+                        var popupContent = 'Study: ' + SafePrint(geo_json['name']) + '<br/>Plot ID: ' + SafePrint(feature.properties['plot_id']);
+                        if (type_param_global === 'Grassroots:Study' && plotsModalInfo[plotId] !== undefined) {
+                            var popupContent = plotsModalInfo[plotId];
+                        }
+                        layer.bindPopup(popupContent, {maxWidth: 800, maxHeight: 400});
+                        // layer.bindPopup('<p>Plot No.:</p>');
                     }
-                    layer.bindPopup(popupContent, {maxWidth: 800, maxHeight: 400});
-                    // layer.bindPopup('<p>Plot No.:</p>');
-                }
-            });
-            markersGroup2.addLayer(layerGroup);
+                });
+                markersGroup2.addLayer(layerGroup);
+            }
         }
-        // }
     }
     map.addLayer(markersGroup2);
 
