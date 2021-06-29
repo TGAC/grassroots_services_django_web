@@ -56,7 +56,7 @@ def search_fieldtrial(str):
                     "parameters": [
                         {
                             "param": "FT Keyword Search",
-                            "current_value": "luzie"
+                            "current_value": str
                         },
                         {
                             "param": "FT Study Facet",
