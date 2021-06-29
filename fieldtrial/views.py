@@ -33,6 +33,7 @@ One study page request
 '''
 def single_study(request, study_id):
     study = get_study(study_id)
+    # data and type goes to the template study.html
     return render(request, 'study.html', {'data': study, 'type': 'Grassroots:Study'})
 
 '''

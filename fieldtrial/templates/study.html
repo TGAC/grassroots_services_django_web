@@ -109,6 +109,7 @@
             $(document).ready(function () {
                 $('#plots').html('<img src="{% static 'images/ajax-loader.gif' %}"/>');
                 $('#result').html('');
+                // injected from view the data and type
                 start_map({{ data|safe }}, '{{ type|safe }}');
             });
 
