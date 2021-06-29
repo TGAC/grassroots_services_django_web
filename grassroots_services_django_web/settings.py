@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # manually added two apps
     'service.apps.ServiceConfig',
     'fieldtrial.apps.ServiceConfig',
     'django.contrib.admin',
