@@ -1,9 +1,12 @@
-var plotsHTMLArray = {};
-var plotsGRUArray = [];
+//var plotsHTMLArray = {};
+//var plotsGRUArray = [];
+// plots json from backend
 var plot_json = [];
-var plotsPhenotypeArray = [];
-var global_width = 0;
-var global_height = 0;
+//var plotsPhenotypeArray = [];
+// var global_width = 0;
+// var global_height = 0;
+
+// colours used for replicates
 var colorJSON = {
     1: "#39CCCC",
     2: "#FFDC00",
@@ -15,10 +18,17 @@ var colorJSON = {
     8: "#ABEBC6",
     9: "#2ECC40",
 };
+
+// plots details
 var plotsModalInfo = {};
+
+// treatment table
 var formatted_treatments = [];
+
+//  @param {string} type_param - type of the display, can be Grassroots:FieldTrial, Grassroots:Study or AllFieldTrials.
 var type_param_global = '';
 
+// for jquery sliders
 var datemin = 0;
 var datemax = 0;
 
@@ -76,6 +86,7 @@ function startFieldTrialGIS(jsonArray, type_param) {
     }
     if (type_param === 'Grassroots:Study') {
         let experimental_area_json = jsonArray[0]['data'];
+        // two column study details table
         jQuery('#tableWrapper').html('<br/><br/>' + create_study_info_html(experimental_area_json));
         $('.table').DataTable({
             "ordering": false,
@@ -178,7 +189,7 @@ function startFieldTrialGIS(jsonArray, type_param) {
 }
 
 /**
- * Create field trial DataTable
+ * Create field trial DataTable, for listing all fieldtrial page and single field trial page
  *
  * @param {JSONArray} data - JSONArray from backend containing all field trial info.
  * @param {string} type_param - type of the display, can be Grassroots:FieldTrial, Grassroots:Study or AllFieldTrials.
@@ -303,6 +314,7 @@ function produceFieldtrialTable(data, type_param) {
 
     });
 
+    // for address columns click and zoom in on the map
     jQuery('#resultTable tbody').on('click', 'td', function () {
         var cellIdx = yrtable.cell(this).index();
         console.log(cellIdx);
@@ -349,6 +361,7 @@ function produceFieldtrialTable(data, type_param) {
     // }
 
     if (type_param === 'AllFieldTrials') {
+        // hide treatment factors column
         yrtable.column(10).visible(false);
         // console.log("server search here");
         // jQuery('#resultTable').on('search.dt', function () {
@@ -386,6 +399,7 @@ function produceFieldtrialTable(data, type_param) {
         // });
     }
     // else {
+    // search with map updates
     jQuery('#resultTable').on('search.dt', function () {
         removePointers();
         var searchData = yrtable.rows({filter: 'applied'}).data().toArray();
@@ -401,14 +415,14 @@ function produceFieldtrialTable(data, type_param) {
     });
 
     // }
-
+    // sliders for harvest year
     jQuery("#slider").bind("valuesChanging", function (e, data) {
         datemin = data.values.min;
         datemax = data.values.max;
 
         yrtable.draw();
     });
-
+    // slider values comparison
     jQuery.fn.dataTableExt.afnFiltering.push(
         function (oSettings, aData, iDataIndex) {
             var dateStart = datemin;
@@ -424,23 +438,6 @@ function produceFieldtrialTable(data, type_param) {
             }
 
         });
-
-    // jQuery.fn.dataTableExt.afnFiltering.push(
-    // function (oSettings, aData, iDataIndex) {
-    //     var dateStart = datemin;
-    //     var dateEnd = datemax;
-    //
-    //     var evalDate = Date.parse(aData[6]);
-    //
-    //     if (((evalDate >= dateStart && evalDate <= dateEnd) || (evalDate >= dateStart && dateEnd == 0)
-    //         || (evalDate >= dateEnd && dateStart == 0)) || (dateStart == 0 && dateEnd == 0)) {
-    //         return true;
-    //     }
-    //     else {
-    //         return false;
-    //     }
-    //
-    // });
 
 }
 
@@ -950,8 +947,11 @@ function displayFTLocations(array, type_param) {
         //     // + '<u class=\"newstyle_link\" onclick="plot_colorbox(\'' + id + '\');" style="cursor: pointer;">View plots</u>'
         //     + '<a class=\"newstyle_link\" href=\"../dynamic/fieldtrialplots_dynamic.html?id=' + id + '\" target="_blank">View plots</a>'
         // ;
+        // table with two columns same as single study detail page
         var popup_note = create_study_info_html(array[i])
         addFTPointer(la, lo, popup_note);
+
+        // shape data with popup info
         if (type_param === 'Grassroots:Study') {
             if (array[i]['shape_data'] !== null && array[i]['shape_data'] !== undefined && array[i]['shape_data'] !== '') {
                 // let geo_json = JSON.parse(array[i]['shape_data']);
@@ -983,13 +983,14 @@ function displayFTLocations(array, type_param) {
  *
  * @param {string} id - id of the plot.
  */
-function plot_colorbox(id) {
-    var plot_data = plotsHTMLArray[id];
-
-    // $('#modal-body').html(plot_data);
-    $.colorbox({width: "80%", html: plot_data});
-    // $('#plotModal').modal('show');
-}
+// deprecated
+// function plot_colorbox(id) {
+//     var plot_data = plotsHTMLArray[id];
+//
+//     // $('#modal-body').html(plot_data);
+//     $.colorbox({width: "80%", html: plot_data});
+//     // $('#plotModal').modal('show');
+// }
 
 
 /**
@@ -1660,7 +1661,7 @@ function LoadTable(experimental_area_json) {
     var team = '';
     for (i = 0; i < jsonArray.length; i++) {
         let exp_area = jsonArray[i]['data'];
-
+        // generate the plots table content
         let plots_table = GeneratePlotsForExperimentalArea(exp_area);
         $('#plots').html(plots_table);
         /*

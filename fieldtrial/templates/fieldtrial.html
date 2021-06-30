@@ -150,14 +150,22 @@
             var location_layer_marker = new L.MarkerClusterGroup({});
             var location_layer_circle = new L.MarkerClusterGroup({});
 
+/**
+ * Start field trial map and table
+ *
+ * @param {JSONArray} jsonArray - JSONArray from backend containing all field trial info.
+ * @param {string} type_param - type of the display, can be Grassroots:FieldTrial, Grassroots:Study or AllFieldTrials.
+ */
             function start_map(ft_json, type_param) {
                 $('#simpleAdvanceWrapper').hide();
                 $('#status').html('');
                 $('#form').html('');
                 $('#tableWrapper').html('<table id="resultTable"></table>');
                 // $('#result').html(JSON.stringify(json['results'][0]['results'][0]['data']));
+                // all the markers in the map
                 markersGroup2 = new L.MarkerClusterGroup({});
                 // markersGroup_current_location = new L.MarkerClusterGroup({});
+                // L is the leaflet library object
                 map = L.map('map', {zoomControl: false}).setView([52.621615, 10.219470], 5);
 
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -167,7 +175,7 @@
 
                 L.control.zoom({position: 'topright'}).addTo(map);
                 L.control.scale().addTo(map);
-
+                // goes to the fieldtrial_map.js
                 startFieldTrialGIS(ft_json['results'][0]['results'], type_param);
                 $('#map_buttons').show();
 
