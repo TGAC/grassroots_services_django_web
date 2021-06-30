@@ -27,7 +27,7 @@ const field_trial_indexing = 'field_trial-indexing';
 
 const grassroots_search = 'search';
 
-
+// sudo service search_measured_variables
 var search_measured_variables_json = {
     "@type": "grassroots_service",
     "so:name": "Search Measured Phenotype Variables",
@@ -70,6 +70,9 @@ var search_measured_variables_json = {
         "so:image": "https://grassroots.tools/grassroots/images/aiss/polygonchange"
     }
 };
+
+
+// sudo service search_treatments
 var search_treatments_json = {
     "@type": "grassroots_service",
     "so:name": "Search Treatments",
@@ -122,6 +125,7 @@ function get_all_services_as_table() {
     // $('#form').html("<table id=\"listTable\">Loading services...</table>");
 
     $.ajax({
+        // urls.py to views.py to grassroots_requests.py then to apache backend
         url: root_dir + "service/ajax/interact_backend/",
         type: "POST",
         headers: {
@@ -398,9 +402,10 @@ function populateService(service_altname) {
         form_html.push('<div id="ajax_result"></div>');
         form_html.push('</div>');
         $('#form').html(form_html.join(' '));
-
+    // private goes to private/
     } else if (selected_service_name === 'private') {
         window.location.href = root_dir + "service/private/";
+     // queen goes to queen/
     } else if (selected_service_name === 'queen') {
         window.location.href = root_dir + "service/queen/";
     } else {
