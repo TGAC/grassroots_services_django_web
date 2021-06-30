@@ -1,4 +1,4 @@
-
+// utility js
 
 //stop browser caching
 jQuery.ajaxSetup({cache: false});
