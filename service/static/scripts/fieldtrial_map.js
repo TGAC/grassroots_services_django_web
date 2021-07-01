@@ -277,9 +277,12 @@ function produceFieldtrialTable(data, type_param) {
                 "render": function (data, type, full, meta) {
                     let shape_link = '';
                     if (full['has_shape_data'] !== null && full['has_shape_data'] !== undefined && full['has_shape_data'] !== '') {
-                        if (full['has_shape_data']) {
-                            shape_link = '<a href="' + root_dir + 'fieldtrial/study/' + studyId + '" target="_blank">View</a>';
-                        }
+                        // old shape data link, comment below for new link
+                        shape_link = '<u class="newstyle_link">View</u>';
+                        // uncomment below to use the new has_shape_data to study page plus comment from line 337-359
+                        // if (full['has_shape_data']) {
+                        //     shape_link = '<a href="' + root_dir + 'fieldtrial/study/' + studyId + '" target="_blank">View</a>';
+                        // }
                     }
                     return shape_link;
                 }
@@ -330,30 +333,31 @@ function produceFieldtrialTable(data, type_param) {
 
             }
         }
-        // Shape data listing page link
-        // else if (json['shape_data'] !== null && json['shape_data'] !== undefined && json['shape_data'] !== '' && cellIdx['column'] === 9) {
-        //
-        //     if (json['address']['address']['location']['centre'] !== undefined) {
-        //         var la = json['address']['address']['location']['centre']['latitude'];
-        //         var lo = json['address']['address']['location']['centre']['longitude'];
-        //         lalo = [la, lo];
-        //     }
-        //
-        //     // let shape_data = JSON.parse(json['shape_data']);
-        //     let shape_data = json['shape_data'];
-        //     let coord = shape_data.features[0].geometry.coordinates;
-        //     let zoom = 18;
-        //     if (coord[0][0].length === 2) {
-        //         lalo = coord[0][0][0].reverse();
-        //         zoom = 22;
-        //     } else if (coord[0][0][0].length === 2) {
-        //         lalo = coord[0][0][0].reverse();
-        //         zoom = 22;
-        //     }
-        //
-        //     map.setView(lalo, zoom, {animate: true});
-        //     $(window).scrollTop($('#map').offset().top - 90);
-        // }
+        // Shape data listing page link, comment below from line 337-359  when has_shape_data is in place
+        else if (json['shape_data'] !== null && json['shape_data'] !== undefined && json['shape_data'] !== '' && cellIdx['column'] === 9) {
+
+            if (json['address']['address']['location']['centre'] !== undefined) {
+                var la = json['address']['address']['location']['centre']['latitude'];
+                var lo = json['address']['address']['location']['centre']['longitude'];
+                lalo = [la, lo];
+            }
+
+            // let shape_data = JSON.parse(json['shape_data']);
+            let shape_data = json['shape_data'];
+            let coord = shape_data.features[0].geometry.coordinates;
+            let zoom = 18;
+            if (coord[0][0].length === 2) {
+                lalo = coord[0][0][0].reverse();
+                zoom = 22;
+            } else if (coord[0][0][0].length === 2) {
+                lalo = coord[0][0][0].reverse();
+                zoom = 22;
+            }
+
+            map.setView(lalo, zoom, {animate: true});
+            $(window).scrollTop($('#map').offset().top - 90);
+        }
+
     });
 
     // if (type_param === 'Grassroots:Study'){

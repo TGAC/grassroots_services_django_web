@@ -2075,9 +2075,11 @@ function simpleOrAdvanced(string) {
  */
 function submit_form() {
     var all_parameter = $('input,textarea,select');
+    // remove the error messages
     $('.popover').each(function () {
         $(this).remove();
     });
+    // remove error parameters background colour
     all_parameter.each(function () {
         $(this).css({'background-color': ''});
     });
@@ -2156,7 +2158,7 @@ function submit_form() {
 }
 
 /**
- * Construct parameters into JSON from HTML form
+ * Construct parameters into JSON from HTML form, make the parameters: [] array
  *
  * @param {Form} form - html form.
  */
@@ -2283,7 +2285,7 @@ function process_repeatable_parameters(input_parameters) {
                     } else {
                         current_value.push(input_parameter['current_value']);
                     }
-
+                    // remove just added values from the list
                     remove_indices.push(pt);
                     // input_parameters.splice(pt, 1);
                 }
@@ -2607,7 +2609,10 @@ function display_result(json) {
         } else {
             $('#status').html(status_text_key);
         }
-    } else {
+
+    }
+    // new services result can be added here
+    else {
         $('#status').html('');
         var status_text_key = json['results'][0]['status_text'];
         if (status_text_key == 'Succeeded') {
@@ -2792,7 +2797,7 @@ function get_general_errors(json) {
 }
 
 /**
- * Format erros from result
+ * Format errors from result
  *
  * @param {JSON} this_result - A result JSON from backend.
  */
@@ -3015,7 +3020,9 @@ function checkResult(each_result) {
         $('#' + uuid).html('Job ' + status_text_key + ':  ' + general_error);
         handle_errors(each_result);
         Utils.ui.reenableButton('submit_button', 'Submit');
-    } else {
+    }
+    // rechecking the result from server
+    else {
         $.ajax({
                 url: root_dir + "service/" + publicOrPrivate + "ajax/interact_backend/",
                 type: "POST",
