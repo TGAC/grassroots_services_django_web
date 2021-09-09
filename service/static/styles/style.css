@@ -341,3 +341,20 @@ table.plots td {
 .dataTables_scrollBody table {
     transform:rotateX(180deg);
 }
+
+
+  /* Popover */
+  .popover {
+  }
+  /* Popover Header */
+  .popover-title {
+    text-align:center;
+  }
+  /* Popover Body */
+  .popover-content {
+    padding: 1.0em;
+  }
+
+.tooltip-inner {
+ word-break: break-all;
+}

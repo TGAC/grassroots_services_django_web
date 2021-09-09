@@ -120,11 +120,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
+# The filesystem path to where the static files
+# that DJango uses will be installed
 STATIC_ROOT = "/opt/apache/htdocs/static/"
 
+# The web address to access the static files
 STATIC_URL = '/static/'
 
 SERVER_URL = "https://grassroots.tools/public_backend"
 PRIVATE_SERVER_URL = "https://grassroots.tools/private_backend"
 QUEEN_SERVER_URL = "http://10.0.152.54/grassroots/queen_bee_backend"
 # PRIVATE_SERVER_URL = "https://grassroots.tools/dev/public_backend" #dev
+
+
+from .custom_settings import *
+
+

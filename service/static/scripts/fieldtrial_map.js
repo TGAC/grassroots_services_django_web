@@ -158,13 +158,14 @@ function startFieldTrialGIS(jsonArray, type_param) {
     $('#download_question').popover({
         content: 'Frictionless Data Package lets you download all data associated with this study, including its parent field trial and programme, for more info and the tool go to <a class="newstyle_link" href="https://grassroots.tools/frictionless-data/grassroots-fd-client.md" target="_blank">here</a>',
         html: true,
-        placement: 'top',
+        placement: 'left',
         trigger: 'manual',
         // delay: {
         //     show: "0",
         //     hide: "5000"
         // },
-        animation: false
+        animation: false,
+        container: 'body'
     });
     //     .on("mouseenter", function () {
     //     var _this = this;
@@ -278,11 +279,12 @@ function produceFieldtrialTable(data, type_param) {
                     let shape_link = '';
                     if (full['has_shape_data'] !== null && full['has_shape_data'] !== undefined && full['has_shape_data'] !== '') {
                         // old shape data link, comment below for new link
-                        shape_link = '<u class="newstyle_link">View</u>';
+                        //shape_link = '<u class="newstyle_link">View</u>';
                         // uncomment below to use the new has_shape_data to study page plus comment from line 337-359
-                        // if (full['has_shape_data']) {
-                        //     shape_link = '<a href="' + root_dir + 'fieldtrial/study/' + studyId + '" target="_blank">View</a>';
-                        // }
+                        if (full['has_shape_data']) {
+                            var studyId = full['_id']['$oid'];
+                           shape_link = '<a href="' + root_dir + 'fieldtrial/study/' + studyId + '" target="_blank">View</a>';
+                        }
                     }
                     return shape_link;
                 }
@@ -290,7 +292,7 @@ function produceFieldtrialTable(data, type_param) {
             {
                 title: "Treatment Factors",
                 "render": function (data, type, full, meta) {
-                    return format_study_treatment_facotrs_link(full);
+                    return format_study_treatment_factors_link(full);
                 }
             }
             ,
@@ -334,6 +336,7 @@ function produceFieldtrialTable(data, type_param) {
             }
         }
         // Shape data listing page link, comment below from line 337-359  when has_shape_data is in place
+
         else if (json['shape_data'] !== null && json['shape_data'] !== undefined && json['shape_data'] !== '' && cellIdx['column'] === 9) {
 
             if (json['address']['address']['location']['centre'] !== undefined) {
@@ -631,7 +634,7 @@ function format_study_contact(full) {
  *
  * @param {JSON} full - Study JSON.
  */
-function format_study_treatment_facotrs_link(full) {
+function format_study_treatment_factors_link(full) {
     var studyId = full['_id']['$oid'];
     var treatment = '';
     if (full['treatment_factors'] !== undefined && full['treatment_factors'] !== null && type_param_global !== 'AllFieldTrials') {
@@ -843,7 +846,7 @@ function create_study_info_html(studyJson) {
     htmlarray.push('<b>Treatment Factors:</b> ');
     htmlarray.push('</td>');
     htmlarray.push('<td>');
-    htmlarray.push(format_study_treatment_facotrs_link(studyJson));
+    htmlarray.push(format_study_treatment_factors_link(studyJson));
     htmlarray.push('</td>');
     htmlarray.push('</tr>');
 
