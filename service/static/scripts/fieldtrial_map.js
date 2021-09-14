@@ -156,7 +156,7 @@ function startFieldTrialGIS(jsonArray, type_param) {
         create_study_modal_html(filtered_data_without_location.concat(filtered_data_with_location));
     }
     $('#download_question').popover({
-        content: 'Frictionless Data Package lets you download all data associated with this study, including its parent field trial and programme, for more info and the tool go to <a class="newstyle_link" href="https://grassroots.tools/frictionless-data/grassroots-fd-client.md" target="_blank">here</a>',
+        content: 'A Frictionless Data Package contains all of the data associated with a study including its parent field trial and programme. For more information and the tool to unpack these packages, go <a class="newstyle_link" href="https://grassroots.tools/frictionless-data/grassroots-fd-client.md" target="_blank">here</a>',
         html: true,
         placement: 'left',
         trigger: 'manual',
@@ -336,7 +336,7 @@ function produceFieldtrialTable(data, type_param) {
             }
         }
         // Shape data listing page link, comment below from line 337-359  when has_shape_data is in place
-
+/*
         else if (json['shape_data'] !== null && json['shape_data'] !== undefined && json['shape_data'] !== '' && cellIdx['column'] === 9) {
 
             if (json['address']['address']['location']['centre'] !== undefined) {
@@ -360,7 +360,7 @@ function produceFieldtrialTable(data, type_param) {
             map.setView(lalo, zoom, {animate: true});
             $(window).scrollTop($('#map').offset().top - 90);
         }
-
+*/
     });
 
     // if (type_param === 'Grassroots:Study'){

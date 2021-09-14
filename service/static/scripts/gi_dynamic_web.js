@@ -1466,7 +1466,7 @@ function do_ajax_search(type) {
                                         messageBottom: null,
                                         header: false,
                                         exportOptions: {
-                                            columns: [8, 10, 11]
+                                            columns: [8]
                                         }
                                     },
                                     {
@@ -1476,7 +1476,7 @@ function do_ajax_search(type) {
                                         messageBottom: null,
                                         header: false,
                                         exportOptions: {
-                                            columns: [8, 10, 11]
+                                            columns: [8]
                                         }
                                     },
                                     {
@@ -1486,7 +1486,7 @@ function do_ajax_search(type) {
                                         messageBottom: null,
                                         header: false,
                                         exportOptions: {
-                                            columns: [8, 10, 11]
+                                            columns: [8]
                                         }
                                     }
                                 ],
