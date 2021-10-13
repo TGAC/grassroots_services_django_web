@@ -152,7 +152,9 @@ function startFieldTrialGIS(jsonArray, type_param) {
     }
 
     displayFTLocations(filtered_data_with_location, type_param);
-    if (type_param !== 'AllFieldTrials') {
+
+/*    if (type_param !== 'AllFieldTrials') { */
+    if (type_param === 'Grassroots:Study') { 
         create_study_modal_html(filtered_data_without_location.concat(filtered_data_with_location));
     }
     $('#download_question').popover({
