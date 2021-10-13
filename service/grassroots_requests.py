@@ -12,7 +12,6 @@ returns JSON from backend and send to the model
 '''
 def get_all_services(str):
     list_services_req = {"operations": {"operation": "get_all_services"}}
-		print ("str " . str)
     if str == 'public':
         res = requests.post(server_url, data=json.dumps(list_services_req))
     elif str == 'private':
