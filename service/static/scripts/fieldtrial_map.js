@@ -1205,7 +1205,7 @@ function formatPlotModal(plot) {
     }
 
     rowsInfoarray.push('<table class="table racks" id="plots_table_rows"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th><th>Links</th><th>Treatments</th></tr></thead><tbody id="rowsInfo">');
-    phenotypearray.push('<table class="table plots" id="plots_table"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th></tr></thead><tbody id="phenotypes">');
+    phenotypearray.push('<table class="table plots" id="plots_table"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th><th>Index</th></tr></thead><tbody id="phenotypes">');
 
     let formatted_plot = format_plot_rows(plot, false);
 
@@ -1375,6 +1375,9 @@ function format_plot_rows(plot, replicate_bool) {
                 } else {
                     phenotypearray.push('<td>' + observation['phenotype']['unit']['so:name'] + '</td>');
                 }
+
+                phenotypearray.push('<td>' + SafePrint(observation['index']) + '</td>');
+
                 phenotypearray.push('</tr>');
             }
         }
