@@ -2745,13 +2745,18 @@ function format_grassroots_search_result(this_result) {
         grassroots_search_html.push('<i>' + img_html + ' ' + title + '</i><br/>');
         grassroots_search_html.push(json['id']);
     } else if (json['@type'] === 'Grassroots:Programme') {
+        let pi = JSON.parse (json['principal_investigator']);
         if (json['so:url'] !== undefined && json['so:url'] !== null) {
             let program_link = json['so:url'];
             grassroots_search_html.push('<br/><a style="color:#18bc9c ! important;" target="_blank" href="' + program_link + '">' + img_html + ' ' + title + '</a><br/>');
         } else {
             grassroots_search_html.push('<i>' + img_html + ' ' + title + '</i><br/>');
         }
-        grassroots_search_html.push('Principal Investigator: ' + SafePrint(json['principal_investigator']) + '</br>' + SafePrint(json['so:description']));
+
+				if (pi !== undefined || pi !== null) {
+	        grassroots_search_html.push('Principal Investigator: ' + SafePrint(pi['so:name']) + '</br>');				
+				}
+        grassroots_search_html.push(SafePrint(json['so:description']));
     } else if (json['@type'] === 'Grassroots:Publication') {
         if (json['so:url'] !== undefined && json['so:url'] !== null) {
             let publication_link = json['so:url'];
