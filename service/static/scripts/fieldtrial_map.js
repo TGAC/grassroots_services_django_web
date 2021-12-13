@@ -677,219 +677,87 @@ function create_study_info_html(studyJson) {
 
     htmlarray.push('<tr>');
     htmlarray.push('<th width="50%">');
-    htmlarray.push('<b>Study Info</b> ');
+    htmlarray.push('<strong>Study Info</strong> ');
     htmlarray.push('</th>');
     htmlarray.push('<th width="50%">');
-    htmlarray.push('<b>Values</b> ');
+    htmlarray.push('<strong>Values</strong> ');
     htmlarray.push('</th>');
     htmlarray.push('</tr>');
     htmlarray.push('<thead>');
     htmlarray.push('<tbody>');
 
-    htmlarray.push('<tr>');
-    htmlarray.push('<td>');
-    htmlarray.push('<b>Study Name:</b> ');
-    htmlarray.push('</td>');
-    htmlarray.push('<td>');
-    htmlarray.push(studyJson['so:name']);
-    htmlarray.push('</td>');
-    htmlarray.push('</tr>');
+    AddTableRow (htmlarray, "Study Name", studyJson ['so:name']);
 
-    htmlarray.push('<tr>');
-    htmlarray.push('<td>');
-    htmlarray.push('<b>Study Description:</b> ');
-    htmlarray.push('</td>');
-    htmlarray.push('<td>');
-    htmlarray.push(studyJson['so:description']);
-    htmlarray.push('</td>');
-    htmlarray.push('</tr>');
+    AddTableRow (htmlarray, "Study Description", studyJson ['so:description']);
 
     if (studyJson["parent_program"] !== undefined) {
-
-
-        htmlarray.push('<tr>');
-        htmlarray.push('<td>');
-        htmlarray.push('<b>Programme:</b> ');
-        htmlarray.push('</td>');
-        htmlarray.push('<td>');
-        htmlarray.push(format_study_parent_program(studyJson));
-        htmlarray.push('</td>');
-        htmlarray.push('</tr>');
+        AddTableRow (htmlarray, "Programme", format_study_parent_program (studyJson));
     }
 
     if (studyJson["parent_field_trial"] !== undefined) {
-        var ftId = studyJson['parent_field_trial']['_id']['$oid'];
-        var ft_name = '<a target="_blank" style="newstyle_link" href="' + root_dir + 'fieldtrial/' + ftId + '" target="_blank">' + studyJson['parent_field_trial']['so:name'] + '</a>';
-        htmlarray.push('<tr>');
-        htmlarray.push('<td>');
-        htmlarray.push('<b>Field Trial Name:</b> ');
-        htmlarray.push('</td>');
-        htmlarray.push('<td>');
-        htmlarray.push(ft_name);
-        htmlarray.push('</td>');
-        htmlarray.push('</tr>');
+        let ftId = studyJson['parent_field_trial']['_id']['$oid'];
+        let ft_name = '<a target="_blank" style="newstyle_link" href="' + root_dir + 'fieldtrial/' + ftId + '" target="_blank">' + studyJson['parent_field_trial']['so:name'] + '</a>';
+
+        AddTableRow (htmlarray, "Field Trial Name", ft_name);
     }
 
-    htmlarray.push('<tr>');
-    htmlarray.push('<td>');
-    htmlarray.push('<b>Study Design:</b> ');
-    htmlarray.push('</td>');
-    htmlarray.push('<td>');
-    htmlarray.push(SafePrint(studyJson['study_design']));
-    htmlarray.push('</td>');
-    htmlarray.push('</tr>');
 
-    htmlarray.push('<tr>');
-    htmlarray.push('<td>');
-    htmlarray.push('<b>Team:</b> ');
-    htmlarray.push('</td>');
-    htmlarray.push('<td>');
-    htmlarray.push(SafePrint(studyJson["parent_field_trial"]['team']));
-    htmlarray.push('</td>');
-    htmlarray.push('</tr>');
+    AddTableRow (htmlarray, "Study Design", SafePrint(studyJson['study_design']));
 
+    AddTableRow (htmlarray, "Changes to Experiment Plan", SafePrint(studyJson['plan_changes']));
 
-    htmlarray.push('<tr>');
-    htmlarray.push('<td>');
-    htmlarray.push('<b>Phenotype Gathering Notes:</b> ');
-    htmlarray.push('</td>');
-    htmlarray.push('<td>');
-    htmlarray.push(SafePrint(studyJson['phenotype_gathering_notes']));
-    htmlarray.push('</td>');
-    htmlarray.push('</tr>');
+    AddTableRow (htmlarray, "Growing Conditions", SafePrint(studyJson['growing_conditions']));
 
-    htmlarray.push('<tr>');
-    htmlarray.push('<td>');
-    htmlarray.push('<b>Slope:</b> ');
-    htmlarray.push('</td>');
-    htmlarray.push('<td>');
-    htmlarray.push(SafePrint(studyJson['envo:00002000']));
-    htmlarray.push('</td>');
-    htmlarray.push('</tr>');
+    AddTableRow (htmlarray, "Phenotype Gathering Notes", SafePrint(studyJson['phenotype_gathering_notes']));
 
-    htmlarray.push('<tr>');
-    htmlarray.push('<td>');
-    htmlarray.push('<b>Aspect:</b> ');
-    htmlarray.push('</td>');
-    htmlarray.push('<td>');
-    htmlarray.push(SafePrint(studyJson['ncit:C42677']));
-    htmlarray.push('</td>');
-    htmlarray.push('</tr>');
+    AddTableRow (htmlarray, "Physical Smples Collected", SafePrint(studyJson['physical_smaples_collected']));
 
-    htmlarray.push('<tr>');
-    htmlarray.push('<td>');
-    htmlarray.push('<b>Weather:</b> ');
-    htmlarray.push('</td>');
-    htmlarray.push('<td>');
-    htmlarray.push(SafePrint(studyJson['weather']));
-    htmlarray.push('</td>');
-    htmlarray.push('</tr>');
+    AddTableRow (htmlarray, "Data not included", SafePrint(studyJson['data_not_included']));
+
+    AddTableRow (htmlarray, "Team", SafePrint(studyJson["parent_field_trial"]['team']));
+
+    AddTableRow (htmlarray, "Slope", SafePrint(studyJson['envo:00002000']));
+
+    if (studyJson["ncit:C42677"] !== undefined) {
+        let aspect_link = '<a target="_blank" style="newstyle_link" href="' + studyJson["ncit:C42677"]  + '" target="_blank">' + studyJson["ncit:C42677"] + '</a>';
+
+        AddTableRow (htmlarray, "Aspect", aspect_link);
+    }
+
+    AddTableRow (htmlarray, "Weather", SafePrint(studyJson['weather']));
 
     if (studyJson['current_crop'] !== undefined) {
-        htmlarray.push('<tr>');
-        htmlarray.push('<td>');
-        htmlarray.push('<b>Current Crop:</b> ');
-        htmlarray.push('</td>');
-        htmlarray.push('<td>');
-        htmlarray.push(format_crop(studyJson['current_crop']));
-        htmlarray.push('</td>');
-        htmlarray.push('</tr>');
+        AddTableRow (htmlarray, "Current Crop", format_crop(studyJson['current_crop']));
     }
 
     if (studyJson['previous_crop'] !== undefined) {
-        htmlarray.push('<tr>');
-        htmlarray.push('<td>');
-        htmlarray.push('<b>Previous Crop:</b> ');
-        htmlarray.push('</td>');
-        htmlarray.push('<td>');
-        htmlarray.push(format_crop(studyJson['previous_crop']));
-        htmlarray.push('</td>');
-        htmlarray.push('</tr>');
+        AddTableRow (htmlarray, "Previous Crop", format_crop(studyJson['previous_crop']));
     }
 
-    htmlarray.push('<tr>');
-    htmlarray.push('<td>');
-    htmlarray.push('<b>Sowing Year:</b> ');
-    htmlarray.push('</td>');
-    htmlarray.push('<td>');
-    htmlarray.push(SafePrint(studyJson['sowing_year']));
-    htmlarray.push('</td>');
-    htmlarray.push('</tr>');
+    AddTableRow (htmlarray, "Weather", SafePrint(studyJson['weather']));
 
-    htmlarray.push('<tr>');
-    htmlarray.push('<td>');
-    htmlarray.push('<b>Harvest Year:</b> ');
-    htmlarray.push('</td>');
-    htmlarray.push('<td>');
-    htmlarray.push(SafePrint(studyJson['harvest_year']));
-    htmlarray.push('</td>');
-    htmlarray.push('</tr>');
+    AddTableRow (htmlarray, "Sowing Year", SafePrint(studyJson['sowing_year']));
 
-    htmlarray.push('<tr>');
-    htmlarray.push('<td>');
-    htmlarray.push('<b>Plots:</b> ');
-    htmlarray.push('</td>');
-    htmlarray.push('<td>');
-    htmlarray.push(get_study_plots_link(studyJson));
-    htmlarray.push('</td>');
-    htmlarray.push('</tr>');
+    AddTableRow (htmlarray, "Harvest Year", SafePrint(studyJson['harvest_year']));
 
-    htmlarray.push('<tr>');
-    htmlarray.push('<td>');
-    htmlarray.push('<b>Address:</b> ');
-    htmlarray.push('</td>');
-    htmlarray.push('<td>');
-    htmlarray.push(get_study_address(studyJson, false));
-    htmlarray.push('</td>');
-    htmlarray.push('</tr>');
+    AddTableRow (htmlarray, "Plots", get_study_plots_link(studyJson));
 
-    htmlarray.push('<tr>');
-    htmlarray.push('<td>');
-    htmlarray.push('<b>Treatment Factors:</b> ');
-    htmlarray.push('</td>');
-    htmlarray.push('<td>');
-    htmlarray.push(format_study_treatment_factors_link(studyJson));
-    htmlarray.push('</td>');
-    htmlarray.push('</tr>');
+    AddTableRow (htmlarray, "Address", get_study_address(studyJson, false));
 
-    htmlarray.push('<tr>');
-    htmlarray.push('<td>');
-    htmlarray.push('<b>Curator:</b> ');
-    htmlarray.push('</td>');
-    htmlarray.push('<td>');
-    htmlarray.push(format_study_curator(studyJson));
-    htmlarray.push('</td>');
-    htmlarray.push('</tr>');
 
-    htmlarray.push('<tr>');
-    htmlarray.push('<td>');
-    htmlarray.push('<b>Contact:</b> ');
-    htmlarray.push('</td>');
-    htmlarray.push('<td>');
-    htmlarray.push(format_study_contact(studyJson));
-    htmlarray.push('</td>');
-    htmlarray.push('</tr>');
+    AddTableRow (htmlarray, "Treatment Factors", format_study_treatment_factors_link(studyJson));
+
+
+    AddTableRow (htmlarray, "Curator", format_study_curator(studyJson));
+
+    AddTableRow (htmlarray, "Contact", format_study_contact(studyJson));
 
     if (studyJson['so:url'] !== undefined && studyJson['so:url'] !== null) {
-        htmlarray.push('<tr>');
-        htmlarray.push('<td>');
-        htmlarray.push('<b>More info:</b> ');
-        htmlarray.push('</td>');
-        htmlarray.push('<td>');
-        htmlarray.push('<a href="' + studyJson['so:url'] + '" target="_blank" style="newstyle_link">link</a>');
-        htmlarray.push('</td>');
-        htmlarray.push('</tr>');
+        AddTableRow (htmlarray, "More info", '<a href="' + studyJson['so:url'] + '" target="_blank" style="newstyle_link">link</a>');
     }
 
     if (studyJson['so:contentUrl'] !== undefined) {
-        htmlarray.push('<tr>');
-        htmlarray.push('<td>');
-        htmlarray.push('<b>Download <i id="download_question" class="fas fa-question newstyle_link"></i>:</b> ');
-        htmlarray.push('</td>');
-        htmlarray.push('<td>');
-        htmlarray.push('<a href="' + studyJson['so:contentUrl'] + '" target="_blank" style="newstyle_link" download>Frictionless Data Package</a>');
-        htmlarray.push('</td>');
-        htmlarray.push('</tr>');
+        AddTableRow (htmlarray, 'Download <i id="download_question" class="fas fa-question newstyle_link"></i>', '<a href="' + studyJson['so:contentUrl'] + '" target="_blank" style="newstyle_link">link</a>');
     }
 
     htmlarray.push('</tbody>');
@@ -900,6 +768,17 @@ function create_study_info_html(studyJson) {
 
 }
 
+
+/**
+ * Add a table row to a given html variable */
+function AddTableRow (table_var, key, value) {
+    table_var.push('<tr>\n<td><strong>');
+    table_var.push(key);
+    table_var.push(':</strong>\n</td>\n<td>');
+    table_var.push(value);
+    table_var.push('</td>\n</tr>\n');
+
+}
 
 /**
  * Remove all markers and geoJSON on the map
