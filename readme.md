@@ -1,6 +1,6 @@
 # Introduction
 
-This is frontend web application for the [Grassroots infrastructure](https://grassroots.tools) using the [Django framework](https://www.djangoproject.com/). This application is open source and available from [https://github.com/TGAC/grassroots_services_django_web}(https://github.com/TGAC/grassroots_services_django_web).
+This is frontend web application for the [Grassroots infrastructure](https://grassroots.tools) using the [Django framework](https://www.djangoproject.com/). This application is open source and available from [https://github.com/TGAC/grassroots_services_django_web](https://github.com/TGAC/grassroots_services_django_web).
 
 # Installation
 
