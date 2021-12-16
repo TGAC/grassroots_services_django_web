@@ -70,4 +70,4 @@ where *<PORT>* is the port that you wish to run the application on. For instance
 python3 manage.py runserver 8000
 ```
 
-So by browsing to *http://localhost:\<PORT\>*, or in the example above *http://localhost:8000*. you can access the application.
+So by browsing to *http://localhost:<PORT\>*, or in the example above *http://localhost:8000*. you can access the application.
