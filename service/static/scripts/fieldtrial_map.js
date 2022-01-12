@@ -734,8 +734,6 @@ function create_study_info_html(studyJson) {
         AddTableRow (htmlarray, "Previous Crop", format_crop(studyJson['previous_crop']));
     }
 
-    AddTableRow (htmlarray, "Weather", SafePrint(studyJson['weather']));
-
     AddTableRow (htmlarray, "Sowing Year", SafePrint(studyJson['sowing_year']));
 
     AddTableRow (htmlarray, "Harvest Year", SafePrint(studyJson['harvest_year']));
