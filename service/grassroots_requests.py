@@ -56,7 +56,7 @@ def search_treatment_return_ols(string):
     submit_json = {
         "services": [
             {
-                "start_service": True,
+                "start_service": true,
                 "so:name": "Search Field Trials",
                 "parameter_set": {
                     "level": "simple",

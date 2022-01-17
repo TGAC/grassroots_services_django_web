@@ -13,7 +13,7 @@ def get_all_fieldtrials():
         "services": [
             {
                 "so:name": "Search Field Trials",
-                "start_service": True,
+                "start_service": true,
                 "parameter_set": {
                     "level": "simple",
                     "parameters": [
@@ -23,7 +23,7 @@ def get_all_fieldtrials():
                         },
                         {
                             "param": "FT Study Facet",
-                            "current_value": True
+                            "current_value": true
                         },
                         {
                             "param": "FT Results Page Number",
@@ -50,7 +50,7 @@ def search_fieldtrial(str):
         "services": [
             {
                 "so:name": "Search Field Trials",
-                "start_service": True,
+                "start_service": true,
                 "parameter_set": {
                     "level": "simple",
                     "parameters": [
@@ -60,7 +60,7 @@ def search_fieldtrial(str):
                         },
                         {
                             "param": "FT Study Facet",
-                            "current_value": True
+                            "current_value": true
                         },
                         {
                             "param": "FT Results Page Number",
@@ -85,7 +85,7 @@ returns JSON from backend and send to the model
 def get_fieldtrial(id):
     list_all_ft_request = {
         "services": [{
-            "start_service": True,
+            "start_service": true,
             "so:name": "Search Field Trials",
             "parameter_set": {
                 "level": "advanced",
@@ -96,7 +96,7 @@ def get_fieldtrial(id):
                     },
                     {
                         "param": "FT Trial Facet",
-                        "current_value": True
+                        "current_value": true
                     },
                     {
                         "param": "FT Results Page Number",
@@ -121,7 +121,7 @@ def get_study(id):
     study_request = {
             "services": [{
                 "so:name": "Search Field Trials",
-                "start_service": True,
+                "start_service": true,
                 "parameter_set": {
                     "level": "advanced",
                     "parameters": [{
@@ -129,10 +129,10 @@ def get_study(id):
                         "current_value": id
                     }, {
                         "param": "Get all Plots for Study",
-                        "current_value": True
+                        "current_value": true
                     }, {
                         "param": "ST Search Studies",
-                        "current_value": True
+                        "current_value": true
                     }]
                 }
             }]
@@ -149,7 +149,7 @@ def get_plot(id):
     plot_request = {
             "services": [{
                 "so:name": "Search Field Trials",
-                "start_service": True,
+                "start_service": true,
                 "parameter_set": {
                     "level": "advanced",
                     "parameters": [{
@@ -157,10 +157,10 @@ def get_plot(id):
                         "current_value": id
                     }, {
                         "param": "Get all Plots for Study",
-                        "current_value": True
+                        "current_value": true
                     }, {
                         "param": "ST Search Studies",
-                        "current_value": True
+                        "current_value": true
                     }]
                 }
             }]
