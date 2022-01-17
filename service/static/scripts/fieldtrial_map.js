@@ -40,7 +40,7 @@ var datemax = 0;
  */
 function startFieldTrialGIS(jsonArray, type_param) {
     type_param_global = type_param;
-    console.log(JSON.stringify(jsonArray));
+    //console.log(JSON.stringify(jsonArray));
     var filtered_data_with_location = [];
     var filtered_data_without_location = [];
     jQuery('#status').html('');
@@ -973,6 +973,7 @@ function addFTPointer(la, lo, note) {
  * @param {string} plot_block_columns - number of columns in block.
  */
 function formatPlot(plot, plot_block_rows, plot_block_columns) {
+  // console.log(JSON.stringify(plot));
     let plotId = plot['_id']['$oid'];
     let current_row = parseInt(plot['row_index']);
     let current_column = parseInt(plot['column_index']);
@@ -1393,7 +1394,6 @@ function SafePrint(obj) {
 function SafePrint_with_value(obj, value) {
     if (obj === undefined || obj === null) {
         return value;
-        console.log(value);
     } else {
         return obj;
     }
@@ -1578,8 +1578,6 @@ function LoadTable(experimental_area_json) {
  * @param {JSON} experimental_area_json - Study JSON.
  */
 function GeneratePlotsForExperimentalArea(experimental_area_json) {
-    console.log(JSON.stringify(experimental_area_json));
-
     plot_json = experimental_area_json['plots'];
     let expAreaId = experimental_area_json['_id']['$oid'];
     let plots = experimental_area_json['plots'];
