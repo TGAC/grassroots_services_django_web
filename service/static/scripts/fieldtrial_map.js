@@ -551,7 +551,7 @@ function create_study_modal_html(array) {
 function format_study_parent_program(full) {
     let result = '';
     if (full['parent_program'] !== undefined && full['parent_program'] !== null) {
-        if (full['parent_program']['so:image'] !== undefined) {
+        if ((full['parent_program']['so:image'] !== undefined) && (full['parent_program']['so:image'] !== null)) {
             result = result + ' <img src="' + full['parent_program']['so:image'] + '" height="32px;"/><br/> ';
         }
         if (full['parent_program']['so:name'] !== undefined) {
@@ -639,7 +639,12 @@ function format_study_contact(full) {
 function format_study_treatment_factors_link(full) {
     var studyId = full['_id']['$oid'];
     var treatment = '';
-    if (full['treatment_factors'] !== undefined && full['treatment_factors'] !== null && type_param_global !== 'AllFieldTrials') {
+
+
+    console.log ("treatment_factors: ");
+    console.log (JSON.stringify (full['treatment_factors']));
+    
+    if ((full['treatment_factors'] !== undefined) && (full['treatment_factors'] !== null) && (type_param_global !== 'AllFieldTrials')) {
         if (full['treatment_factors'].length > 0) {
             treatment = '<span style="cursor:pointer;" class="newstyle_link" onclick="plotModal(\'' + studyId + 'treatment\')">Treatment Factors</span>'
         }
@@ -1021,6 +1026,10 @@ function plotModal(plotId) {
     $('#modal-body').html(plotsModalInfo[plotId]);
     $('#plotModal').modal('show');
 
+    
+        console.log ("treatment_factors: " + plotId);
+
+    
     let searchStr = '';
     for (i = 0; i < plot_json.length; i++) {
         if (plot_json[i]['_id']['$oid'] === plotId) {
