@@ -1,5 +1,9 @@
 {%  include "header.html" %}
  {% load static %}
+ 
+ {% load ft_extras %}
+ 
+ 
 <!--content-->
 <style type="text/css">
     .modal-dialog {
@@ -198,5 +202,37 @@
     </div>
 </section>
 <!--footer-->
+
+<!--
+<section id="new_stuff">
+
+<table class="table table-bordered dataTable no-footer">
+
+{% if "so:name" in study_json %}
+<tr><td>Name</td><td>{% lookup_value study_json "so:name" %}</td></tr>
+{% endif %}
+
+{% if "so:description" in study_json %}
+<tr><td>Description</td><td>{% lookup_value study_json "so:description" %}</td></tr>
+{% endif %}
+
+
+{% if "study_design" in study_json %}
+<tr><td>Study Design</td><td>{{ study_json.study_design }}</td></tr>
+{% endif %}
+
+{% if "sowing_year" in study_json %}
+<tr><td>Sowing Year</td><td>{{ study_json.sowing_year }}</td></tr>
+{% endif %}
+
+{% if "harvest_year" in study_json %}
+<tr><td>Harvest Year</td><td>{{ study_json.harvest_year }}</td></tr>
+{% endif %}
+
+</table>
+
+
+</section>
+-->
 
 {% include "footer.html" %}

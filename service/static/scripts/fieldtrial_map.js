@@ -23,7 +23,7 @@ var colorJSON = {
 var plotsModalInfo = {};
 
 // treatment table
-var formatted_treatments = [];
+var s_formatted_treatments = [];
 
 //  @param {string} type_param - type of the display, can be Grassroots:FieldTrial, Grassroots:Study or AllFieldTrials.
 var type_param_global = '';
@@ -94,7 +94,7 @@ function startFieldTrialGIS(jsonArray, type_param) {
             "searching": false,
             "info": false
         });
-        formatted_treatments = generate_treatments_html(experimental_area_json);
+        s_formatted_treatments = generate_treatments_html(experimental_area_json);
         if (experimental_area_json['plots'] !== undefined && experimental_area_json['plots'] !== null) {
             for (j = 0; j < experimental_area_json['plots'].length; j++) {
                 let plot = experimental_area_json['plots'][j];
@@ -1156,7 +1156,7 @@ function formatPlotModal(plot) {
     }
     htmlarray.push('</div>');
     htmlarray.push('</div>');
-    htmlarray.push(formatted_treatments);
+    htmlarray.push(s_formatted_treatments);
     htmlarray.push('<hr/>');
     htmlarray.push('<h5>Rows:</h5>');
     htmlarray.push('        <div id="simpleAdvanceWrapper1" style="display:none;" >\n' +
@@ -1594,7 +1594,7 @@ function GeneratePlotsForExperimentalArea(experimental_area_json) {
     let plot_block_rows = parseInt(experimental_area_json['plot_block_rows']);
     let plot_block_columns = parseInt(experimental_area_json['plot_block_columns']);
 
-    formatted_treatments = generate_treatments_html(experimental_area_json);
+    s_formatted_treatments = generate_treatments_html(experimental_area_json);
 
     if (plots.length > 0) {
         var htmlarray = [];

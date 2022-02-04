@@ -1,6 +1,11 @@
 from django.shortcuts import render
 import json
 
+
+from django import template
+register = template.Library()
+
+
 # Create your views here.
 
 from django.http import HttpResponse
@@ -34,7 +39,17 @@ One study page request
 def single_study(request, study_id):
     study = get_study(study_id)
     # data and type goes to the template study.html
-    return render(request, 'study.html', {'data': study, 'type': 'Grassroots:Study'})
+    
+    result_json = json.loads (study)
+    study_json = result_json ['results'][0]['results'][0]['data']
+
+  #  print (json.dumps (study_json))
+
+  
+
+  
+    return render(request, 'study.html', {'data': study, 'study_json': study_json, 'type': 'Grassroots:Study'})
+#    return render(request, 'study.html', {'data': study, 'type': 'Grassroots:Study'})
 
 '''
 One study's plots page request
@@ -52,3 +67,5 @@ def search_fieldtrial(request):
     data = request.POST.get('search_str', False)
     response_json = search_fieldtrial(data)
     return HttpResponse(response_json)
+
+
