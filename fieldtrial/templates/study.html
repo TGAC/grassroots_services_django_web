@@ -207,29 +207,83 @@
 <section id="new_stuff">
 
 <table class="table table-bordered dataTable no-footer">
+        <col style="width:40%">
+        <col style="width:60%">
 
-{% if "so:name" in study_json %}
-<tr><td>Name</td><td>{% lookup_value study_json "so:name" %}</td></tr>
-{% endif %}
+{% for key, value in study_json.items %}
+  {% if "so:name" in key %}
+        <tr><td>Study Name:</td><td>{% lookup_value study_json "so:name" %}</td></tr>
+  {% endif %}
 
-{% if "so:description" in study_json %}
-<tr><td>Description</td><td>{% lookup_value study_json "so:description" %}</td></tr>
-{% endif %}
+  {% if "so:description" in key %}
+        <tr><td>Study Descriptioni:</td><td>{% lookup_value study_json "so:description" %}</td></tr>
+  {% endif %}
+
+  {% if "parent_program" in key %}
+  <tr><td>Programme:</td><td> <img src="{% lookup_value value "so:image" %}">
+                  <br> {% lookup_value value "so:name" %}
+                 <br>
+      {% for key2, value2 in value.items %}
+        {% if "so:name" in value2 %}
+                 {% lookup_value value2 "so:name" %}</td></tr>
+        {% endif %}
+      {% endfor %}
+  {% endif %}
+
+  {% if "parent_field_trial" in key %}
+            <tr><td>Field Trial Name:</td><td>{% lookup_value value "so:name" %}</td></tr>
+  {% endif %}
+
+  {% if "study_design" in key %}
+            <tr><td>Study Design:</td><td>{% lookup_value study_json "study_design" %}</td></tr>
+  {% endif %}
+
+  {% if "plan_changes" in key %}
+            <tr><td>Changes to Experiment Plan:</td><td>{% lookup_value study_json "plan_changes" %}</td></tr>
+  {% endif %}
+
+  {% if "growing_conditions" in key %}
+            <tr><td>Growing conditions:</td><td>{% lookup_value study_json "growing_conditions" %}</td></tr>
+  {% endif %}
+
+  {% if "phenotype_gathering_notes" in key %}
+            <tr><td>Phenotype Gathering Notes:</td><td>{% lookup_value study_json "phenotype_gathering_notes" %}</td></tr>
+  {% endif %}
+
+  {% if "physical_samples_collected" in key %}
+            <tr><td>Physical samples collected:</td><td>{% lookup_value study_json "physical_samples_collected" %}</td></tr>
+  {% endif %}
+
+  {% if "data_not_included" in key %}
+            <tr><td>Data not included:</td><td>{% lookup_value study_json "data_not_included" %}</td></tr>
+  {% endif %}
+
+  {% if "parent_field_trial" in key %}
+  <tr><td>Team</td><td>{{ value.team }}</td></tr>
+  {% endif %}
 
 
-{% if "study_design" in study_json %}
-<tr><td>Study Design</td><td>{{ study_json.study_design }}</td></tr>
-{% endif %}
+{% if "address" in key %}
+  <tr><td>Address</td>
+   {% for key2, value2 in value.items %}
+     {% for key3, value3 in value2.items %}
+        {% if "addressLocality" in value3 %}
+                 <td>{{ value3.name }} <br>
+                     {{ value3.addressLocality }} <br>
+                     {{ value3.addressCountry }} <br>
+                     {{ value3.postalCode }} </td></tr>
+        {% endif %}
+     {% endfor %}
+   {% endfor %}
 
-{% if "sowing_year" in study_json %}
-<tr><td>Sowing Year</td><td>{{ study_json.sowing_year }}</td></tr>
-{% endif %}
+ {% if "treatment_factors" in key %}
+  <tr><td>Treatment Factors:</td><td>{{ value.treatment_factors }}</td></tr>
+ {% endif %}
 
-{% if "harvest_year" in study_json %}
-<tr><td>Harvest Year</td><td>{{ study_json.harvest_year }}</td></tr>
-{% endif %}
+ {% endif %}
 
-</table>
+{% endfor %}
+ </table>
 
 
 </section>
