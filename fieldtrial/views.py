@@ -1,6 +1,7 @@
 from django.shortcuts import render
 import json
 
+from django.conf import settings
 
 from django import template
 register = template.Library()
@@ -43,13 +44,18 @@ def single_study(request, study_id):
     result_json = json.loads (study)
     study_json = result_json ['results'][0]['results'][0]['data']
 
-  #  print (json.dumps (study_json))
+    ##print (json.dumps (study_json))
+    #print (settings.BASE_DIR)
+    #print (request.get_port())
+    #print (request.path)
+    full_path=request.build_absolute_uri()
+    #print(full_path.replace('study', 'plots')) # replace study for plots to create the link to the plots in given study.
+    full_path_plots=full_path.replace('study', 'plots')
 
-  
-
-  
-    return render(request, 'study.html', {'data': study, 'study_json': study_json, 'type': 'Grassroots:Study'})
-#    return render(request, 'study.html', {'data': study, 'type': 'Grassroots:Study'})
+    return render(request, 'study.html', {'data': study, 'study_json': study_json, 'type': 'Grassroots:Study', 'path_plots':full_path_plots} )
+    #return render(request, 'study.html', {'data': study, 'study_json': study_json, 'type': 'Grassroots:Study', 'BASE_DIR':settings.BASE_DIR})
+    #return render(request, 'study.html', {'data': study, 'study_json': study_json, 'type': 'Grassroots:Study'})
+    #return render(request, 'study.html', {'data': study, 'type': 'Grassroots:Study'})
 
 '''
 One study's plots page request

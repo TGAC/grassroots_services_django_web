@@ -2,6 +2,7 @@
  {% load static %}
  
  {% load ft_extras %}
+ {% load fieldtrial_tag %}
  
  
 <!--content-->
@@ -210,80 +211,114 @@
         <col style="width:40%">
         <col style="width:60%">
 
-{% for key, value in study_json.items %}
-  {% if "so:name" in key %}
-        <tr><td>Study Name:</td><td>{% lookup_value study_json "so:name" %}</td></tr>
-  {% endif %}
-
-  {% if "so:description" in key %}
-        <tr><td>Study Descriptioni:</td><td>{% lookup_value study_json "so:description" %}</td></tr>
-  {% endif %}
-
-  {% if "parent_program" in key %}
-  <tr><td>Programme:</td><td> <img src="{% lookup_value value "so:image" %}">
-                  <br> {% lookup_value value "so:name" %}
-                 <br>
-      {% for key2, value2 in value.items %}
-        {% if "so:name" in value2 %}
-                 {% lookup_value value2 "so:name" %}</td></tr>
-        {% endif %}
-      {% endfor %}
-  {% endif %}
-
-  {% if "parent_field_trial" in key %}
-            <tr><td>Field Trial Name:</td><td>{% lookup_value value "so:name" %}</td></tr>
-  {% endif %}
-
-  {% if "study_design" in key %}
-            <tr><td>Study Design:</td><td>{% lookup_value study_json "study_design" %}</td></tr>
-  {% endif %}
-
-  {% if "plan_changes" in key %}
-            <tr><td>Changes to Experiment Plan:</td><td>{% lookup_value study_json "plan_changes" %}</td></tr>
-  {% endif %}
-
-  {% if "growing_conditions" in key %}
-            <tr><td>Growing conditions:</td><td>{% lookup_value study_json "growing_conditions" %}</td></tr>
-  {% endif %}
-
-  {% if "phenotype_gathering_notes" in key %}
-            <tr><td>Phenotype Gathering Notes:</td><td>{% lookup_value study_json "phenotype_gathering_notes" %}</td></tr>
-  {% endif %}
-
-  {% if "physical_samples_collected" in key %}
-            <tr><td>Physical samples collected:</td><td>{% lookup_value study_json "physical_samples_collected" %}</td></tr>
-  {% endif %}
-
-  {% if "data_not_included" in key %}
-            <tr><td>Data not included:</td><td>{% lookup_value study_json "data_not_included" %}</td></tr>
-  {% endif %}
-
-  {% if "parent_field_trial" in key %}
-  <tr><td>Team</td><td>{{ value.team }}</td></tr>
-  {% endif %}
+{% if "so:name" in study_json %}
+        <tr><td>Study Name:</td><td>{% lookup_keys study_json "so:name" %}</td></tr>
+{% endif %}
 
 
-{% if "address" in key %}
-  <tr><td>Address</td>
-   {% for key2, value2 in value.items %}
-     {% for key3, value3 in value2.items %}
-        {% if "addressLocality" in value3 %}
-                 <td>{{ value3.name }} <br>
-                     {{ value3.addressLocality }} <br>
-                     {{ value3.addressCountry }} <br>
-                     {{ value3.postalCode }} </td></tr>
-        {% endif %}
-     {% endfor %}
-   {% endfor %}
+{% if "so:description" in study_json %}
+        <tr><td>Study Description:</td><td>{% lookup_keys study_json "so:description" %}</td></tr>
+{% endif %}
 
- {% if "treatment_factors" in key %}
-  <tr><td>Treatment Factors:</td><td>{{ value.treatment_factors }}</td></tr>
- {% endif %}
+{% if "parent_program" in study_json %}
+        <tr><td>Programme:</td><td> <img src="{% lookup_keys study_json "parent_program.so:image" %}">
+        <br> {% lookup_keys study_json "parent_program.so:name" %}
+        <br> {% lookup_keys study_json "parent_program.principal_investigator.so:name" %}</td></tr>
+{% endif %}
 
- {% endif %}
+{% if "parent_field_trial" in study_json %}
+        <tr><td>Field Trial Name:</td><td>{% lookup_keys study_json "parent_field_trial.so:name" %}</td></tr>
+{% endif %}
 
-{% endfor %}
- </table>
+{% if "study_design" in study_json %}
+        <tr><td>Study Design:</td><td>{% lookup_keys study_json "study_design" %}</td></tr>
+{% endif %}
+
+{% if "plan_changes" in study_json %}
+        <tr><td>Changes to Experiment Plan:</td><td>{% lookup_keys study_json "plan_changes" %}</td></tr>
+{% endif %}
+
+{% if "growing_conditions" in study_json %}
+        <tr><td>Growing conditions:</td><td>{% lookup_keys study_json "growing_conditions" %}</td></tr>
+{% endif %}
+
+{% if "phenotype_gathering_notes" in study_json %}
+        <tr><td>Phenotype Gathering Notes:</td><td>{% lookup_keys study_json "phenotype_gathering_notes" %}</td></tr>
+{% endif %}
+
+{% if "physical_samples_collected" in study_json %}
+        <tr><td>Physical samples collected:</td><td>{% lookup_keys study_json "physical_samples_collected" %}</td></tr>
+{% endif %}
+
+{% if "data_not_included" in study_json %}
+        <tr><td>Data not included:</td><td>{% lookup_keys study_json "data_not_included" %}</td></tr>
+{% endif %}
+
+{% if "parent_field_trial" in study_json %}
+        <tr><td>Team:</td><td>{% lookup_keys study_json "parent_field_trial.team" %}</td></tr>
+{% endif %}
+
+{% if "envo:00002000" in study_json %}
+        <tr><td>Slope:</td><td>{% lookup_keys study_json "envo:00002000" %}</td></tr>
+{% endif %}
+
+{% if "weather" in study_json %}
+        <tr><td>Weather:</td><td>{% lookup_keys study_json "weather" %}</td></tr>
+{% endif %}
+
+{% if "current_crop" in study_json %}
+        <tr><td>Current Crop:</td>
+	    <td><a href="{% lookup_keys study_json "current_crop.so:url" %}">
+			 {% lookup_keys study_json "current_crop.so:name" %}</a></td></tr>
+{% endif %}
+
+{% if "previous_crop" in study_json %}
+	 <tr><td>Previous Crop:</td>
+	     <td><a href="{% lookup_keys study_json "previous_crop.so:url" %}">
+			  {% lookup_keys study_json "previous_crop.so:name" %}</a></td></tr>
+{% endif %}
+
+{% if "sowing_year" in study_json %}
+        <tr><td>Sowing Year:</td><td>{% lookup_keys study_json "sowing_year" %}</td></tr>
+{% endif %}
+
+{% if "harvest_year" in study_json %}
+        <tr><td>Harvest Year:</td><td>{% lookup_keys study_json "harvest_year" %}</td></tr>
+{% endif %}
+
+{% if "plots" in study_json %}
+        <tr><td>Plots:</td><td><a href="{{path_plots}}">view plots</a></td></tr>
+{% endif %}
+
+
+{% if "address" in study_json %}
+        <tr><td>Address</td>
+                 <td>{% lookup_keys study_json "address.address.Address.name" %} <br>
+                     {% lookup_keys study_json "address.address.Address.addressLocality" %} <br>
+                     {% lookup_keys study_json "address.address.Address.addressCountry" %} <br>
+                     {% lookup_keys study_json "address.address.Address.postalCode" %} </td></tr>
+{% endif %}
+
+{% if "treatment_factors" in study_json %}
+        <tr><td>Treatment Factors:</td><td>{%lookup_keys study_json "treatment_factors" %} </td></tr>
+{% endif %}
+
+{% if "curator_name" in study_json %}
+        <tr><td>Curator:</td><td>{%lookup_keys study_json "curator_name" %} </td></tr>
+{% endif %}
+
+{% if "contact_name" in study_json %}
+        <tr><td>Contact:</td><td>{%lookup_keys study_json "contact_name" %} </td></tr>
+{% endif %}
+
+
+{% if "so:contentUrl" in study_json %}
+        <tr><td>Download:</td><td>
+                        <a href="{% lookup_keys study_json "so:contentUrl" %}">link</a>
+                        <br>
+{% endif %}
+
+</table>
 
 
 </section>
