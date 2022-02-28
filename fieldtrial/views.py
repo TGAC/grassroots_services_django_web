@@ -46,15 +46,22 @@ def single_study(request, study_id):
 
     ##print (json.dumps (study_json))
     #print (settings.BASE_DIR)
-    #print (request.get_port())
-    #print (request.path)
     full_path=request.build_absolute_uri()
-    #print(full_path.replace('study', 'plots')) # replace study for plots to create the link to the plots in given study.
-    full_path_plots=full_path.replace('study', 'plots')
+    
+    ft_id         = study_json['parent_field_trial']['_id']['$oid']
+    individual_id = study_json['_id']['$oid']
 
-    return render(request, 'study.html', {'data': study, 'study_json': study_json, 'type': 'Grassroots:Study', 'path_plots':full_path_plots} )
+    ### replace 'study' for 'plots' to create the link to the plots in given study ###
+    full_path_plots=full_path.replace('study', 'plots')
+    
+    
+    ### link for field trial name replace indiviual id for id of the field trial ###
+    field_trial_link=full_path.replace('study/', '')
+    field_trial_link=field_trial_link.replace(individual_id, ft_id)
+    #print(field_trial_link)
+    
+    return render(request, 'study.html', {'data': study, 'study_json': study_json, 'type': 'Grassroots:Study', 'path_plots':full_path_plots, 'ft_path':field_trial_link} )
     #return render(request, 'study.html', {'data': study, 'study_json': study_json, 'type': 'Grassroots:Study', 'BASE_DIR':settings.BASE_DIR})
-    #return render(request, 'study.html', {'data': study, 'study_json': study_json, 'type': 'Grassroots:Study'})
     #return render(request, 'study.html', {'data': study, 'type': 'Grassroots:Study'})
 
 '''
