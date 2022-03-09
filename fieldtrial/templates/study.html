@@ -3,8 +3,7 @@
  
  {% load fieldtrial_tag %}
  {% load format_value %}
- 
- 
+
 <!--content-->
 <style type="text/css">
     .modal-dialog {
@@ -202,10 +201,42 @@
         </script>
     </div>
 </section>
-<!--footer-->
 
+ 
+
+<!--footer-->
 <!--
-<section id="new_stuff">
+<section id="new_stuff" >
+
+<div id='MyModal' class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+	 <table class="table">
+                        <thead><tr><th>Treatment</th><th>Ontology term</th><th width="50%">Description</th><th>Values</th></tr></thead><tbody>
+				{% for j in N_treatments %}
+				 <tr>
+				   <td>{% format_treatment     study_json "treatment_factors" "treatment.so:name"    j %}</td>
+			           <td>{% format_ontology_link study_json "treatment_factors" "treatment.so:sameAs"  j %}</td>
+			           <td>{% format_treatment    study_json "treatment_factors" "treatment.so:description" j %}</td>
+				   <td>
+				     {% for i in counters|index:j %}
+					{% format_treatment_lists study_json "treatment_factors" "values" "Label" j i %}: 
+					{% format_treatment_lists study_json "treatment_factors" "values" "Value" j i %} <br>
+		   	 	     {% endfor %}
+				  </td>
+				 </tr>
+				{% endfor %}
+			</tbody></table>
+
+    </div>
+		    <div class="modal-footer">
+       			 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		    </div>
+
+  </div>
+</div>
+
+
 
 <table class="table table-bordered dataTable no-footer">
         <col style="width:40%">
@@ -265,7 +296,7 @@
 {% endif %}
 
 {% if "current_crop" in study_json %}
-        <tr><td>Current Cro00000p:</td><td>{% format_crop study_json "current_crop.so:name" %}</td>
+        <tr><td>Current Crop:</td><td>{% format_crop study_json "current_crop.so:name" %}</td>
 {% endif %}
 
 {% if "previous_crop" in study_json %}
@@ -290,8 +321,9 @@
         <tr><td>Address</td><td>{% format_address study_json "address.address.Address.name" %} </td></tr>
 {% endif %}
 
-{% if "treatment_factors" in study_json %}
-        <tr><td>Treatment Factors:</td><td>{%lookup_keys study_json "treatment_factors" %} </td></tr>
+{% if flag %}
+        <tr><td>Treatment Factors:</td><td><a data-target="#MyModal" data-toggle="modal" class="MainNavText" 
+       href="#myModal">Treatment Factors</a> </td></tr>
 {% endif %}
 
 {% if "curator" in study_json %}
@@ -304,15 +336,15 @@
 
 
 {% if "so:contentUrl" in study_json %}
-        <tr><td>Download:</td><td>
-                        <a href="{% lookup_keys study_json "so:contentUrl" %}">link</a>
-                        <br>
+        <tr><td>Download: <a tabindex="0" class="btn bt-lg btn-danger"  role="button" data-toggle="popover" data-trigger="focus"  data-content="A Frictionless Data Package contains all of the data associated with a study including its parent field trial and programme. For more information and the tool to unpack these packages, go <a href='https://grassroots.tools/frictionless-data/grassroots-fd-client.md'>here</a>   "> ? </a>
+	 </td><td>
+           <a href="{% lookup_keys study_json "so:contentUrl" %}">link</a>
 {% endif %}
 
 </table>
 
--->
 </section>
+-->
 
 
 {% include "footer.html" %}

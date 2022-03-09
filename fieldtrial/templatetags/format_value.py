@@ -5,6 +5,14 @@ from functools import reduce
 
 register = template.Library()
 
+@register.filter
+def index(indexable, i):
+    return indexable[i]
+
+
+@register.filter
+def addstr(arg1, arg2):
+    return str(arg1) + str(arg2)
 
 @register.simple_tag
 def format_programme(dictionary, keys, default=None):
@@ -44,6 +52,44 @@ def format_ft_name(dictionary, keys, default=None):
     #print(individual_id)
      
     return (ft_name) 
+
+
+@register.simple_tag
+def format_treatment(dictionary, main_key, keys, counter, default=None):
+    lists  =  reduce(lambda d, key: d.get(key, default) if isinstance(d, dict) else default, main_key.split("."), dictionary)
+    nested_dic = lists[counter]
+
+    name  =  reduce(lambda d, key: d.get(key, default) if isinstance(d, dict) else default, keys.split("."), nested_dic)
+     
+    return (name) 
+
+@register.simple_tag
+def format_ontology_link(dictionary, main_key, keys, counter, default=None):
+    lists  =  reduce(lambda d, key: d.get(key, default) if isinstance(d, dict) else default, main_key.split("."), dictionary)
+    nested_dic = lists[counter]
+
+    ontology  =  reduce(lambda d, key: d.get(key, default) if isinstance(d, dict) else default, keys.split("."), nested_dic)
+    
+    link = '<a target="_blank" href="https://browser.planteome.org/amigo/term/' + ontology + '">' + ontology +'</a>'
+     
+    return (mark_safe(link)) 
+
+
+@register.simple_tag
+def format_treatment_lists(dictionary, main_key, keys, inner_key, counter1, counter2, default=None):
+    lists  =  reduce(lambda d, key: d.get(key, default) if isinstance(d, dict) else default, main_key.split("."), dictionary)
+    nested_dic = lists[counter1]
+
+    name  =  reduce(lambda d, key: d.get(key, default) if isinstance(d, dict) else default, keys.split("."), nested_dic)
+    
+    #inner_key="Label"
+    inner_dic=name[counter2]
+    nested_values  =  reduce(lambda d, key: d.get(key, default) if isinstance(d, dict) else default, inner_key.split("."), inner_dic)
+    #print(nested_values)
+    
+    return (nested_values) 
+
+
 
 
 @register.simple_tag
