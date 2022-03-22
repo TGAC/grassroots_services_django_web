@@ -10,10 +10,6 @@ def index(indexable, i):
     return indexable[i]
 
 
-@register.filter
-def addstr(arg1, arg2):
-    return str(arg1) + str(arg2)
-
 @register.simple_tag
 def format_programme(dictionary, keys, default=None):
     name =  reduce(lambda d, key: d.get(key, default) if isinstance(d, dict) else default, keys.split("."), dictionary)
