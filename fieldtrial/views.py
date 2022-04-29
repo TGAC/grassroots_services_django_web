@@ -1,6 +1,7 @@
 from django.shortcuts import render
 import json
 
+from django.conf import settings
 
 from django import template
 register = template.Library()
@@ -43,13 +44,40 @@ def single_study(request, study_id):
     result_json = json.loads (study)
     study_json = result_json ['results'][0]['results'][0]['data']
 
-  #  print (json.dumps (study_json))
+    ##print (json.dumps (study_json))
+    #print (settings.BASE_DIR)
+    full_path=request.build_absolute_uri()
+    
+    ft_id         = study_json['parent_field_trial']['_id']['$oid']
+    individual_id = study_json['_id']['$oid']
+    
+    N_t=0
+    counters=[]
+    flag=False
+    ## number of treatment factors
+    if  study_json['treatment_factors']:
+        #print(len(study_json['treatment_factors']))
+        N_t = len(study_json['treatment_factors'])
+        value1 = study_json['treatment_factors']
+    
+        #values per treatment. create array for nested for loop 
+        for i in range(N_t):
+            ranges=range(len(value1[i]['values']))
+            counters.append (ranges)
+            flag=True
+   
+    #print(len(study_json['treatment_factors'])) 
 
-  
-
-  
-    return render(request, 'study.html', {'data': study, 'study_json': study_json, 'type': 'Grassroots:Study'})
-#    return render(request, 'study.html', {'data': study, 'type': 'Grassroots:Study'})
+    ### replace 'study' for 'plots' to create the link to the plots in given study ###
+    full_path_plots=full_path.replace('study', 'plots')
+    
+    ### link for field trial name replace indiviual id for id of the field trial ###
+    field_trial_link=full_path.replace('study/', '')
+    field_trial_link=field_trial_link.replace(individual_id, ft_id)
+    
+    return render(request, 'study.html', {'data': study, 'study_json': study_json, 'type': 'Grassroots:Study', 'path_plots':full_path_plots, 'ft_path':field_trial_link, 'N_treatments':range(N_t), 'counters':counters, 'flag':flag} )
+    #return render(request, 'study.html', {'data': study, 'study_json': study_json, 'type': 'Grassroots:Study', 'BASE_DIR':settings.BASE_DIR})
+    #return render(request, 'study.html', {'data': study, 'type': 'Grassroots:Study'})
 
 '''
 One study's plots page request

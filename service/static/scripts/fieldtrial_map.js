@@ -94,6 +94,7 @@ function startFieldTrialGIS(jsonArray, type_param) {
             "searching": false,
             "info": false
         });
+
         s_formatted_treatments = generate_treatments_html(experimental_area_json);
         if (experimental_area_json['plots'] !== undefined && experimental_area_json['plots'] !== null) {
             for (j = 0; j < experimental_area_json['plots'].length; j++) {
@@ -102,6 +103,7 @@ function startFieldTrialGIS(jsonArray, type_param) {
                     if (plot['rows'][0]['study_index'] !== undefined) {
                         let plotId = plot['rows'][0]['study_index'];
                         plotsModalInfo[plotId] = formatPlotModal(plot);
+			
                         // show other plots info, but performance issue
                         // let searchStr = '';
                         //
@@ -147,15 +149,15 @@ function startFieldTrialGIS(jsonArray, type_param) {
 
 
     } else {
-        produceFieldtrialTable(filtered_data_without_location.concat(filtered_data_with_location), type_param);
+          produceFieldtrialTable(filtered_data_without_location.concat(filtered_data_with_location), type_param);
 
     }
 
     displayFTLocations(filtered_data_with_location, type_param);
 
 /*    if (type_param !== 'AllFieldTrials') { */
-    if (type_param === 'Grassroots:Study') { 
-        create_study_modal_html(filtered_data_without_location.concat(filtered_data_with_location));
+    if (type_param === 'Grassroots:Study') {
+	  create_study_modal_html(filtered_data_without_location.concat(filtered_data_with_location));
     }
     $('#download_question').popover({
         content: 'A Frictionless Data Package contains all of the data associated with a study including its parent field trial and programme. For more information and the tool to unpack these packages, go <a class="newstyle_link" href="https://grassroots.tools/frictionless-data/grassroots-fd-client.md" target="_blank">here</a>',
@@ -198,7 +200,8 @@ function startFieldTrialGIS(jsonArray, type_param) {
  * @param {string} type_param - type of the display, can be Grassroots:FieldTrial, Grassroots:Study or AllFieldTrials.
  */
 function produceFieldtrialTable(data, type_param) {
-    // yrtable.destroy();
+     //yrtable.clear();
+     //yrtable.destroy();
     yrtable = jQuery('#resultTable').DataTable({
         data: data,
         "aaSorting": [],
@@ -207,8 +210,8 @@ function produceFieldtrialTable(data, type_param) {
             {
                 title: "Programme",
                 "render": function (data, type, full, meta) {
-
                     return format_study_parent_program(full);
+
                 }
             },
             {
@@ -275,7 +278,8 @@ function produceFieldtrialTable(data, type_param) {
                     return get_study_address(full, true);
                 }
             },
-            {
+/* redundant column. 
+		{
                 title: "Shape Data",
                 "render": function (data, type, full, meta) {
                     let shape_link = '';
@@ -291,9 +295,19 @@ function produceFieldtrialTable(data, type_param) {
                     return shape_link;
                 }
             },
+*/
             {
                 title: "Treatment Factors",
                 "render": function (data, type, full, meta) {
+		// Create treatment factors tables for modal links
+		    var studyId = full['_id']['$oid'];
+			if (full['treatment_factors'] !== undefined) {
+		            if (full['treatment_factors'] !== null) {
+                		if (full['treatment_factors'].length !== 0) {
+	                    plotsModalInfo[studyId + 'treatment'] = generate_treatments_html(full);
+        	        	}
+        	    	    }
+        		}
                     return format_study_treatment_factors_link(full);
                 }
             }
@@ -640,15 +654,15 @@ function format_study_treatment_factors_link(full) {
     var studyId = full['_id']['$oid'];
     var treatment = '';
 
-
-    console.log ("treatment_factors: ");
-    console.log (JSON.stringify (full['treatment_factors']));
+    //console.log ("treatment_factors: ");
+    //console.log (JSON.stringify (full['treatment_factors'])); 
     
     if ((full['treatment_factors'] !== undefined) && (full['treatment_factors'] !== null) && (type_param_global !== 'AllFieldTrials')) {
         if (full['treatment_factors'].length > 0) {
             treatment = '<span style="cursor:pointer;" class="newstyle_link" onclick="plotModal(\'' + studyId + 'treatment\')">Treatment Factors</span>'
         }
     }
+
     return treatment;
 }
 
@@ -1023,12 +1037,11 @@ function plot_gap_calculator(current_column, current_row, plot_block_columns, pl
  * @param {string} plotId - Plot id.
  */
 function plotModal(plotId) {
-    $('#modal-body').html(plotsModalInfo[plotId]);
-    $('#plotModal').modal('show');
+         $('#modal-body').html(plotsModalInfo[plotId]);
+   	 $('#plotModal').modal('show');
 
-    
-        console.log ("treatment_factors: " + plotId);
-
+        console.log ("-Treatment_factors: " + plotId);
+        console.log (plotsModalInfo[plotId]);
     
     let searchStr = '';
     for (i = 0; i < plot_json.length; i++) {
