@@ -2745,7 +2745,7 @@ function format_grassroots_search_result(this_result) {
         grassroots_search_html.push('<i>' + img_html + ' ' + title + '</i><br/>');
         grassroots_search_html.push(json['id']);
     } else if (json['@type'] === 'Grassroots:Programme') {
-        let pi = JSON.parse (json['principal_investigator']);
+        let pi = json['principal_investigator']);
         if (json['so:url'] !== undefined && json['so:url'] !== null) {
             let program_link = json['so:url'];
             grassroots_search_html.push('<br/><a style="color:#18bc9c ! important;" target="_blank" href="' + program_link + '">' + img_html + ' ' + title + '</a><br/>');
