@@ -1148,7 +1148,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id, refreshed) 
         }
         // tabular
         else if (grassroots_type == "params:tabular" || grassroots_type == "params:json_array") {
-            var cHeading = parameter['store']['Column Headings'];
+           //*-* var cHeading = parameter['store']['Column Headings'];
             var each_table_obj = {};
             var table_id = param.replace(/ /g, "_");
             var display_style = '';
@@ -1165,7 +1165,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id, refreshed) 
             var current_table_value = [];
 
             each_table_obj['table_id'] = table_id;
-            each_table_obj['cHeadings'] = cHeading;
+           //*-* each_table_obj['cHeadings'] = cHeading;
             // if (!refreshed) {
             datatable_param_list.push(each_table_obj);
             // }
@@ -1178,7 +1178,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id, refreshed) 
             form_html.push('<table id="' + table_id + '" class="display datatable_param">');
             form_html.push('<thead id="' + table_id + 'thead" >');
             // }
-            form_html.push(table_thead_formatter(cHeading));
+            //*-*  form_html.push(table_thead_formatter(cHeading));
             form_html.push('</thead>');
             // form_html.push('<label title="' + description + '">' + display_name + '</label>');
             // form_html.push('<input  type="text" class=" form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '"/>');
