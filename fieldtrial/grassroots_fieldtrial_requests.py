@@ -111,8 +111,8 @@ def get_fieldtrial(id):
         }]
     }
     res = requests.post(server_url, data=json.dumps(list_all_ft_request))
-#    return json.dumps(res.json())
-    return res.json()
+    return json.dumps(res.json())
+#    return res.json()
 
 '''
 Get a study with a id
