@@ -1248,6 +1248,8 @@ function format_plot_rows(plot, replicate_bool) {
         // get_GRU_by_accession(accession, plotId, random_id);
 
         if (plot['rows'][r]['observations'] != undefined) {
+            let crop_onotology_url = "https://cropontology.org/term/"
+          
             for (o = 0; o < plot['rows'][r]['observations'].length; o++) {
                 var observation = plot['rows'][r]['observations'][o];
 
@@ -1258,19 +1260,19 @@ function format_plot_rows(plot, replicate_bool) {
                 phenotypearray.push('<td>' + SafePrint(observation['raw_value']) + '</td>');
                 phenotypearray.push('<td>' + SafePrint(observation['corrected_value']) + '</td>');
                 if (observation['phenotype']['trait']['so:sameAs'].startsWith('CO')) {
-                    phenotypearray.push('<td class="tooltip-test"  title="' + observation['phenotype']['trait']['so:description'] + '"><a class="newstyle_link" target="_blank" href="http://www.cropontology.org/terms/' + observation['phenotype']['trait']['so:sameAs'] + '/">' + observation['phenotype']['trait']['so:name'] + '</a></td>');
+                    phenotypearray.push('<td class="tooltip-test"  title="' + observation['phenotype']['trait']['so:description'] + '"><a class="newstyle_link" target="_blank" href="' + crop_onotology_url + observation['phenotype']['trait']['so:sameAs'] + '">' + observation['phenotype']['trait']['so:name'] + '</a></td>');
 
                 } else {
                     phenotypearray.push('<td class="tooltip-test"  title="' + observation['phenotype']['trait']['so:description'] + '">' + observation['phenotype']['trait']['so:name'] + '</td>');
                 }
                 if (observation['phenotype']['measurement']['so:sameAs'].startsWith('CO')) {
-                    phenotypearray.push('<td data-toggle="tooltip" title="' + observation['phenotype']['measurement']['so:description'] + '"><a class="newstyle_link" target="_blank" href="http://www.cropontology.org/terms/' + observation['phenotype']['measurement']['so:sameAs'] + '/">' + observation['phenotype']['measurement']['so:name'] + '</td>');
+                    phenotypearray.push('<td data-toggle="tooltip" title="' + observation['phenotype']['measurement']['so:description'] + '"><a class="newstyle_link" target="_blank" href="' + crop_onotology_url + observation['phenotype']['measurement']['so:sameAs'] + '">' + observation['phenotype']['measurement']['so:name'] + '</td>');
 
                 } else {
                     phenotypearray.push('<td data-toggle="tooltip" title="' + observation['phenotype']['measurement']['so:description'] + '">' + observation['phenotype']['measurement']['so:name'] + '</td>');
                 }
                 if (observation['phenotype']['unit']['so:sameAs'].startsWith('CO')) {
-                    phenotypearray.push('<td data-toggle="tooltip"><a class="newstyle_link" target="_blank" href="http://www.cropontology.org/terms/' + observation['phenotype']['unit']['so:sameAs'] + '/">' + observation['phenotype']['unit']['so:name'] + '</td>');
+                    phenotypearray.push('<td data-toggle="tooltip"><a class="newstyle_link" target="_blank" href="' + crop_onotology_url + observation['phenotype']['unit']['so:sameAs'] + '">' + observation['phenotype']['unit']['so:name'] + '</td>');
 
                 } else {
                     phenotypearray.push('<td>' + observation['phenotype']['unit']['so:name'] + '</td>');
