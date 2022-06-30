@@ -135,6 +135,12 @@ QUEEN_SERVER_URL = "http://10.0.152.54/grassroots/queen_bee_backend"
 # PRIVATE_SERVER_URL = "https://grassroots.tools/dev/public_backend" #dev
 
 
+# increase the limit size of files for uploading
+DATA_UPLOAD_MAX_MEMORY_SIZE =  7340032
+FILE_UPLOAD_MAX_MEMORY_SIZE =  7340032
+
+
+
 try:
     from .custom_settings import *
 except ImportError:
