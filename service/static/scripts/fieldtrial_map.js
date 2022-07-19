@@ -997,11 +997,31 @@ function formatPlot(plot, plot_block_rows, plot_block_columns) {
     let current_row = parseInt(plot['row_index']);
     let current_column = parseInt(plot['column_index']);
     let accession = "";
-    for (r = 0; r < plot['rows'].length; r++) {
-        accession += " " + plot['rows'][r]['material']['accession'];
-    }
+    //for (r = 0; r < plot['rows'].length; r++) {
+    //    accession += " " + plot['rows'][r]['material']['accession'];  //Check for discarded ones!
+    //}
+
+	for (r = 0; r < plot['rows'].length; r++)  //  
+  	{
+	  if (plot ['rows'][r]['discard'])
+  	  {
+	    // it's a discard plot
+    		accession += 'discard';
+  	   }
+	  else if (plot ['rows'][r]['blank'])
+  	  {
+    		// it's a blank plot
+   	  }
+   	  else if (plot['rows'][r]['material'])
+  	  {
+    		accession += " " + plot['rows'][r]['material']['accession'];
+  	  }
+	}
+
+
     var color;
     color = '#ABEBC6';
+
     plotsModalInfo[plotId] = formatPlotModal(plot);
     let padding = plot_gap_calculator(current_column, current_row, plot_block_columns, plot_block_rows);
     return '<td style="' + padding + '"><div class="plot" id="' + plotId + '" style="padding:5px; cursor:pointer; font-size: 0.8rem;  background-color:' + color + '" onclick="plotModal(\'' + plotId + '\')">Row:' + current_row + ' Column:' + current_column + '</div></td>';
@@ -1040,7 +1060,7 @@ function plotModal(plotId) {
          $('#modal-body').html(plotsModalInfo[plotId]);
    	 $('#plotModal').modal('show');
 
-        console.log ("-Treatment_factors: " + plotId);
+        console.log ("---Treatment_factors: " + plotId);
         console.log (plotsModalInfo[plotId]);
     
     let searchStr = '';
@@ -1048,9 +1068,22 @@ function plotModal(plotId) {
         if (plot_json[i]['_id']['$oid'] === plotId) {
             var plot = plot_json[i];
             for (r = 0; r < plot['rows'].length; r++) {
-                let this_accession = SafePrint(plot['rows'][r]['material']['accession']);
-                get_GRU_by_accession(this_accession, plotId, r);
-                searchStr = this_accession;
+                //let this_accession = SafePrint(plot['rows'][r]['material']['accession']); Check for discarded ones!
+		 if (plot ['rows'][r]['discard'])
+  	    	 { 
+			  // it's a discard plot
+                	 searchStr = 'discard';
+  	   	 }
+		 else if (plot ['rows'][r]['blank'])
+  	  	  {
+	    		// it's a blank plot
+   		  }
+	  	 else if (plot['rows'][r]['material'])
+  	         {
+                	let this_accession = SafePrint(plot['rows'][r]['material']['accession']);
+                	get_GRU_by_accession(this_accession, plotId, r);
+                	searchStr = this_accession;
+  	         }
             }
         }
     }
@@ -1059,8 +1092,23 @@ function plotModal(plotId) {
         const loop_plotId = plot_json[j]['_id']['$oid'];
         if (loop_plotId !== plotId) {
             var rows = plot_json[j]['rows'];
-            for (jr = 0; jr < rows.length; jr++) {
-                var accession = rows[jr]['material']['accession'];
+
+	    for (jr = 0; jr < rows.length; jr++) {
+                	//var accession = rows[jr]['material']['accession'];  // add check for discarded ones.
+			 if (rows[jr]['discard'])
+		  	  {
+			    // it's a discard plot
+                	   var accession = 'discard';
+		  	  }
+			  else if ( rows[jr]['blank'])
+  	  		  {
+		    		// it's a blank plot
+   	  		  }
+		   	  else if (rows[jr]['material'])
+  	  		  {
+                	   var accession = rows[jr]['material']['accession'];
+  	  		  }
+
                 if (accession != undefined) {
                     if (searchStr === accession && searchStr !== '') {
                         let formatted_plot = format_plot_rows(plot_json[j], true);
@@ -1100,11 +1148,13 @@ function formatPlotModal(plot) {
 
     let plot_actual_id = '';
 
-    if (plot['rows'][0]['study_index'] !== undefined) {
+    
+   if (plot['rows'][0]['study_index'] !== undefined) {
         plot_actual_id = plot['rows'][0]['study_index'];
     }
 
-    rowsInfoarray.push('<table class="table racks" id="plots_table_rows"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th><th>Links</th><th>Treatments</th></tr></thead><tbody id="rowsInfo">');
+    //rowsInfoarray.push('<table class="table racks" id="plots_table_rows"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th><th>Links</th><th>Treatments</th></tr></thead><tbody id="rowsInfo">');
+    rowsInfoarray.push('<table class="table racks" id="plots_table_rows"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Links</th><th>Treatments</th></tr></thead><tbody id="rowsInfo">'); // remove Gene Bank temporarily
     phenotypearray.push('<table class="table plots" id="plots_table"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th><th>Index</th></tr></thead><tbody id="phenotypes">');
 
     let formatted_plot = format_plot_rows(plot, false);
@@ -1217,78 +1267,104 @@ function format_plot_rows(plot, replicate_bool) {
     let formatted_plot = {};
     let phenotypearray = [];
     let rowsInfoarray = [];
-    // rowsInfoarray.push('<table class="table racks"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th><th>Links</th></tr></thead><tbody>');
-    // phenotypearray.push('<table class="table plots"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th></tr></thead><tbody>');
+    
     let replicate = ' (Plot ' + plot_actual_id + ' Row:' + plot['row_index'] + ' - Col:' + plot['column_index'] + ')(Current)';
     if (replicate_bool) {
         replicate = ' <u style="cursor:pointer;" onclick="plotModal(\'' + plotId + '\')">(Plot ' + plot_actual_id + ' Row:' + plot['row_index'] + ' - Col:' + plot['column_index'] + ')</u>';
     }
 
     for (r = 0; r < plot['rows'].length; r++) {
-        // var random_id = generate_random_id();
         var replicate_index = plot['rows'][r]['replicate'];
         var color = colorJSON[replicate_index];
-        var accession = SafePrint(plot['rows'][r]['material']['accession']);
-        var pedigree = SafePrint(plot['rows'][r]['material']['pedigree']);
+        //var accession = SafePrint(plot['rows'][r]['material']['accession']);//  Add check for discarded ones. 
+        //var pedigree = SafePrint(plot['rows'][r]['material']['pedigree']); 
+	if (plot ['rows'][r]['discard']) {
+	        //  it's a discard plot
+		var accession = 'discard';
+        	var color = colorJSON[2]; // Select random colour. 
+
+  	}
+        else if (plot ['rows'][r]['blank']){
+    		// it's a blank plot
+   	 }
+   	 else if (plot['rows'][r]['material']){
+               var accession = SafePrint(plot['rows'][r]['material']['accession']);
+               var pedigree =  SafePrint(plot['rows'][r]['material']['pedigree']);
+  	 }
         var treatments = plot['rows'][r]['treatments'];
-        rowsInfoarray.push('<tr>');
+        
+	rowsInfoarray.push('<tr>');
         rowsInfoarray.push('<td style="background-color:' + color + '">' + SafePrint(replicate_index) + replicate + '</td>');
         rowsInfoarray.push('<td>' + SafePrint(plot['rows'][r]['rack_index']) + '</td>');
         rowsInfoarray.push('<td>' + accession + '</td>');
         rowsInfoarray.push('<td>' + pedigree + '</td>');
-        rowsInfoarray.push('<td><a class="newstyle_link" target="_blank" href="' + SafePrint(plot['rows'][r]['material']['gene_bank']['so:url']) + '">' + SafePrint(plot['rows'][r]['material']['gene_bank']['so:name']) + '</a></td>');
-        //rowsInfoarray.push('<td id="' + random_id + '"></td>');
+        //rowsInfoarray.push('<td><a class="newstyle_link" target="_blank" href="' + SafePrint(plot['rows'][r]['material']['gene_bank']['so:url']) + '">' + SafePrint(plot['rows'][r]['material']['gene_bank']['so:name']) + '</a></td>');//     GENE BANK
+	if (plot ['rows'][r]['discard']) {
+	    // it's a discard plot
+  	}
+	else if (plot ['rows'][r]['blank']){
+    	    // it's a blank plot
+   	}
+   	else if (plot['rows'][r]['material']){
+             //    rowsInfoarray.push('<td><a class="newstyle_link" target="_blank" href="' + SafePrint(plot['rows'][r]['material']['gene_bank']['so:url']) + '">' + SafePrint(plot['rows'][r]['material']['gene_bank']['so:name']) + '</a></td>'); // GENE BANK
+  	}
+
         rowsInfoarray.push('<td id="' + plotId + '_' + r + '"></td>');
+
         if (treatments !== null && treatments !== [] && treatments !== undefined) {
             rowsInfoarray.push('<td>' + format_plot_treatment(treatments) + '</td>');
         } else {
             rowsInfoarray.push('<td></td>');
         }
         rowsInfoarray.push('</tr>');
-        // get_GRU_by_accession(accession, plotId, random_id);
 
         if (plot['rows'][r]['observations'] != undefined) {
             let crop_onotology_url = "https://cropontology.org/term/"
-          
+   	
             for (o = 0; o < plot['rows'][r]['observations'].length; o++) {
                 var observation = plot['rows'][r]['observations'][o];
+                var phenotype_name = observation['phenotype']['variable'];// from new arrangement of JSON structure.
 
                 phenotypearray.push('<tr>');
                 phenotypearray.push('<td style="background-color:' + color + '">' + SafePrint(replicate_index) + replicate + '</td>');
-                phenotypearray.push('<td>' + SafePrint(plot['rows'][r]['rack_index']) + '</td>');
+                
+		phenotypearray.push('<td>' + SafePrint(plot['rows'][r]['rack_index']) + '</td>');
                 phenotypearray.push('<td>' + SafePrint(observation['date']) + '</td>');
                 phenotypearray.push('<td>' + SafePrint(observation['raw_value']) + '</td>');
                 phenotypearray.push('<td>' + SafePrint(observation['corrected_value']) + '</td>');
-                if (observation['phenotype']['trait']['so:sameAs'].startsWith('CO')) {
-                    phenotypearray.push('<td class="tooltip-test"  title="' + observation['phenotype']['trait']['so:description'] + '"><a class="newstyle_link" target="_blank" href="' + crop_onotology_url + observation['phenotype']['trait']['so:sameAs'] + '">' + observation['phenotype']['trait']['so:name'] + '</a></td>');
+
+                if (lookup( phenotype_name,  'trait', 'so:sameAs').startsWith('CO')) {
+                    phenotypearray.push('<td class="tooltip-test"  title="' + lookup(phenotype_name, 'trait','so:description') + '"><a class="newstyle_link" target="_blank" href="' + crop_onotology_url + lookup(phenotype_name, 'trait','so:sameAs') + '">' + lookup(phenotype_name, 'trait','so:name') + '</a></td>');
 
                 } else {
-                    phenotypearray.push('<td class="tooltip-test"  title="' + observation['phenotype']['trait']['so:description'] + '">' + observation['phenotype']['trait']['so:name'] + '</td>');
+                    phenotypearray.push('<td class="tooltip-test"  title="' + lookup(phenotype_name, 'trait','so:description')  + '">' + lookup(phenotype_name, 'trait','so:name')  + '</td>');
                 }
-                if (observation['phenotype']['measurement']['so:sameAs'].startsWith('CO')) {
-                    phenotypearray.push('<td data-toggle="tooltip" title="' + observation['phenotype']['measurement']['so:description'] + '"><a class="newstyle_link" target="_blank" href="' + crop_onotology_url + observation['phenotype']['measurement']['so:sameAs'] + '">' + observation['phenotype']['measurement']['so:name'] + '</td>');
+                
+		if (lookup( phenotype_name,  'measurement', 'so:sameAs').startsWith('CO')) {
+                    phenotypearray.push('<td data-toggle="tooltip" title="' + lookup( phenotype_name,  'measurement', 'so:description') + '"><a class="newstyle_link" target="_blank" href="' + crop_onotology_url + lookup( phenotype_name,  'measurement', 'so:sameAs')  + '">' + lookup( phenotype_name,  'measurement', 'so:name') + '</td>');
 
                 } else {
-                    phenotypearray.push('<td data-toggle="tooltip" title="' + observation['phenotype']['measurement']['so:description'] + '">' + observation['phenotype']['measurement']['so:name'] + '</td>');
+                    phenotypearray.push('<td data-toggle="tooltip" title="' + lookup(phenotype_name,  'measurement', 'so:description') + '">' + lookup(phenotype_name,  'measurement', 'so:name') + '</td>');
                 }
-                if (observation['phenotype']['unit']['so:sameAs'].startsWith('CO')) {
-                    phenotypearray.push('<td data-toggle="tooltip"><a class="newstyle_link" target="_blank" href="' + crop_onotology_url + observation['phenotype']['unit']['so:sameAs'] + '">' + observation['phenotype']['unit']['so:name'] + '</td>');
+                
+		if (lookup( phenotype_name,  'unit', 'so:sameAs')) {
+                    phenotypearray.push('<td data-toggle="tooltip"><a class="newstyle_link" target="_blank" href="' + crop_onotology_url + lookup(phenotype_name,  'unit', 'so:sameAs') + '">' + lookup(phenotype_name,  'unit', 'so:name')  + '</td>');
 
                 } else {
-                    phenotypearray.push('<td>' + observation['phenotype']['unit']['so:name'] + '</td>');
+                    phenotypearray.push('<td>' +  lookup(phenotype_name,  'unit', 'so:name')  + '</td>');
                 }
 
                 phenotypearray.push('<td>' + SafePrint(observation['index']) + '</td>');
 
                 phenotypearray.push('</tr>');
             }
-        }
+        } // end if
 
         // plotsGRUArray[plotId] = plotGRULinkArray;
-    }
-    // rowsInfoarray.push('</tbody></table>');
-    // phenotypearray.push('</tbody></table>');
+	    //
+    } // end main r loop
 
+    
     formatted_plot['rowsInfo'] = rowsInfoarray;
     formatted_plot['phenotypes'] = phenotypearray;
 
@@ -1327,7 +1403,7 @@ function simpleOrAdvanced_rows(string) {
     var pheno_table = $('#plots_table_rows').DataTable();
     if (string === 'show_simple') {
         pheno_table.column(1).visible(false);
-        pheno_table.column(4).visible(false);
+        pheno_table.column(4).visible(true); //GENE BANK
     } else if (string === 'show_advanced') {
         pheno_table.column(1).visible(true);
         pheno_table.column(4).visible(true);
@@ -1550,6 +1626,7 @@ let default_width = "";
 let default_design = "";
 let default_sowing_date = "";
 let default_harvest_date = "";
+let allPhenotypes = [];
 
 /**
  * Create Plots table
@@ -1558,7 +1635,7 @@ let default_harvest_date = "";
  */
 function LoadTable(experimental_area_json) {
     $('#control').show();
-    console.log(JSON.stringify(experimental_area_json));
+    //console.log(JSON.stringify(experimental_area_json)); / very long, it crashes browser debugger**!!
     var jsonArray = experimental_area_json['results'][0]['results'];
 
     default_length = SafePrint(jsonArray[0]['data']['plot_length']);
@@ -1572,6 +1649,7 @@ function LoadTable(experimental_area_json) {
     jQuery('#status').html('');
     var fieldTrialName = '';
     var team = '';
+    
     for (i = 0; i < jsonArray.length; i++) {
         let exp_area = jsonArray[i]['data'];
         // generate the plots table content
@@ -1611,13 +1689,19 @@ function GeneratePlotsForExperimentalArea(experimental_area_json) {
 
     s_formatted_treatments = generate_treatments_html(experimental_area_json);
 
+   allPhenotypes =  experimental_area_json['phenotypes'];  // New variable for phenotypes 
+
+
     if (plots.length > 0) {
         var htmlarray = [];
 
         var row = 1;
         var column = 1;
 
-        for (j = 0; j < plots.length; j++) {
+        // MAIN LOOP 
+	for (j = 0; j < plots.length; j++) {
+        //for (j = 0; j < 3; j++) {
+
 
             if (plots[j]['row_index'] === row) {
                 if (plots[j]['column_index'] === column) {
@@ -1720,5 +1804,13 @@ function filter_plot() {
 }
 
 
+// Use name of phenotype to look for a particular value given two keys
+function lookup(name, key1, key2) {
+
+	var result = allPhenotypes[name]['definition'][key1][key2]
+
+    return result;
+
+}
 
 
