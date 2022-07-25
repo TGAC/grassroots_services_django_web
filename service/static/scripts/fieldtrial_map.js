@@ -1057,13 +1057,20 @@ function plot_gap_calculator(current_column, current_row, plot_block_columns, pl
  * @param {string} plotId - Plot id.
  */
 function plotModal(plotId) {
-         $('#modal-body').html(plotsModalInfo[plotId]);
-   	 $('#plotModal').modal('show');
+   $('#modal-body').html(plotsModalInfo[plotId]);
+   $('#plotModal').modal('show');
 
-        console.log ("---Treatment_factors: " + plotId);
-        console.log (plotsModalInfo[plotId]);
+     console.log ("-Treatment_factors: " + plotId);
+     //console.log (plotsModalInfo[plotId]);
     
     let searchStr = '';
+    let searchTreat       = ''; // NEW
+    let replicateIds      = []; // NEW
+    let replicates        = {}; // NEW
+    let current_treatment = []; // NEW
+
+
+
     for (i = 0; i < plot_json.length; i++) {
         if (plot_json[i]['_id']['$oid'] === plotId) {
             var plot = plot_json[i];
@@ -1083,6 +1090,14 @@ function plotModal(plotId) {
                 	let this_accession = SafePrint(plot['rows'][r]['material']['accession']);
                 	get_GRU_by_accession(this_accession, plotId, r);
                 	searchStr = this_accession;
+
+               		let this_treatment = SafePrint(plot['rows'][r]['treatments'][0]['label']); // **NEW treatment info of current plot
+                        searchTreat = this_treatment;
+                        //console.log("THIS ID---> index, i", plot['rows'][0]['study_index']  );
+
+                        for (t = 0; t < plot['rows'][r]['treatments'].length; t++) {
+				 current_treatment.push(plot['rows'][r]['treatments'][t]['label']);
+			}
   	         }
             }
         }
@@ -1092,13 +1107,14 @@ function plotModal(plotId) {
         const loop_plotId = plot_json[j]['_id']['$oid'];
         if (loop_plotId !== plotId) {
             var rows = plot_json[j]['rows'];
+    	    let treatments = []; // NEW
 
 	    for (jr = 0; jr < rows.length; jr++) {
                 	//var accession = rows[jr]['material']['accession'];  // add check for discarded ones.
 			 if (rows[jr]['discard'])
 		  	  {
-			    // it's a discard plot
-                	   var accession = 'discard';
+			        // it's a discard plot
+                	        var accession = 'discard';
 		  	  }
 			  else if ( rows[jr]['blank'])
   	  		  {
@@ -1106,21 +1122,52 @@ function plotModal(plotId) {
    	  		  }
 		   	  else if (rows[jr]['material'])
   	  		  {
-                	   var accession = rows[jr]['material']['accession'];
+                	        var accession = rows[jr]['material']['accession'];
+				
+			        for (t = 0; t < rows[jr]['treatments'].length; t++) {
+			 	 	treatments.push( rows[jr]['treatments'][t]['label'] );
+			        }
+
+			        //var treatment1 = rows[jr]['treatments'][0]['label']; //
+
   	  		  }
 
                 if (accession != undefined) {
                     if (searchStr === accession && searchStr !== '') {
                         let formatted_plot = format_plot_rows(plot_json[j], true);
+
+
+			if (areEqual(current_treatment, treatments)  && searchTreat !== '') {// new EXACT REPLICATES (same treatment)
+                          console.log("ID of exact replicate", plot_json[j]['rows'][0]['study_index']  );
+                          replicateIds.push(loop_plotId);
+                          replicates[loop_plotId] = plot_json[j]['rows'];
+                          //console.log("Check replicates seizes",  plot_json[j]['rows'][0]['observations'].length );
+
+                          var formatted_phenotypes = format_plot_rows(plot_json[j], true);
+                          //$('#phenotypes').append(formatted_phenotypes['phenotypes'].join(""));   // add only exact replicates
+                        }
+
                         $('#rowsInfo').append(formatted_plot['rowsInfo'].join(""));
-                        $('#phenotypes').append(formatted_plot['phenotypes'].join(""));
+                        //$('#phenotypes').append(formatted_plot['phenotypes'].join("")); momentary
                         break;
                     }
                 }
             }
         }
 
+    } // end of loop through all plots to find replicates.
+
+    if( searchStr !== 'discard'){
+
+	//  NEW FUCTION format phenotypes independently and after finding exact replicates.
+         let formatted_pheno = format_pheno(plot, replicateIds, replicates);
+
+        // console.log ("new phenotype array", formatted_pheno['phenotypes']);
+	//$('#phenotypes').append(formatted_phenotypes['phenotypes'].join("")); // 
+	$('#phenotypes').append(formatted_pheno['phenotypes'].join("")); // Add phenotypes at  the end of the process
     }
+
+
 
     $('#plots_table').DataTable({
         "aaSorting": [],
@@ -1155,12 +1202,16 @@ function formatPlotModal(plot) {
 
     //rowsInfoarray.push('<table class="table racks" id="plots_table_rows"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th><th>Links</th><th>Treatments</th></tr></thead><tbody id="rowsInfo">');
     rowsInfoarray.push('<table class="table racks" id="plots_table_rows"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Links</th><th>Treatments</th></tr></thead><tbody id="rowsInfo">'); // remove Gene Bank temporarily
-    phenotypearray.push('<table class="table plots" id="plots_table"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th><th>Index</th></tr></thead><tbody id="phenotypes">');
+    
+   //phenotypearray.push('<table class="table plots" id="plots_table"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th><th>Index</th></tr></thead><tbody id="phenotypes">'); //original  9 columns
+   //phenotypearray.push('<table class="table plots" id="plots_table"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Raw Value Replicate</th><th>Trait</th><th>Measurement</th><th>Unit</th><th>Index</th></tr></thead><tbody id="phenotypes">');  // TEST 9 columns  extra raw value
+   phenotypearray.push('<table class="table plots" id="plots_table"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Raw Value Replicate</th><th>Raw Value Replicate</th><th>Trait</th><th>Measurement</th><th>Unit</th><th>Index</th></tr></thead><tbody id="phenotypes">');// 10 columns
 
     let formatted_plot = format_plot_rows(plot, false);
 
     rowsInfoarray = rowsInfoarray.concat(formatted_plot['rowsInfo']);
-    phenotypearray = phenotypearray.concat(formatted_plot['phenotypes']);
+     //phenotypearray = phenotypearray.concat(formatted_plot['phenotypes']); //momentarily     TEST replace with new function
+
     //
     // let searchStr = '';
     //         for (r = 0; r < plot['rows'].length; r++) {
@@ -1382,13 +1433,23 @@ function simpleOrAdvanced_pheno(string) {
     if (string === 'show_simple') {
         pheno_table.column(1).visible(false);
         pheno_table.column(2).visible(false);
-        pheno_table.column(4).visible(false);
-        pheno_table.column(6).visible(false);
-    } else if (string === 'show_advanced') {
-        pheno_table.column(1).visible(true);
-        pheno_table.column(2).visible(true);
-        pheno_table.column(4).visible(true);
+        pheno_table.column(3).visible(true); // raw value current plot
+        pheno_table.column(4).visible(true); // Replicate
+        pheno_table.column(5).visible(true); // Replicate
         pheno_table.column(6).visible(true);
+        pheno_table.column(7).visible(false);
+        pheno_table.column(8).visible(true);
+        pheno_table.column(9).visible(true);// Index 
+    } else if (string === 'show_advanced') {
+        pheno_table.column(1).visible(true);// rack
+        pheno_table.column(2).visible(true);// date
+        pheno_table.column(3).visible(true);
+        pheno_table.column(4).visible(true);
+        pheno_table.column(5).visible(true); 
+        pheno_table.column(6).visible(true);// 6 trait
+        pheno_table.column(7).visible(true);// measurement.
+        pheno_table.column(8).visible(true);// unit
+        pheno_table.column(9).visible(false);// Index
     }
 
 }
@@ -1812,5 +1873,144 @@ function lookup(name, key1, key2) {
     return result;
 
 }
+
+
+/**
+ * Format rows of phenotypes values
+ *
+ * @param  plotCurrent  - Current Plot 
+ * @param  replicateIds - Array containing ID of plots of exact replicates of current plot
+ * @param  replicate      Rows of the exact replicates
+ */
+
+function format_pheno(plotCurrent, replicateIds, replicates){
+   //console.log("--TEST ID ", plotCurrent['rows'][0]['study_index'] );
+   // console.log("observation size current plot",  plotCurrent['rows'][0]['observations'].length );//    ******** ADD CHECK DISCARDED!
+
+  let plot_actual_id = plotCurrent['rows'][0]['study_index'];
+ 
+  let formatted_plot = {};
+  let phenotypearray = [];
+
+  var phenotypeRaw   = {};
+	
+
+  for (o = 0; o < plotCurrent['rows'][0]['observations'].length; o++) {
+
+	let observation    = plotCurrent['rows'][0]['observations'][o];
+        let phenotype_name = observation['phenotype']['variable']; 
+
+        phenotypeRaw[phenotype_name] = observation['raw_value'];      // Array of raw values of current plot
+
+  }
+
+  var current_index    = plotCurrent['rows'][0]['replicate'];
+  var color = colorJSON[current_index];
+	
+  let RawVals = [];
+  let links   = [];	
+  let colors  = [];	
+ 
+  for (i = 0; i < replicateIds.length; i++) {
+  
+     let studyId = replicateIds[i] 
+     let plot    = replicates[studyId];
+     let plot_study_index = plot[0]['study_index'];
+     //  console.log("replicate ID", plot_study_index);
+     name_link = ' <u style="cursor:pointer;" onclick="plotModal(\'' + studyId + '\')">(Plot ' + plot_study_index + ')</u>';
+     links.push(name_link);
+     
+     let replicate_index = plot[0]['replicate'];
+     let color           = colorJSON[replicate_index];  
+     colors.push(color);	  
+	  
+     let replicateRaw = {};
+     for (o = 0; o < plot[0]['observations'].length; o++) {
+
+	let observation    = plot[0]['observations'][o];
+        let phenotype_name = observation['phenotype']['variable']; 
+
+         replicateRaw[phenotype_name] = observation['raw_value'];
+     }
+     RawVals.push(replicateRaw);	
+  }
+ //  console.log("raw values size replicate", Object.keys(replicateRaw).length );
+
+
+   var crop_onotology_url = "https://cropontology.org/term/";	
+
+   for (o = 0; o < plotCurrent['rows'][0]['observations'].length; o++) {
+        var observation    = plotCurrent['rows'][0]['observations'][o];
+        var phenotype_name = observation['phenotype']['variable'];
+	//raw = RawVals[0]; 
+    
+        phenotypearray.push('<tr>');
+        phenotypearray.push('<td style="background-color:' + color + '">' + SafePrint(current_index) + ' Plot ' + plot_actual_id + '(Current) </td>');
+        phenotypearray.push('<td>' + SafePrint(plotCurrent['rows'][0]['rack_index']) + '</td>');
+	phenotypearray.push('<td>' + SafePrint(observation['date'])      + '</td>');
+	phenotypearray.push('<td>' + SafePrint(observation['raw_value']) + '</td>');
+	
+	// ******* Two extra columns of raw values of exact replicate plots. ********** 
+        for (i = 0; i < 2; i++) {
+	let raw = {};
+	raw = RawVals[i]; 
+	link =links[i]; 
+  
+            phenotypearray.push('<td style="background-color:' + colors[i] + '">'+SafePrint(raw[phenotype_name])+ '<br>'+ link  +'</td>');
+        }
+       
+	 // phenotypearray.push('<td>' + SafePrint(observation['corrected_value']) + '</td>'); // corrected value column temporarily removed.
+
+       if (lookup( phenotype_name,  'trait', 'so:sameAs').startsWith('CO')) {
+            phenotypearray.push('<td class="tooltip-test"  title="' + lookup(phenotype_name, 'trait','so:description') + '"><a class="newstyle_link" target="_blank" href="' + crop_onotology_url + lookup(phenotype_name, 'trait','so:sameAs') + '">' + lookup(phenotype_name, 'trait','so:name') + '</a></td>');
+
+                } else {
+                    phenotypearray.push('<td class="tooltip-test"  title="' + lookup(phenotype_name, 'trait','so:description')  + '">' + lookup(phenotype_name, 'trait','so:name')  + '</td>');
+                }
+
+                if (lookup( phenotype_name,  'measurement', 'so:sameAs').startsWith('CO')) {
+                    phenotypearray.push('<td data-toggle="tooltip" title="' + lookup( phenotype_name,  'measurement', 'so:description') + '"><a class="newstyle_link" target="_blank" href="' + crop_onotology_url + lookup( phenotype_name,  'measurement', 'so:sameAs')  + '">' + lookup( phenotype_name,  'measurement', 'so:name') + '</td>');
+
+                } else {
+                    phenotypearray.push('<td data-toggle="tooltip" title="' + lookup(phenotype_name,  'measurement', 'so:description') + '">' + lookup(phenotype_name,  'measurement', 'so:name') + '</td>');
+                }
+
+                if (lookup( phenotype_name,  'unit', 'so:sameAs')) {
+                    phenotypearray.push('<td data-toggle="tooltip"><a class="newstyle_link" target="_blank" href="' + crop_onotology_url + lookup(phenotype_name,  'unit', 'so:sameAs') + '">' + lookup(phenotype_name,  'unit', 'so:name')  + '</td>');
+
+                } else {
+                    phenotypearray.push('<td>' +  lookup(phenotype_name,  'unit', 'so:name')  + '</td>');
+                }
+
+                phenotypearray.push('<td>' + SafePrint(observation['index']) + '</td>');
+
+                phenotypearray.push('</tr>');
+    
+   }
+
+
+  formatted_plot['phenotypes'] = phenotypearray;
+
+  return formatted_plot;
+
+
+}
+
+
+
+function areEqual(array1, array2) {
+  if (array1.length === array2.length) {
+    return array1.every((element, index) => {
+      if (element === array2[index]) {
+        return true;
+      }
+
+      return false;
+    });
+  }
+
+  return false;
+}
+
 
 
