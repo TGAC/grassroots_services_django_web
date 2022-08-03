@@ -4,6 +4,9 @@ import json
 from django.conf import settings
 
 from django import template
+from plotly.offline import plot
+from plotly.graph_objs import Scatter
+
 register = template.Library()
 
 
@@ -15,6 +18,9 @@ from .grassroots_fieldtrial_requests import get_fieldtrial
 from .grassroots_fieldtrial_requests import get_study
 from .grassroots_fieldtrial_requests import get_plot
 from .grassroots_fieldtrial_requests import search_fieldtrial
+
+from .grassroots_plots import numpy_data
+from .grassroots_plots import plotly_plot
 
 '''
 Field trial index page request, pre-load the template
@@ -86,7 +92,21 @@ def single_plot(request, plot_id):
     plot = get_plot(plot_id)
     plot_json = json.loads(plot)
     study_name = plot_json['results'][0]['results'][0]['data']['so:name']
-    return render(request, 'plots.html', {'data': plot, 'plot_id': plot_id, 'study_name': study_name})
+
+    plot_array = plot_json['results'][0]['results'][0]['data']['plots'] # send only array of 'plots' to plotly
+    matrices  = numpy_data(plot_array)
+
+    row     = matrices[0]
+    column  = matrices[1]
+    row_raw = matrices[2]
+    row_acc = matrices[3]
+
+    accession = row_acc.reshape(row,column-1)
+    matrix    = row_raw.reshape(row,column-1)
+
+    plot_div = plotly_plot(matrix, accession)
+
+    return render(request, 'plots.html', {'data': plot, 'plot_id': plot_id, 'study_name': study_name, 'plot_div': plot_div})
 
 '''
 Search field trial page request
