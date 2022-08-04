@@ -319,7 +319,7 @@
 
 
 {% if "address" in study_json %}
-        <tr><td><strong>Address:</strong></td><td>{% format_address study_json "address.address.Address.name" %} </td></tr>
+        <tr><td><strong>Address:</strong></td><td>{% format_address study_json "address.name" %} </td></tr>
 {% endif %}
 
 {% if flag %}
