@@ -22,7 +22,8 @@ test rendering plotly interactive heatmap
 
 def plotly_plot(numpy_matrix, accession):
    
-    # Matrices need to be fliped to match original JS/datables 
+    numpy_matrix = np.flipud(numpy_matrix)      # To Match order shown originally in JS code
+    accession    = np.flipud(accession)            # To Match order shown originally in JS code
 
     notAvailable = np.zeros_like(numpy_matrix)
     discarded    =  np.zeros_like(numpy_matrix)
@@ -118,7 +119,7 @@ def numpy_data(json):
     test=json[0]['rows'][0]['study_index']
 
     current_name =  json[3]['rows'][0]['observations'][0]['phenotype']['variable'] # SELECT RANDOM PHENOTYPE FOR TESTS 
-   
+  
     row_raw   = np.array([])
     matrix    = np.array([])
     row_acc   = np.array([])
