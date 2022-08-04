@@ -777,6 +777,13 @@ function create_study_info_html(studyJson) {
         AddTableRow (htmlarray, 'Download <i id="download_question" class="fas fa-question newstyle_link"></i>', '<a href="' + studyJson['so:contentUrl'] + '" target="_blank" style="newstyle_link">link</a>');
     }
 
+    if (studyJson["handbook"] !== undefined) {
+        let handbook = '<a target="_blank" style="newstyle_link" href="' +  studyJson['handbook']['so:url']   + '" target="_blank">' + studyJson['handbook']['name'] + '</a>';
+
+        AddTableRow (htmlarray, "Handbook pdf", handbook); 
+    }
+	
+
     htmlarray.push('</tbody>');
     htmlarray.push('</table>');
 
