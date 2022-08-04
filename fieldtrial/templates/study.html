@@ -1,4 +1,4 @@
-{%  include "header.html" %}
+{%  include "header2.html" %}
  {% load static %}
  
  {% load fieldtrial_tag %}
@@ -117,9 +117,9 @@
                </span>
             </div>
         </div>
-        <div id="tableWrapper">
+       <!-- <div id="tableWrapper">
 		          <table id="resultTable"></table> 
-        </div> 
+       </div>  -->
 
         <!-- Modal -->
         <div class="modal " tabindex="-1" role="dialog" id="plotModal" style="z-index: 999999;">
@@ -237,7 +237,7 @@
  
 
 <!--footer-->
-<!--
+
 <section id="new_stuff" >
 
 <table class="table table-bordered dataTable no-footer">
@@ -339,11 +339,17 @@
 {% if "so:contentUrl" in study_json %}
         <tr><td><strong>Download: </strong><a tabindex="0" class="btn bt-lg btn-danger"  role="button" data-toggle="popover" data-trigger="focus"  data-content="A Frictionless Data Package contains all of the data associated with a study including its parent field trial and programme. For more information and the tool to unpack these packages, go <a href='https://grassroots.tools/frictionless-data/grassroots-fd-client.md'>here</a>   "> ? </a>
 	 </td><td>
-           <a href="{% lookup_keys study_json "so:contentUrl" %}">link</a>
+		 <a href="{% lookup_keys study_json "so:contentUrl" %}">link</a></td></tr>
 {% endif %}
+
+{% if "handbook" in study_json %}
+<tr><td><strong>Handbook pdf:</strong></td><td> 
+		<a href="{% lookup_keys study_json "handbook.so:url" %}"> {% lookup_keys study_json "handbook.name" %} </a></td></tr>
+{% endif %}
+
 
 </table>
 
 </section>
--->
+
 {% include "footer.html" %}
