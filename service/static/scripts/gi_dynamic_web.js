@@ -619,7 +619,7 @@ function populate_page_with_json(json, refreshed) {
     for (var idt = 0; idt < datatable_param_list.length; idt++) {
         var datatableId = datatable_param_list[idt]['table_id'];
         var buttons = [];
-        $('#' + datatableId).DataTable().destroy();
+        // DAN  ? -- $('#' + datatableId).DataTable().destroy();
         if (datatableId === 'PL_Upload') {
             add_plot_datatable(datatableId);
         } else {
@@ -2958,15 +2958,15 @@ function format_fieldtrial_result(array) {
         }
         if (type === 'Grassroots:Study') {
             typeText = 'Study';
-            var address_name = (array[i]['data']['address']['address']['Address']['name'] != undefined) ? array[i]['data']['address']['address']['Address']['name'] + '<br/>' : "";
-            var address_locality = (array[i]['data']['address']['address']['Address']['addressLocality'] != undefined) ? array[i]['data']['address']['address']['Address']['addressLocality'] + '<br/>' : "";
-            var address_country = (array[i]['data']['address']['address']['Address']['addressCountry'] != undefined) ? array[i]['data']['address']['address']['Address']['addressCountry'] + '<br/>' : "";
-            var address_postcode = (array[i]['data']['address']['address']['Address']['postalCode'] != undefined) ? array[i]['data']['address']['address']['Address']['postalCode'] : "";
+            var address_name = (array[i]['data']['address']['name'] != undefined) ? array[i]['data']['address']['name'] + '<br/>' : "";
+           // var address_locality = (array[i]['data']['address']['address']['Address']['addressLocality'] != undefined) ? array[i]['data']['address']['address']['Address']['addressLocality'] + '<br/>' : "";
+            //var address_country = (array[i]['data']['address']['address']['Address']['addressCountry'] != undefined) ? array[i]['data']['address']['address']['Address']['addressCountry'] + '<br/>' : "";
+            //var address_postcode = (array[i]['data']['address']['address']['Address']['postalCode'] != undefined) ? array[i]['data']['address']['address']['Address']['postalCode'] : "";
 
-            info = address_name
-                + address_locality
-                + address_country
-                + address_postcode;
+            info = address_name;
+            //    + address_locality
+            //    + address_country
+           //     + address_postcode;
         }
         if (type === 'Grassroots:Phenotype') {
             typeText = 'Phenotype';
