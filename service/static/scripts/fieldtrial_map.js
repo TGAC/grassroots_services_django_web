@@ -474,18 +474,19 @@ function produceFieldtrialTable(data, type_param) {
 function get_study_address(full, link_bool) {
     var addressInfo = '';
     if (full['address'] !== undefined && full['address']['address'] !== "undefined") {
-        if (full['address']['address']['Address'] !== undefined && full['address']['address']['Address'] !== "undefined") {
-            var address_name = (full['address']['address']['Address']['name'] != undefined) ? full['address']['address']['Address']['name'] + '<br/>' : "";
-            var address_locality = (full['address']['address']['Address']['addressLocality'] != undefined) ? full['address']['address']['Address']['addressLocality'] + '<br/>' : "";
-            var address_country = (full['address']['address']['Address']['addressCountry'] != undefined) ? full['address']['address']['Address']['addressCountry'] + '<br/>' : "";
-            var address_postcode = (full['address']['address']['Address']['postalCode'] != undefined) ? full['address']['address']['Address']['postalCode'] : "";
+        if (full['address'] !== undefined && full['address'] !== "undefined") {
+            var address_name = (full['address']['name'] != undefined) ? full['address']['name'] + '<br/>' : "";
+            //var address_name = (full['address']['address']['Address']['name'] != undefined) ? full['address']['address']['Address']['name'] + '<br/>' : "";
+	    //var address_locality = (full['address']['address']['Address']['addressLocality'] != undefined) ? full['address']['address']['Address']['addressLocality'] + '<br/>' : "";
+            //var address_country = (full['address']['address']['Address']['addressCountry'] != undefined) ? full['address']['address']['Address']['addressCountry'] + '<br/>' : "";
+            //var address_postcode = (full['address']['address']['Address']['postalCode'] != undefined) ? full['address']['address']['Address']['postalCode'] : "";
 
             var link = (link_bool) ? 'class="newstyle_link"' : "";
 
-            addressInfo = '<span ' + link + '> ' + address_name
-                + address_locality
-                + address_country
-                + address_postcode + '</span>';
+            addressInfo = '<span ' + link + '> ' + address_name + '</span>';
+               // + address_locality
+               // + address_country
+               // + address_postcode + '</span>';
         }
     }
     return addressInfo;
@@ -845,8 +846,8 @@ function displayFTLocations(array, type_param) {
             if (array[i]['address']['address']['Address']['addressLocality'] != undefined) {
                 town = array[i]['address']['address']['Address']['addressLocality'];
             }
-            if (array[i]['address']['address']['Address']['name'] != undefined) {
-                name = array[i]['address']['address']['Address']['name'];
+            if (array[i]['address']['name'] != undefined) {
+                name = array[i]['address']['name'];
             }
         }
         var id = array[i]['_id']['$oid'];
