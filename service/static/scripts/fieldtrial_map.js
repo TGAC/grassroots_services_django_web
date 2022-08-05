@@ -99,6 +99,7 @@ function startFieldTrialGIS(jsonArray, type_param) {
         if (experimental_area_json['plots'] !== undefined && experimental_area_json['plots'] !== null) {
             for (j = 0; j < experimental_area_json['plots'].length; j++) {
                 let plot = experimental_area_json['plots'][j];
+		allPhenotypes =  experimental_area_json['phenotypes'];  // global variable with all phenotypes of particular study
                 if (plot['rows'].length > 0) {
                     if (plot['rows'][0]['study_index'] !== undefined) {
                         let plotId = plot['rows'][0]['study_index'];
