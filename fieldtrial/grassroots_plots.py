@@ -36,6 +36,13 @@ def plotly_plot(numpy_matrix, accession):
 
     numpy_matrix[indexInf] = np.nan # Replace Inf by NaN
 
+    # Reverse Y ticks and start them from 1
+    size=numpy_matrix.shape
+    Y = size[0]
+    Yvals = np.arange(0,Y)
+    Yaxis = np.arange(1,Y+1)
+    Yaxis = np.flip(Yaxis)
+
     fig = px.imshow(numpy_matrix, aspect="auto",
             labels=dict(x="columns", y="rows", color="Value"),
             color_continuous_scale=px.colors.sequential.Greens )
@@ -44,10 +51,13 @@ def plotly_plot(numpy_matrix, accession):
         customdata = np.moveaxis([accession, numpy_matrix], 0,-1),
         hovertemplate="Accession: %{customdata[0]}<br>raw value: %{customdata[1]:.2f}  <extra></extra>")
 
-    fig.update_layout(font=dict(family="Courier New, monospace",size=12,color="Black"),title={
+    fig.update_layout( font=dict(family="Courier New, monospace",size=12,color="Black"),title={
         'text': "Raw Values of Grain Yield...",
         'y':0.98,'x':0.5,
         'xanchor': 'center','yanchor': 'top'})
+
+    fig.update_layout( yaxis = dict(tickmode = 'array', tickvals = Yvals, ticktext = Yaxis ) )
+
 
     fig.update_xaxes(showgrid=True, gridwidth=7, gridcolor='Black', zeroline=False)
     fig.update_yaxes(showgrid=True, gridwidth=7, gridcolor='Black', zeroline=False)
@@ -76,14 +86,19 @@ def seaborn_plot(numpy_matrix):
     NA        = np.where(notAvailable < 1, np.nan, notAvailable)
     discarded = np.where(   discarded < 1, np.nan, discarded)
 
-
     numpy_matrix[indexInf] = np.nan # Replace Inf by NaN
+
+    # Reverse Y ticks and start them from 1
+    size = numpy_matrix.shape
+    Y    = size[0]
+    Yaxis = np.arange(1,Y+1)
+    Yaxis = np.flip(Yaxis)
 
     maxVal = np.nanmax(numpy_matrix)
     minVal = np.nanmin(numpy_matrix)
     #print(minVal)
     colormap  = sns.light_palette("seagreen", as_cmap=True)
-    dark  = sns.dark_palette((260, 75, 60), input="husl")
+    dark      = sns.dark_palette((260, 75, 60), input="husl")
     sns.heatmap(NA, linewidth=0.5,cmap=dark, cbar=False )
 
     g = sns.heatmap(numpy_matrix,  vmax=maxVal, vmin=minVal,linewidth=0.5,cmap=colormap, cbar_kws={'label': 'unit: t/ha'}) 
@@ -97,6 +112,8 @@ def seaborn_plot(numpy_matrix):
     g.set_xlabel("Columns", fontsize = 14)
     g.set_ylabel("Rows", fontsize = 14)
     g.set_title("Raw Values of Grain Yield @ 85% Dry Matter", fontsize = 20)
+    g.set_yticklabels(Yaxis)
+    g.tick_params(axis='y', rotation=0)
    
 
     fig = g.get_figure()
