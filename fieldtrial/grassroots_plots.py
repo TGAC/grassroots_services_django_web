@@ -72,6 +72,10 @@ def plotly_plot(numpy_matrix, accession, title, unit):
     Yaxis = np.arange(1,Y+1)
     Yaxis = np.flip(Yaxis)
 
+    X = size[1]
+    Xvals = np.arange(0, X)
+    Xaxis = np.arange(1,X+1)
+
     fig = px.imshow(numpy_matrix, aspect="auto",
             labels=dict(x="columns", y="rows", color=units),
             color_continuous_scale=px.colors.sequential.Greens )
@@ -86,6 +90,7 @@ def plotly_plot(numpy_matrix, accession, title, unit):
         'xanchor': 'center','yanchor': 'top'})
 
     fig.update_layout( yaxis = dict(tickmode = 'array', tickvals = Yvals, ticktext = Yaxis ) )
+    fig.update_layout( xaxis = dict(tickmode = 'array', tickvals = Xvals, ticktext = Xaxis ) )
 
 
     fig.update_xaxes(showgrid=True, gridwidth=7, gridcolor='Black', zeroline=False)
@@ -119,10 +124,15 @@ def seaborn_plot(numpy_matrix, title, unit):
     numpy_matrix[indexInf] = np.nan # Replace Inf by NaN
 
     # Reverse Y ticks and start them from 1
-    size = numpy_matrix.shape
-    Y    = size[0]
+    size  = numpy_matrix.shape
+    Y     = size[0]
+    Yvals = np.arange(0.5, Y+0.5, 1.0)
     Yaxis = np.arange(1,Y+1)
     Yaxis = np.flip(Yaxis)
+
+    X     = size[1]
+    Xaxis = np.arange(1,X+1)
+
 
     maxVal = np.nanmax(numpy_matrix)
     minVal = np.nanmin(numpy_matrix)
@@ -142,8 +152,10 @@ def seaborn_plot(numpy_matrix, title, unit):
     g.set_xlabel("Columns", fontsize = 14)
     g.set_ylabel("Rows", fontsize = 14)
     g.set_title(title, fontsize = 20)
-    g.set_yticklabels(Yaxis)
-    g.tick_params(axis='y', rotation=0)
+    g.set_yticks( Yvals )
+    g.set_yticklabels(Yaxis, size=10)
+    g.tick_params(    axis='y', rotation=0)
+    g.set_xticklabels(Xaxis, size=10)
    
 
     fig = g.get_figure()
