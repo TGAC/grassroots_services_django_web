@@ -21,6 +21,7 @@ from .grassroots_fieldtrial_requests import search_fieldtrial
 
 from .grassroots_plots import numpy_data
 from .grassroots_plots import plotly_plot
+from .grassroots_plots import seaborn_plot
 
 '''
 Field trial index page request, pre-load the template
@@ -93,20 +94,27 @@ def single_plot(request, plot_id):
     plot_json = json.loads(plot)
     study_name = plot_json['results'][0]['results'][0]['data']['so:name']
 
-    plot_array = plot_json['results'][0]['results'][0]['data']['plots'] # send only array of 'plots' to plotly
-    matrices  = numpy_data(plot_array)
+    plot_array = plot_json['results'][0]['results'][0]['data']['plots']       # send only array of 'plots' to plotly
+    phenotypes = plot_json['results'][0]['results'][0]['data']['phenotypes']  # Details of all the phenotypes
+    
+    matrices   = numpy_data(plot_array, phenotypes)
 
     row     = matrices[0]
     column  = matrices[1]
     row_raw = matrices[2]
     row_acc = matrices[3]
+    traitName  = matrices[4]
+    units      = matrices[5]
 
     accession = row_acc.reshape(row,column-1)
     matrix    = row_raw.reshape(row,column-1)
+    static    = matrix
 
-    plot_div = plotly_plot(matrix, accession)
 
-    return render(request, 'plots.html', {'data': plot, 'plot_id': plot_id, 'study_name': study_name, 'plot_div': plot_div})
+    image    = seaborn_plot(static,   traitName,  units)
+    plot_div = plotly_plot( matrix, accession, traitName, units)
+
+    return render(request, 'plots.html', {'data': plot, 'plot_id': plot_id, 'study_name': study_name, 'plot_div': plot_div, 'heatmap':image})
 
 '''
 Search field trial page request

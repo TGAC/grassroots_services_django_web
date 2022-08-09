@@ -111,11 +111,14 @@
 
 
 <section id="TEST3">
-        <h4 id="title"> Test heatmap</h4>
-<p>Heatmap of a single phenotype</p>
+        <h4 id="title"> Tests of heatmaps</h4>
+<p>Heatmap of a single phenotype using interactive plotly library </p>
   {% autoescape off %}
   {{ plot_div }}
   {% endautoescape %}
+
+  <p>Sample of static image for paper/handbook: </p>
+   <p>  <img src="data:image/png;base64 , {{ heatmap|safe }}">  </p>
 
 </section>
 

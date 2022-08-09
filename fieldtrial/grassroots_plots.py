@@ -14,13 +14,41 @@ import plotly.figure_factory as ff
 
 from functools import reduce
 
+################################################################################################################
+def search_phenotype(list_observations, value):  
+    
+    for i in range(len(list_observations)):
+        
+        dic            = list_observations[i]
+        phenotype_name = lookup_keys(dic, 'phenotype.variable')
+        if  (phenotype_name == value ):
+              return True
+              
+        else:
+              return False
+
+###################################################################
+def searchPhenotypeTrait(listPheno, value):
+
+    name = listPheno[value]['definition']['trait']['so:name']
+
+    return name
+
+###################################################################
+def searchPhenotypeUnit(listPheno, value):
+
+    name = listPheno[value]['definition']['unit']['so:name']
+
+    return name
+
+
 
 ############################################################################################
 '''
 test rendering plotly interactive heatmap
 '''
 
-def plotly_plot(numpy_matrix, accession):
+def plotly_plot(numpy_matrix, accession, title, unit):
    
     numpy_matrix = np.flipud(numpy_matrix)      # To Match order shown originally in JS code
     accession    = np.flipud(accession)            # To Match order shown originally in JS code
@@ -36,6 +64,7 @@ def plotly_plot(numpy_matrix, accession):
 
     numpy_matrix[indexInf] = np.nan # Replace Inf by NaN
 
+    units = 'Units: '+unit
     # Reverse Y ticks and start them from 1
     size=numpy_matrix.shape
     Y = size[0]
@@ -44,7 +73,7 @@ def plotly_plot(numpy_matrix, accession):
     Yaxis = np.flip(Yaxis)
 
     fig = px.imshow(numpy_matrix, aspect="auto",
-            labels=dict(x="columns", y="rows", color="Value"),
+            labels=dict(x="columns", y="rows", color=units),
             color_continuous_scale=px.colors.sequential.Greens )
 
     fig.update_traces(
@@ -52,7 +81,7 @@ def plotly_plot(numpy_matrix, accession):
         hovertemplate="Accession: %{customdata[0]}<br>raw value: %{customdata[1]:.2f}  <extra></extra>")
 
     fig.update_layout( font=dict(family="Courier New, monospace",size=12,color="Black"),title={
-        'text': "Raw Values of Grain Yield...",
+        'text': title,
         'y':0.98,'x':0.5,
         'xanchor': 'center','yanchor': 'top'})
 
@@ -72,9 +101,9 @@ def plotly_plot(numpy_matrix, accession):
 '''
 test rendering seaborn image
 '''
-def seaborn_plot(numpy_matrix):
+def seaborn_plot(numpy_matrix, title, unit):
 
-    sns.set(rc={'figure.figsize':(22.7,8.27)})
+    sns.set(rc={'figure.figsize':(17.5,8.0)})
     
     #print(numpy_matrix.shape)
     notAvailable = np.zeros_like(numpy_matrix)
@@ -85,6 +114,7 @@ def seaborn_plot(numpy_matrix):
     discarded[indexDiscard]  = 1
     NA        = np.where(notAvailable < 1, np.nan, notAvailable)
     discarded = np.where(   discarded < 1, np.nan, discarded)
+    units = 'Units: '+ unit
 
     numpy_matrix[indexInf] = np.nan # Replace Inf by NaN
 
@@ -101,7 +131,7 @@ def seaborn_plot(numpy_matrix):
     dark      = sns.dark_palette((260, 75, 60), input="husl")
     sns.heatmap(NA, linewidth=0.5,cmap=dark, cbar=False )
 
-    g = sns.heatmap(numpy_matrix,  vmax=maxVal, vmin=minVal,linewidth=0.5,cmap=colormap, cbar_kws={'label': 'unit: t/ha'}) 
+    g = sns.heatmap(numpy_matrix,  vmax=maxVal, vmin=minVal,linewidth=0.5,cmap=colormap, cbar_kws={'label': units}) 
     ##g.set_facecolor('xkcd:black')
 
     g.patch.set_facecolor('white')
@@ -111,7 +141,7 @@ def seaborn_plot(numpy_matrix):
 
     g.set_xlabel("Columns", fontsize = 14)
     g.set_ylabel("Rows", fontsize = 14)
-    g.set_title("Raw Values of Grain Yield @ 85% Dry Matter", fontsize = 20)
+    g.set_title(title, fontsize = 20)
     g.set_yticklabels(Yaxis)
     g.tick_params(axis='y', rotation=0)
    
@@ -132,11 +162,13 @@ def seaborn_plot(numpy_matrix):
 '''
 Create numpy arrays for plotly script. Matrix of raw values and matrix of accession 
 '''
-def numpy_data(json):
+def numpy_data(json, pheno):
     test=json[0]['rows'][0]['study_index']
 
     current_name =  json[3]['rows'][0]['observations'][0]['phenotype']['variable'] # SELECT RANDOM PHENOTYPE FOR TESTS 
-  
+    traitName = searchPhenotypeTrait(pheno, current_name)
+    unit      = searchPhenotypeUnit( pheno, current_name)
+
     row_raw   = np.array([])
     matrix    = np.array([])
     row_acc   = np.array([])
@@ -193,6 +225,8 @@ def numpy_data(json):
     matrices.append(column)
     matrices.append(row_raw)
     matrices.append(row_acc)
+    matrices.append(traitName)
+    matrices.append(unit)
     
     return matrices
 
@@ -200,17 +234,6 @@ def numpy_data(json):
 def lookup_keys(dictionary, keys, default=None):
      return reduce(lambda d, key: d.get(key, default) if isinstance(d, dict) else default, keys.split("."), dictionary)
 
-def search_phenotype(list_observations, value):  
-    
-    for i in range(len(list_observations)):
-        
-        dic            = list_observations[i]
-        phenotype_name = lookup_keys(dic, 'phenotype.variable')
-        if  (phenotype_name == value ):
-              return True
-              
-        else:
-              return False
 
 
 
