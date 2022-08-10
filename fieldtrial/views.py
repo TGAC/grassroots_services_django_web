@@ -107,11 +107,11 @@ def single_plot(request, plot_id):
     units      = matrices[5]
 
     accession = row_acc.reshape(row,column)
-    matrix    = row_raw.reshape(row,column)
-    static    = matrix
+    plotlyMatrix = row_raw.reshape(row,column)
+    static    = row_raw.reshape(row,column)
 
+    plot_div = plotly_plot(plotlyMatrix, accession, traitName, units)
     image    = seaborn_plot(static,   traitName,  units)
-    plot_div = plotly_plot( matrix, accession, traitName, units)
 
     return render(request, 'plots.html', {'data': plot, 'plot_id': plot_id, 'study_name': study_name, 
         'plot_div': plot_div, 'heatmap':image})

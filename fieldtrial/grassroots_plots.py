@@ -48,26 +48,39 @@ def searchPhenotypeUnit(listPheno, value):
 test rendering plotly interactive heatmap
 '''
 
-def plotly_plot(numpy_matrix, accession, title, unit):
+def plotly_plot(matrix, accession, title, unit):
    
-    numpy_matrix = np.flipud(numpy_matrix)      # To Match order shown originally in JS code
-    accession    = np.flipud(accession)            # To Match order shown originally in JS code
+    main_matrix = np.flipud(matrix)      # To Match order shown originally in JS code
+    accession   = np.flipud(accession)            # To Match order shown originally in JS code
+    size = main_matrix.shape
+    Y =   size[0]
+    X =   size[1]
 
-    notAvailable = np.zeros_like(numpy_matrix)
-    discarded    =  np.zeros_like(numpy_matrix)
-    indexInf     =  np.where(np.isinf(numpy_matrix))
-    indexDiscard =  np.where(np.isnan(numpy_matrix))
+    notAvailable = np.zeros_like(main_matrix)
+    discarded    =  np.zeros_like(main_matrix)
+    indexInf     =  np.where(np.isinf(main_matrix))
+    indexDiscard =  np.where(np.isnan(main_matrix))
     notAvailable[indexInf]   = 1
     discarded[indexDiscard]  = 1
     NA        = np.where(notAvailable < 1, np.nan, notAvailable)
     discarded = np.where(   discarded < 1, np.nan, discarded)
 
-    numpy_matrix[indexInf] = np.nan # Replace Inf by NaN
+    print(indexInf)
+    main_matrix[indexInf] = np.nan # Replace Inf by NaN
+
+    numpy_array = main_matrix.flatten()
+    strings     = np.array(["%.3f" % x for x in numpy_array])  #matrix has to be flattened for conversion to strings
+    s_matrix    = strings.reshape(Y,X)                         #new matrix used in hovering text to show raw values.
+    s_matrix[indexInf]     = 'N/A'
+    s_matrix[indexDiscard] = 'N/A'
+
+    accession[indexDiscard] = 'Discarded'
+    accession[indexInf]     = 'N/A'
 
     units = 'Units: '+unit
     # Reverse Y ticks and start them from 1
-    size=numpy_matrix.shape
-    Y = size[0]
+    size = main_matrix.shape
+    Y    = size[0]
     Yvals = np.arange(0,Y)
     Yaxis = np.arange(1,Y+1)
     Yaxis = np.flip(Yaxis)
@@ -76,13 +89,14 @@ def plotly_plot(numpy_matrix, accession, title, unit):
     Xvals = np.arange(0, X)
     Xaxis = np.arange(1,X+1)
 
-    fig = px.imshow(numpy_matrix, aspect="auto",
+    fig = px.imshow(main_matrix, aspect="auto",
             labels=dict(x="columns", y="rows", color=units),
             color_continuous_scale=px.colors.sequential.Greens )
 
     fig.update_traces(
-        customdata = np.moveaxis([accession, numpy_matrix], 0,-1),
-        hovertemplate="Accession: %{customdata[0]}<br>raw value: %{customdata[1]:.2f}  <extra></extra>")
+        customdata = np.moveaxis([accession, s_matrix], 0,-1),
+        #hovertemplate="Accession: %{customdata[0]}<br>raw value: %{customdata[1]:.2f}  <extra></extra>")
+        hovertemplate="Accession: %{customdata[0]}<br>raw value: %{customdata[1]}  <extra></extra>")
 
     fig.update_layout( font=dict(family="Courier New, monospace",size=12,color="Black"),title={
         'text': title,
@@ -99,6 +113,8 @@ def plotly_plot(numpy_matrix, accession, title, unit):
     fig['layout'].update(plot_bgcolor='black')
 
     plot_div = plot(fig, output_type='div')
+
+    main_matrix[indexInf] = np.inf
 
     return plot_div
 
