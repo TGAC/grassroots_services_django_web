@@ -106,15 +106,15 @@ def single_plot(request, plot_id):
     traitName  = matrices[4]
     units      = matrices[5]
 
-    accession = row_acc.reshape(row,column-1)
-    matrix    = row_raw.reshape(row,column-1)
+    accession = row_acc.reshape(row,column)
+    matrix    = row_raw.reshape(row,column)
     static    = matrix
-
 
     image    = seaborn_plot(static,   traitName,  units)
     plot_div = plotly_plot( matrix, accession, traitName, units)
 
-    return render(request, 'plots.html', {'data': plot, 'plot_id': plot_id, 'study_name': study_name, 'plot_div': plot_div, 'heatmap':image})
+    return render(request, 'plots.html', {'data': plot, 'plot_id': plot_id, 'study_name': study_name, 
+        'plot_div': plot_div, 'heatmap':image})
 
 '''
 Search field trial page request

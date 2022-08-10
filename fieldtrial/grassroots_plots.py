@@ -109,7 +109,8 @@ test rendering seaborn image
 def seaborn_plot(numpy_matrix, title, unit):
 
     sns.set(rc={'figure.figsize':(17.5,8.0)})
-    
+
+    numpy_matrix = np.flipud(numpy_matrix)      # To Match order shown originally in JS code
     #print(numpy_matrix.shape)
     notAvailable = np.zeros_like(numpy_matrix)
     discarded    =  np.zeros_like(numpy_matrix)
@@ -210,6 +211,7 @@ def numpy_data(json, pheno):
                         row_acc = np.append(row_acc, np.nan )  
   
                column+=1
+               columns = json[j]['column_index']#
 
         elif ( int( json[j]['row_index'] ) > row  ):
             if   ( 'discard' in json[j]['rows'][0] ):
@@ -225,13 +227,17 @@ def numpy_data(json, pheno):
 
             row+=1
             column=2
+            columns = json[j]['column_index']
 
 
-    #accession = row_acc.reshape(row,column-1)   
-    #matrix = row_raw.reshape(row,column-1)   
-    #print("matrix", matrix.shape)
- 
-    print("phenotype-", current_name )
+    column = columns # use actual number of columns instead of counter
+    
+    #print("number of plots and shape check", len(json), row, column, row*(column) )
+    if (len(json) != row*column):
+        print("NOT rectangular")
+        # fit odd shape plot into bigger rectangular plot.
+        row_raw  = oddShapeValues(   json, row, column, current_name)
+        row_acc  = oddShapeAccession(json, row, column, current_name)
 
     matrices.append(row)
     matrices.append(column)
@@ -240,11 +246,70 @@ def numpy_data(json, pheno):
     matrices.append(traitName)
     matrices.append(unit)
     
+    print("phenotype-", current_name )
     return matrices
 
-
+################################################################################################################################
 def lookup_keys(dictionary, keys, default=None):
      return reduce(lambda d, key: d.get(key, default) if isinstance(d, dict) else default, keys.split("."), dictionary)
+
+#############################################################################################################################
+def oddShapeValues(arraysJson, rows, columns, phenotype):
+
+    matrix = np.zeros((rows,columns))
+    matrix[:] = np.nan
+
+    for r in range(len(arraysJson)):
+        if  ( 'discard' in arraysJson[r]['rows'][0] ):
+            i = int( arraysJson[r]['row_index']    )
+            j = int( arraysJson[r]['column_index'] )
+            i=i-1
+            j=j-1
+            matrix[i][j] = np.nan
+
+        elif ( 'observations' in arraysJson[r]['rows'][0] ):
+            i = int( arraysJson[r]['row_index']    )
+            j = int( arraysJson[r]['column_index'] )
+            i=i-1
+            j=j-1
+            if( search_phenotype(arraysJson[r]['rows'][0]['observations'], phenotype) ):
+                matrix[i][j] = arraysJson[r]['rows'][0]['observations'][0]['raw_value']
+            else:
+                matrix[i][j] = np.inf
+
+    #matrix = np.flipud(matrix)
+    #print(matrix)
+    matrix  = matrix.flatten()
+
+    return matrix
+#######################################################################
+def oddShapeAccession(arraysJson, rows, columns, phenotype):
+
+    dt= np.dtype(('U', 50)) # define string type for of strings (accession names)
+    matrix = np.empty((rows,columns), dtype=dt)
+    matrix[:] = 'Discarded' #  hovering text in empty plots
+
+    for r in range(len(arraysJson)):
+        if  ( 'discard' in arraysJson[r]['rows'][0] ):
+            i = int( arraysJson[r]['row_index']    )
+            j = int( arraysJson[r]['column_index'] )
+            i=i-1
+            j=j-1
+            matrix[i][j] = np.nan         #discarded plot
+
+        elif ( 'observations' in arraysJson[r]['rows'][0] ):
+            i = int( arraysJson[r]['row_index']    )
+            j = int( arraysJson[r]['column_index'] )
+            i=i-1
+            j=j-1
+            if( search_phenotype(arraysJson[r]['rows'][0]['observations'], phenotype) ):
+                matrix[i][j] = arraysJson[r]['rows'][0]['material']['accession']
+            else:
+                matrix[i][j] = np.nan    # No values for that phenotype
+
+    matrix  = matrix.flatten()
+
+    return matrix
 
 
 
