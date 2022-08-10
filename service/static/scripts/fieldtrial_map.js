@@ -1097,21 +1097,28 @@ function plotModal(plotId) {
 	  	 else if (plot['rows'][r]['material'])
   	         {
                 	let this_accession = SafePrint(plot['rows'][r]['material']['accession']);
-                	get_GRU_by_accession(this_accession, plotId, r);
-                	searchStr = this_accession;
+                        get_GRU_by_accession(this_accession, plotId, r);
+                        searchStr = this_accession;
 
-               		let this_treatment = SafePrint(plot['rows'][r]['treatments'][0]['label']); // **NEW treatment info of current plot
-                        searchTreat = this_treatment;
-                        //console.log("THIS ID---> index, i", plot['rows'][0]['study_index']  );
+                        if (plot['rows'][r]['treatments']){
 
-                        for (t = 0; t < plot['rows'][r]['treatments'].length; t++) {
-				 current_treatment.push(plot['rows'][r]['treatments'][t]['label']);
-			}
+                                let this_treatment = SafePrint(plot['rows'][r]['treatments'][0]['label']);//treatment info of current plot
+                                searchTreat = this_treatment;
+                                treatment = true
+                                for (t = 0; t < plot['rows'][r]['treatments'].length; t++) {
+                                 current_treatment.push(plot['rows'][r]['treatments'][t]['label']);
+                                }
+                        }
+                        else{
+                                console.log("study with no treatments")
+                                treatment = false
+                        }
   	         }
             }
         }
     }
-
+    
+    var foundReplicates=false
     for (j = 0; j < plot_json.length; j++) {
         const loop_plotId = plot_json[j]['_id']['$oid'];
         if (loop_plotId !== plotId) {
@@ -1132,19 +1139,18 @@ function plotModal(plotId) {
 		   	  else if (rows[jr]['material'])
   	  		  {
                 	        var accession = rows[jr]['material']['accession'];
-				
-			        for (t = 0; t < rows[jr]['treatments'].length; t++) {
-			 	 	treatments.push( rows[jr]['treatments'][t]['label'] );
+				if (treatment==true){
+			        	for (t = 0; t < rows[jr]['treatments'].length; t++) {
+			 	 		treatments.push( rows[jr]['treatments'][t]['label'] );
+					}
 			        }
-
-			        //var treatment1 = rows[jr]['treatments'][0]['label']; //
 
   	  		  }
 
                 if (accession != undefined) {
                     if (searchStr === accession && searchStr !== '') {
                         let formatted_plot = format_plot_rows(plot_json[j], true);
-
+			foundReplicates=true
 
 			if (areEqual(current_treatment, treatments)  && searchTreat !== '') {// new EXACT REPLICATES (same treatment)
                           console.log("ID of exact replicate", plot_json[j]['rows'][0]['study_index']  );
@@ -1166,16 +1172,20 @@ function plotModal(plotId) {
 
     } // end of loop through all plots to find replicates.
 
-    if( searchStr !== 'discard'){
-
-	//  NEW FUCTION format phenotypes independently and after finding exact replicates.
-         let formatted_pheno = format_pheno(plot, replicateIds, replicates);
+    if( searchStr !== 'discard' && foundReplicates==true && replicateIds.length > 0 ){
+	 //  NEW FUCTION to format phenotypes independently  after finding exact replicates.
+        let formatted_pheno = format_pheno(plot, replicateIds, replicates, foundReplicates);
 
         // console.log ("new phenotype array", formatted_pheno['phenotypes']);
 	//$('#phenotypes').append(formatted_phenotypes['phenotypes'].join("")); // 
-	$('#phenotypes').append(formatted_pheno['phenotypes'].join("")); // Add phenotypes at  the end of the process
+	$('#phenotypes').append(formatted_pheno['phenotypes'].join("")); // Add phenotypes data of replicates once searching loop is completed
     }
 
+   if (foundReplicates==false || replicateIds.length == 0){
+	foundReplicates=false // set it true as no exact replicates were found
+        let formatted_pheno = format_pheno(plot, replicateIds, replicates, foundReplicates); //Add phenotypes data of the current plot only.
+        $('#phenotypes').append(formatted_pheno['phenotypes'].join("")); 
+    }
 
 
     $('#plots_table').DataTable({
@@ -1892,7 +1902,7 @@ function lookup(name, key1, key2) {
  * @param  replicate      Rows of the exact replicates
  */
 
-function format_pheno(plotCurrent, replicateIds, replicates){
+function format_pheno(plotCurrent, replicateIds, replicates, noReplicates){
    //console.log("--TEST ID ", plotCurrent['rows'][0]['study_index'] );
    // console.log("observation size current plot",  plotCurrent['rows'][0]['observations'].length );//    ******** ADD CHECK DISCARDED!
 
@@ -1960,14 +1970,20 @@ function format_pheno(plotCurrent, replicateIds, replicates){
 	phenotypearray.push('<td>' + SafePrint(observation['raw_value']) + '</td>');
 	
 	// ******* Two extra columns of raw values of exact replicate plots. ********** 
-        for (i = 0; i < 2; i++) {
-	let raw = {};
-	raw = RawVals[i]; 
-	link =links[i]; 
-  
-            phenotypearray.push('<td style="background-color:' + colors[i] + '">'+SafePrint(raw[phenotype_name])+ '<br>'+ link  +'</td>');
+	if(noReplicates==false){
+                phenotypearray.push('<td> No replicates </td>');
+                phenotypearray.push('<td> No replicates </td>');
+                console.log("No Replicates", noReplicates);
         }
-       
+        if(noReplicates==true){
+                for (i = 0; i < 2; i++) {    //ADD two extra columns for exact replicates
+                let raw = {};
+                raw = RawVals[i];
+                link =links[i];
+
+                 phenotypearray.push('<td style="background-color:' + colors[i] + '">'+SafePrint(raw[phenotype_name])+ '<br>'+ link  +'</td>');
+                }
+        }
 	 // phenotypearray.push('<td>' + SafePrint(observation['corrected_value']) + '</td>'); // corrected value column temporarily removed.
 
        if (lookup( phenotype_name,  'trait', 'so:sameAs').startsWith('CO')) {
