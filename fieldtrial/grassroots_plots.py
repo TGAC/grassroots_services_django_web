@@ -65,7 +65,7 @@ def plotly_plot(matrix, accession, title, unit):
     NA        = np.where(notAvailable < 1, np.nan, notAvailable)
     discarded = np.where(   discarded < 1, np.nan, discarded)
 
-    print(indexInf)
+    #print(indexInf)
     main_matrix[indexInf] = np.nan # Replace Inf by NaN
 
     numpy_array = main_matrix.flatten()
@@ -80,12 +80,10 @@ def plotly_plot(matrix, accession, title, unit):
     units = 'Units: '+unit
     # Reverse Y ticks and start them from 1
     size = main_matrix.shape
-    Y    = size[0]
     Yvals = np.arange(0,Y)
     Yaxis = np.arange(1,Y+1)
     Yaxis = np.flip(Yaxis)
 
-    X = size[1]
     Xvals = np.arange(0, X)
     Xaxis = np.arange(1,X+1)
 
@@ -148,6 +146,7 @@ def seaborn_plot(numpy_matrix, title, unit):
     Yaxis = np.flip(Yaxis)
 
     X     = size[1]
+    Xvals = np.arange(0, X)
     Xaxis = np.arange(1,X+1)
 
 
@@ -172,6 +171,7 @@ def seaborn_plot(numpy_matrix, title, unit):
     g.set_yticks( Yvals )
     g.set_yticklabels(Yaxis, size=10)
     g.tick_params(    axis='y', rotation=0)
+    g.set_xticks(Xvals)
     g.set_xticklabels(Xaxis, size=10)
    
 
