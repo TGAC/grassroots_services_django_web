@@ -48,10 +48,11 @@ def searchPhenotypeUnit(listPheno, value):
 test rendering plotly interactive heatmap
 '''
 
-def plotly_plot(matrix, accession, title, unit):
+def plotly_plot(matrix, accession, title, unit, IDs):
    
     main_matrix = np.flipud(matrix)      # To Match order shown originally in JS code
     accession   = np.flipud(accession)            # To Match order shown originally in JS code
+    plotsID     = np.flipud(IDs)
     size = main_matrix.shape
     Y =   size[0]
     X =   size[1]
@@ -89,12 +90,12 @@ def plotly_plot(matrix, accession, title, unit):
 
     fig = px.imshow(main_matrix, aspect="auto",
             labels=dict(x="columns", y="rows", color=units),
-            color_continuous_scale=px.colors.sequential.Greens )
+            color_continuous_scale=px.colors.sequential.Greens, height=800 )
 
     fig.update_traces(
-        customdata = np.moveaxis([accession, s_matrix], 0,-1),
+        customdata = np.moveaxis([accession, s_matrix, plotsID], 0,-1),
         #hovertemplate="Accession: %{customdata[0]}<br>raw value: %{customdata[1]:.2f}  <extra></extra>")
-        hovertemplate="Accession: %{customdata[0]}<br>raw value: %{customdata[1]}  <extra></extra>")
+        hovertemplate="Accession: %{customdata[0]}<br>raw value: %{customdata[1]}<br>plot ID: %{customdata[2]}  <extra></extra>")
 
     fig.update_layout( font=dict(family="Courier New, monospace",size=12,color="Black"),title={
         'text': title,
@@ -198,48 +199,55 @@ def numpy_data(json, pheno):
     traitName = searchPhenotypeTrait(pheno, current_name)
     unit      = searchPhenotypeUnit( pheno, current_name)
 
+    dtID= np.dtype(('U', 4))
+
     row_raw   = np.array([])
     matrix    = np.array([])
     row_acc   = np.array([])
     accession = np.array([])
+    plotsIds  = np.array([], dtype=dtID)  #format of strings
 
     matrices = []
-    
-
 
     row    = 1
     column = 1
-    #loop throght observations like in JS code. Add extra array to store accession as well.
+    #loop throght observations in the same fashion as in old JS code. 
     for j in range(len(json)):
         if ( int( json[j]['row_index'] ) == row ):
             if  (int( json[j]['column_index'] ) == column):   
                if   ( 'discard' in json[j]['rows'][0] ):
                     
-                    row_raw = np.append(row_raw, np.nan )  # use NaN for discarded plots
-                    row_acc = np.append(row_acc, np.nan )  
+                    row_raw  = np.append(row_raw, np.nan )  # use NaN for discarded plots
+                    row_acc  = np.append(row_acc, np.nan )  
+                    plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
                
                elif ( 'observations' in json[j]['rows'][0] ):
                     if( search_phenotype(json[j]['rows'][0]['observations'], current_name) ):
-                        row_raw = np.append(row_raw, json[j]['rows'][0]['observations'][0]['raw_value']) 
-                        row_acc = np.append(row_acc, json[j]['rows'][0]['material']['accession']) 
+                        row_raw  = np.append(row_raw, json[j]['rows'][0]['observations'][0]['raw_value']) 
+                        row_acc  = np.append(row_acc, json[j]['rows'][0]['material']['accession']) 
+                        plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
                     else:
-                        row_raw = np.append(row_raw, np.inf )  # use infinity for N/A data
-                        row_acc = np.append(row_acc, np.nan )  
+                        row_raw  = np.append(row_raw, np.inf )  # use infinity for N/A data
+                        row_acc  = np.append(row_acc, np.nan )  
+                        plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
   
                column+=1
                columns = json[j]['column_index']#
 
         elif ( int( json[j]['row_index'] ) > row  ):
             if   ( 'discard' in json[j]['rows'][0] ):
-                    row_raw = np.append(row_raw, np.nan )  
-                    row_acc = np.append(row_acc, np.nan )  
+                    row_raw  = np.append(row_raw, np.nan )  
+                    row_acc  = np.append(row_acc, np.nan )  
+                    plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
             elif ( 'observations' in json[j]['rows'][0] ):
                     if( search_phenotype(json[j]['rows'][0]['observations'], current_name) ):
-                        row_raw = np.append(row_raw, json[j]['rows'][0]['observations'][0]['raw_value'])  
-                        row_acc = np.append(row_acc, json[j]['rows'][0]['material']['accession']) 
+                        row_raw  = np.append(row_raw, json[j]['rows'][0]['observations'][0]['raw_value'])  
+                        row_acc  = np.append(row_acc, json[j]['rows'][0]['material']['accession']) 
+                        plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
                     else:
-                        row_raw = np.append(row_raw, np.inf )
-                        row_acc = np.append(row_acc, np.nan )  
+                        row_raw  = np.append(row_raw, np.inf )
+                        row_acc  = np.append(row_acc, np.nan )  
+                        plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
 
             row+=1
             column=2
@@ -254,6 +262,7 @@ def numpy_data(json, pheno):
         # fit odd shape plot into bigger rectangular plot.
         row_raw  = oddShapeValues(   json, row, column, current_name)
         row_acc  = oddShapeAccession(json, row, column, current_name)
+        plotsIds = oddShapePlotID(   json, row, column, current_name)
 
     matrices.append(row)
     matrices.append(column)
@@ -261,6 +270,7 @@ def numpy_data(json, pheno):
     matrices.append(row_acc)
     matrices.append(traitName)
     matrices.append(unit)
+    matrices.append(plotsIds)
     
     print("phenotype-", current_name )
     return matrices
@@ -322,6 +332,39 @@ def oddShapeAccession(arraysJson, rows, columns, phenotype):
                 matrix[i][j] = arraysJson[r]['rows'][0]['material']['accession']
             else:
                 matrix[i][j] = np.nan    # No values for that phenotype
+
+    matrix  = matrix.flatten()
+
+    return matrix
+
+
+#######################################################################
+def oddShapePlotID(arraysJson, rows, columns, phenotype):
+
+    dt= np.dtype(('U', 40))
+    matrix = np.empty((rows,columns), dtype=dt)
+    matrix[:] = 'N/A'
+
+    for r in range(len(arraysJson)):
+        if  ( 'discard' in arraysJson[r]['rows'][0] ):
+            i = int( arraysJson[r]['row_index']    )
+            j = int( arraysJson[r]['column_index'] )
+            i=i-1
+            j=j-1
+            matrix[i][j] = arraysJson[r]['rows'][0]['study_index']
+
+        elif ( 'observations' in arraysJson[r]['rows'][0] ):
+            i = int( arraysJson[r]['row_index']    )
+            j = int( arraysJson[r]['column_index'] )
+            i=i-1
+            j=j-1
+            if( search_phenotype(arraysJson[r]['rows'][0]['observations'], phenotype) ):
+                matrix[i][j] = arraysJson[r]['rows'][0]['study_index']
+            else:
+            #    matrix[i][j] = np.nan    # No values for that phenotype
+                matrix[i][j] = arraysJson[r]['rows'][0]['study_index']
+
+
 
     matrix  = matrix.flatten()
 
