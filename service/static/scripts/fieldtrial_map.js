@@ -1153,14 +1153,21 @@ function plotModal(plotId) {
 			foundReplicates=true
 
 			if (areEqual(current_treatment, treatments)  && searchTreat !== '') {// new EXACT REPLICATES (same treatment)
-                          console.log("ID of exact replicate", plot_json[j]['rows'][0]['study_index']  );
-                          replicateIds.push(loop_plotId);
-                          replicates[loop_plotId] = plot_json[j]['rows'];
-                          //console.log("Check replicates seizes",  plot_json[j]['rows'][0]['observations'].length );
+                              console.log("ID of exact replicate", plot_json[j]['rows'][0]['study_index']  );
+                              replicateIds.push(loop_plotId);
+                              replicates[loop_plotId] = plot_json[j]['rows'];
 
-                          var formatted_phenotypes = format_plot_rows(plot_json[j], true);
-                          //$('#phenotypes').append(formatted_phenotypes['phenotypes'].join(""));   // add only exact replicates
+                              var formatted_phenotypes = format_plot_rows(plot_json[j], true);
+                              //$('#phenotypes').append(formatted_phenotypes['phenotypes'].join(""));   // add only exact replicates
                         }
+			 else if (treatment==false) {   // Found replicates but study has no treatments
+                              console.log("ID  replicate (no treatments)", plot_json[j]['rows'][0]['study_index']  );
+                              replicateIds.push(loop_plotId);
+                              replicates[loop_plotId] = plot_json[j]['rows'];
+
+                              var formatted_phenotypes = format_plot_rows(plot_json[j], true);
+                        }
+
 
                         $('#rowsInfo').append(formatted_plot['rowsInfo'].join(""));
                         //$('#phenotypes').append(formatted_plot['phenotypes'].join("")); momentary
