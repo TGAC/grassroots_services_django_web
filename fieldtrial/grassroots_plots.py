@@ -14,18 +14,30 @@ import plotly.figure_factory as ff
 
 from functools import reduce
 
-################################################################################################################
-def search_phenotype(list_observations, value):  
-    
+############################################################################
+def search_phenotype(list_observations, value):
+
+    found = False
     for i in range(len(list_observations)):
-        
+
         dic            = list_observations[i]
         phenotype_name = lookup_keys(dic, 'phenotype.variable')
         if  (phenotype_name == value ):
               return True
-              
-        else:
-              return False
+              break
+
+    return found
+
+###########################################################################
+def search_phenotype_index(list_observations, value):
+
+    for i in range(len(list_observations)):
+
+        dic            = list_observations[i]
+        phenotype_name = lookup_keys(dic, 'phenotype.variable')
+        if  (phenotype_name == value ):
+              return i
+          
 
 ###################################################################
 def searchPhenotypeTrait(listPheno, value):
@@ -188,14 +200,14 @@ def seaborn_plot(numpy_matrix, title, unit):
      
     return image
  
-
+###############################################################################################################
 '''
 Create numpy arrays for plotly script. Matrix of raw values and matrix of accession 
 '''
 def numpy_data(json, pheno):
     test=json[0]['rows'][0]['study_index']
 
-    current_name =  json[3]['rows'][0]['observations'][0]['phenotype']['variable'] # SELECT RANDOM PHENOTYPE FOR TESTS 
+    current_name =  json[3]['rows'][0]['observations'][2]['phenotype']['variable'] # SELECT RANDOM PHENOTYPE FOR TESTS 
     traitName = searchPhenotypeTrait(pheno, current_name)
     unit      = searchPhenotypeUnit( pheno, current_name)
 
@@ -223,7 +235,8 @@ def numpy_data(json, pheno):
                
                elif ( 'observations' in json[j]['rows'][0] ):
                     if( search_phenotype(json[j]['rows'][0]['observations'], current_name) ):
-                        row_raw  = np.append(row_raw, json[j]['rows'][0]['observations'][0]['raw_value']) 
+                        indexCurrentPhenotype = search_phenotype_index (json[j]['rows'][0]['observations'], current_name)
+                        row_raw  = np.append(row_raw, json[j]['rows'][0]['observations'][indexCurrentPhenotype]['raw_value']) 
                         row_acc  = np.append(row_acc, json[j]['rows'][0]['material']['accession']) 
                         plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
                     else:
@@ -241,7 +254,8 @@ def numpy_data(json, pheno):
                     plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
             elif ( 'observations' in json[j]['rows'][0] ):
                     if( search_phenotype(json[j]['rows'][0]['observations'], current_name) ):
-                        row_raw  = np.append(row_raw, json[j]['rows'][0]['observations'][0]['raw_value'])  
+                        indexCurrentPhenotype = search_phenotype_index (json[j]['rows'][0]['observations'], current_name)
+                        row_raw  = np.append(row_raw, json[j]['rows'][0]['observations'][indexCurrentPhenotype]['raw_value'])  
                         row_acc  = np.append(row_acc, json[j]['rows'][0]['material']['accession']) 
                         plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
                     else:
