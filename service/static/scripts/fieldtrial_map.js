@@ -1974,7 +1974,7 @@ function format_pheno(plotCurrent, replicateIds, replicates, noReplicates){
         phenotypearray.push('<td style="background-color:' + color + '">' + SafePrint(current_index) + ' Plot ' + plot_actual_id + '(Current) </td>');
         phenotypearray.push('<td>' + SafePrint(plotCurrent['rows'][0]['rack_index']) + '</td>');
 	phenotypearray.push('<td>' + SafePrint(observation['date'])      + '</td>');
-	phenotypearray.push('<td>' + SafePrint(observation['raw_value']) + '</td>');
+	phenotypearray.push('<td>' + round2Fixed(SafePrint(observation['raw_value']))  + '</td>');
 	
 	// ******* Two extra columns of raw values of exact replicate plots. ********** 
 	if(noReplicates==false){
@@ -1988,7 +1988,7 @@ function format_pheno(plotCurrent, replicateIds, replicates, noReplicates){
                 raw = RawVals[i];
                 link =links[i];
 
-                 phenotypearray.push('<td style="background-color:' + colors[i] + '">'+SafePrint(raw[phenotype_name])+ '<br>'+ link  +'</td>');
+                 phenotypearray.push('<td style="background-color:' + colors[i] + '">'+ round2Fixed(SafePrint(observation['raw_value']))  + '<br>'+ link  +'</td>');
                 }
         }
 	 // phenotypearray.push('<td>' + SafePrint(observation['corrected_value']) + '</td>'); // corrected value column temporarily removed.
@@ -2045,4 +2045,39 @@ function areEqual(array1, array2) {
 }
 
 
+function round2Fixed(value) {
+
+  if (isNaN(value))
+    return value;
+
+  if (Number.isInteger(value))
+    return value;
+
+  var  decimals = 2;
+  n = countDecimals(value)
+        if (n==1)
+          decimals=1;
+        if (n==2)
+           decimals=2;
+        if (n==3)
+         decimals=2;
+        if (n==4)
+         decimals=2;
+        if (n==5)
+         decimals=4;
+        if (n>6)
+          decimals=4;
+
+
+        //console.log("decimals", decimals, value)  
+        var t = Math.pow(10, decimals);
+        return (Math.round((value * t) + (decimals>0?1:0)*(Math.sign(value) * (10 / Math.pow(100, decimals)))) / t).toFixed(decimals);
+
+}
+
+var countDecimals = function (value) {
+    if ((value % 1) != 0)
+        return value.toString().split(".")[1].length;
+    return 0;
+}
 
