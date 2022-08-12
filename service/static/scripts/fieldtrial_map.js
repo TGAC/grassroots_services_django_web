@@ -1988,7 +1988,7 @@ function format_pheno(plotCurrent, replicateIds, replicates, noReplicates){
                 raw = RawVals[i];
                 link =links[i];
 
-                 phenotypearray.push('<td style="background-color:' + colors[i] + '">'+ round2Fixed(SafePrint(observation['raw_value']))  + '<br>'+ link  +'</td>');
+                 phenotypearray.push('<td style="background-color:' + colors[i] + '">'+ round2Fixed(SafePrint(raw[phenotype_name]))  + '<br>'+ link  +'</td>');
                 }
         }
 	 // phenotypearray.push('<td>' + SafePrint(observation['corrected_value']) + '</td>'); // corrected value column temporarily removed.
