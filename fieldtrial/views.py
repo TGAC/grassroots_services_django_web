@@ -110,10 +110,10 @@ def single_plot(request, plot_id):
 
     plotIDs      =  plotID.reshape(row,column)
     accession    = row_acc.reshape(row,column)
-    plotlyMatrix = row_raw.reshape(row,column)
+    #plotlyMatrix = row_raw.reshape(row,column)
     static    = row_raw.reshape(row,column)
 
-    plot_div = plotly_plot(plotlyMatrix, accession, traitName, units, plotIDs)
+    plot_div = plotly_plot(row_raw, accession, traitName, units, plotIDs)
     image    = seaborn_plot(static,   traitName,  units)
     
     return render(request, 'plots.html', {'data': plot, 'plot_id': plot_id, 'study_name': study_name, 

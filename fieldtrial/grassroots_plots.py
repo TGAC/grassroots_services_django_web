@@ -59,57 +59,71 @@ def searchPhenotypeUnit(listPheno, value):
 '''
 test rendering plotly interactive heatmap
 '''
+def plotly_plot(numpy_matrix, accession, title, unit, IDs):
 
-def plotly_plot(matrix, accession, title, unit, IDs):
-   
-    main_matrix = np.flipud(matrix)      # To Match order shown originally in JS code
-    accession   = np.flipud(accession)            # To Match order shown originally in JS code
-    plotsID     = np.flipud(IDs)
-    size = main_matrix.shape
-    Y =   size[0]
-    X =   size[1]
+    ##numpy_matrix = np.flipud(numpy_matrix)      # To Match order shown originally in JS code
+    #plotID      = np.flipud(IDs)        
+    size = IDs.shape
+    Y    = size[0]
+    X    = size[1]
 
-    notAvailable = np.zeros_like(main_matrix)
-    discarded    =  np.zeros_like(main_matrix)
-    indexInf     =  np.where(np.isinf(main_matrix))
-    indexDiscard =  np.where(np.isnan(main_matrix))
-    notAvailable[indexInf]   = 1
-    discarded[indexDiscard]  = 1
-    NA        = np.where(notAvailable < 1, np.nan, notAvailable)
-    discarded = np.where(   discarded < 1, np.nan, discarded)
+    indexInf     =  np.where(np.isinf(numpy_matrix))
+    indexDiscard =  np.where(np.isnan(numpy_matrix))
+    
+    numpy_matrix[indexInf] = np.nan # Replace Inf by NaN
 
-    #print(indexInf)
-    main_matrix[indexInf] = np.nan # Replace Inf by NaN
+    strings     = np.array(["%s" % x for x in numpy_matrix])  #matrix has to be flattened for conversion to strings
+    #strings     = np.array(["%.3f" % x for x in numpy_array])  #matrix has to be flattened for conversion to strings
 
-    numpy_array = main_matrix.flatten()
-    strings     = np.array(["%.3f" % x for x in numpy_array])  #matrix has to be flattened for conversion to strings
-    s_matrix    = strings.reshape(Y,X)                         #new matrix used in hovering text to show raw values.
-    s_matrix[indexInf]     = 'N/A'
-    s_matrix[indexDiscard] = 'N/A'
 
+    for i in range(len(strings)):   #remove decimal place when floats are integers
+        string1 = strings[i]
+        string_split = string1.split('.')
+        if( len(string_split)==2):
+            if(string_split[1]=='0'):
+                integer = strings[i]
+                integer = integer[:-2]
+                strings[i] = integer
+    
+
+    strings[indexInf]     = 'N/A'    # use array of string for custumising hovering text
+    strings[indexDiscard] = 'N/A'
+
+    accession = accession.flatten()
     accession[indexDiscard] = 'Discarded'
-    accession[indexInf]     = 'N/A'
+    accession = accession.reshape(Y,X)                       
 
-    units = 'Units: '+unit
+    s_matrix = strings.reshape(Y,X)                  
+    s_matrix = np.flipud(s_matrix)      
+
+    numpy_matrix[indexInf] = np.inf # but back inf (N/A values)
+    numpy_matrix           = numpy_matrix.reshape(Y,X) 
+
+
+    numpy_matrix = np.flipud(numpy_matrix)  # For matching order of JS table
+    accession    = np.flipud(accession)        
+    plotID       = np.flipud(IDs)        
+
     # Reverse Y ticks and start them from 1
-    size = main_matrix.shape
     Yvals = np.arange(0,Y)
     Yaxis = np.arange(1,Y+1)
     Yaxis = np.flip(Yaxis)
-
+    
     Xvals = np.arange(0, X)
     Xaxis = np.arange(1,X+1)
 
-    fig = px.imshow(main_matrix, aspect="auto",
+    units = 'Units: '+unit
+
+    fig = px.imshow(numpy_matrix, aspect="auto",
             labels=dict(x="columns", y="rows", color=units),
             color_continuous_scale=px.colors.sequential.Greens, height=800 )
 
     fig.update_traces(
-        customdata = np.moveaxis([accession, s_matrix, plotsID], 0,-1),
-        #hovertemplate="Accession: %{customdata[0]}<br>raw value: %{customdata[1]:.2f}  <extra></extra>")
-        hovertemplate="Accession: %{customdata[0]}<br>raw value: %{customdata[1]}<br>plot ID: %{customdata[2]}  <extra></extra>")
+    customdata = np.moveaxis([accession, s_matrix, plotID], 0,-1),
+    #hovertemplate="Accession: %{customdata[0]}<br>raw value: %{customdata[1]}<br>plot ID: %{customdata[1]}  <extra></extra>")
+    hovertemplate="Accession: %{customdata[0]}<br>raw value: %{customdata[1]}<br>plot ID: %{customdata[2]}  <extra></extra>")
 
-    fig.update_layout( font=dict(family="Courier New, monospace",size=12,color="Black"),title={
+    fig.update_layout(font=dict(family="Courier New, monospace",size=12,color="Black"),title={
         'text': title,
         'y':0.98,'x':0.5,
         'xanchor': 'center','yanchor': 'top'})
@@ -120,13 +134,12 @@ def plotly_plot(matrix, accession, title, unit, IDs):
 
     fig.update_xaxes(showgrid=True, gridwidth=7, gridcolor='Black', zeroline=False)
     fig.update_yaxes(showgrid=True, gridwidth=7, gridcolor='Black', zeroline=False)
-    
     fig['layout'].update(plot_bgcolor='black')
 
+    #plot_div = plot([Scatter(x=x_data, y=y_data, mode='lines', name='test', opacity=0.8, marker_color='green')], output_type='div')
     plot_div = plot(fig, output_type='div')
 
-    main_matrix[indexInf] = np.inf
-
+    
     return plot_div
 
 ############################################################################################
@@ -241,7 +254,7 @@ def numpy_data(json, pheno):
                         plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
                     else:
                         row_raw  = np.append(row_raw, np.inf )  # use infinity for N/A data
-                        row_acc  = np.append(row_acc, np.nan )  
+                        row_acc  = np.append(row_acc, json[j]['rows'][0]['material']['accession'])  
                         plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
   
                column+=1
@@ -260,7 +273,7 @@ def numpy_data(json, pheno):
                         plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
                     else:
                         row_raw  = np.append(row_raw, np.inf )
-                        row_acc  = np.append(row_acc, np.nan )  
+                        row_acc  = np.append(row_acc, json[j]['rows'][0]['material']['accession'])  
                         plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
 
             row+=1
@@ -345,7 +358,7 @@ def oddShapeAccession(arraysJson, rows, columns, phenotype):
             if( search_phenotype(arraysJson[r]['rows'][0]['observations'], phenotype) ):
                 matrix[i][j] = arraysJson[r]['rows'][0]['material']['accession']
             else:
-                matrix[i][j] = np.nan    # No values for that phenotype
+                matrix[i][j] = arraysJson[r]['rows'][0]['material']['accession']
 
     matrix  = matrix.flatten()
 
