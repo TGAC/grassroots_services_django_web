@@ -249,10 +249,22 @@ def treatments(arraysJson, rows, columns):
             i=i-1
             j=j-1
             value = []
+            label = []
+            treat = []
             for k in range(len(arraysJson[j]['rows'][0]['treatments'])):
-                    value  = np.append(value, arraysJson[j]['rows'][0]['treatments'][k]["so:sameAs"] )
-            string = ', '.join(value)
+                    value  = np.append(value, arraysJson[r]['rows'][0]['treatments'][k]["so:sameAs"] )
+                    label  = np.append(label, arraysJson[r]['rows'][0]['treatments'][k]["label"] )
+
+            for m in range(len(value)):
+                v1 = value[m]
+                v2 = label[m]
+                t  = v1 +' (' + v2 +')'        # combine name and label
+                treat  = np.append(treat, t)  # to create single matrix that contains all the treatment(s) info.  
+        
+            #string = ', '.join(value)
+            string = ', '.join(treat)
             matrix[i][j] = string
+
         else:
             matrix[i][j] = np.inf
 
