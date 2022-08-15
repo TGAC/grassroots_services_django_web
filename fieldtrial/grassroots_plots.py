@@ -59,7 +59,7 @@ def searchPhenotypeUnit(listPheno, value):
 '''
 test rendering plotly interactive heatmap
 '''
-def plotly_plot(numpy_matrix, accession, title, unit, IDs):
+def plotly_plot(numpy_matrix, accession, title, unit, IDs, treatments):
 
     ##numpy_matrix = np.flipud(numpy_matrix)      # To Match order shown originally in JS code
     #plotID      = np.flipud(IDs)        
@@ -118,10 +118,20 @@ def plotly_plot(numpy_matrix, accession, title, unit, IDs):
             labels=dict(x="columns", y="rows", color=units),
             color_continuous_scale=px.colors.sequential.Greens, height=800 )
 
-    fig.update_traces(
-    customdata = np.moveaxis([accession, s_matrix, plotID], 0,-1),
-    #hovertemplate="Accession: %{customdata[0]}<br>raw value: %{customdata[1]}<br>plot ID: %{customdata[1]}  <extra></extra>")
-    hovertemplate="Accession: %{customdata[0]}<br>raw value: %{customdata[1]}<br>plot ID: %{customdata[2]}  <extra></extra>")
+    #print(treatments)
+    if len(treatments)>0:
+        treatments = treatments.reshape(Y,X)
+        treatments = np.flipud(treatments)
+
+        fig.update_traces(
+        customdata = np.moveaxis([accession, s_matrix, plotID, treatments], 0,-1),
+        #hovertemplate="Accession: %{customdata[0]}<br>raw value: %{customdata[1]:.2f}  <extra></extra>")
+        hovertemplate="Accession: %{customdata[0]}<br>Raw value: %{customdata[1]}<br>Plot ID: %{customdata[2]}<br>Treatment: %{customdata[3]} <extra></extra>")
+
+    else:
+        fig.update_traces(
+        customdata = np.moveaxis([accession, s_matrix, plotID], 0,-1),
+        hovertemplate="Accession: %{customdata[0]}<br>Raw value: %{customdata[1]}<br>Plot ID: %{customdata[2]}  <extra></extra>")
 
     fig.update_layout(font=dict(family="Courier New, monospace",size=12,color="Black"),title={
         'text': title,
@@ -212,7 +222,44 @@ def seaborn_plot(numpy_matrix, title, unit):
     mem.close()
      
     return image
- 
+
+
+
+###############################################################################################################
+'''
+create treatments array for plotly text 
+'''
+def treatments(arraysJson, rows, columns):
+
+    dt= np.dtype(('U', 80))
+    matrix = np.zeros((rows,columns), dtype=dt)
+    matrix[:] = "N/A"
+
+    for r in range(len(arraysJson)):
+        if  ( 'discard' in arraysJson[r]['rows'][0] ):
+            i = int( arraysJson[r]['row_index']    )
+            j = int( arraysJson[r]['column_index'] )
+            i=i-1
+            j=j-1
+            matrix[i][j] = 'N/A'
+
+        elif ( 'treatments' in arraysJson[r]['rows'][0] ):
+            i = int( arraysJson[r]['row_index']    )
+            j = int( arraysJson[r]['column_index'] )
+            i=i-1
+            j=j-1
+            value = []
+            for k in range(len(arraysJson[j]['rows'][0]['treatments'])):
+                    value  = np.append(value, arraysJson[j]['rows'][0]['treatments'][k]["so:sameAs"] )
+            string = ', '.join(value)
+            matrix[i][j] = string
+        else:
+            matrix[i][j] = np.inf
+
+    matrix  = matrix.flatten()
+    return matrix
+
+
 ###############################################################################################################
 '''
 Create numpy arrays for plotly script. Matrix of raw values and matrix of accession 
