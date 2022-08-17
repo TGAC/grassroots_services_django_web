@@ -73,8 +73,6 @@ def plotly_plot(numpy_matrix, accession, title, unit, IDs, treatments):
     numpy_matrix[indexInf] = np.nan # Replace Inf by NaN
 
     strings     = np.array(["%s" % x for x in numpy_matrix])  #matrix has to be flattened for conversion to strings
-    #strings     = np.array(["%.3f" % x for x in numpy_array])  #matrix has to be flattened for conversion to strings
-
 
     for i in range(len(strings)):   #remove decimal place when floats are integers
         string1 = strings[i]
@@ -126,12 +124,12 @@ def plotly_plot(numpy_matrix, accession, title, unit, IDs, treatments):
         fig.update_traces(
         customdata = np.moveaxis([accession, s_matrix, plotID, treatments], 0,-1),
         #hovertemplate="Accession: %{customdata[0]}<br>raw value: %{customdata[1]:.2f}  <extra></extra>")
-        hovertemplate="Accession: %{customdata[0]}<br>Raw value: %{customdata[1]}<br>Plot ID: %{customdata[2]}<br>Treatment: %{customdata[3]} <extra></extra>")
+        hovertemplate="Accession: %{customdata[0]}<br>Raw value: %{customdata[1]}<br>Plot ID: %{customdata[2]} (column: %{x}, row:%{y})<br>Treatment: %{customdata[3]} <extra></extra>")
 
     else:
         fig.update_traces(
         customdata = np.moveaxis([accession, s_matrix, plotID], 0,-1),
-        hovertemplate="Accession: %{customdata[0]}<br>Raw value: %{customdata[1]}<br>Plot ID: %{customdata[2]}  <extra></extra>")
+        hovertemplate="Accession: %{customdata[0]}<br>Raw value: %{customdata[1]}<br>Plot ID: %{customdata[2]} (column: %{x}, row:%{y})<extra></extra>")
 
     fig.update_layout(font=dict(family="Courier New, monospace",size=12,color="Black"),title={
         'text': title,
