@@ -24,6 +24,7 @@ from .grassroots_plots import numpy_data
 from .grassroots_plots import plotly_plot
 from .grassroots_plots import seaborn_plot
 from .grassroots_plots import treatments
+from .grassroots_plots import dict_phenotypes
 
 '''
 Field trial index page request, pre-load the template
@@ -99,8 +100,17 @@ def single_plot(request, plot_id):
     plot_array = plot_json['results'][0]['results'][0]['data']['plots']       # send only array of 'plots' to plotly
     treatment_factors = plot_json['results'][0]['results'][0]['data']['treatment_factors']
     phenotypes = plot_json['results'][0]['results'][0]['data']['phenotypes']  # Details of all the phenotypes
-    
-    matrices   = numpy_data(plot_array, phenotypes)
+   
+    dictTraits = dict_phenotypes(phenotypes, plot_array)  # dictionary to fill dropdown menu
+    default_name = list(dictTraits.keys())[0]             # select first phenotype as default
+    print("Default phenotype: ", default_name )
+
+    if 'singlePhenotype' in request.GET:
+        selected_phenotype = request.GET['singlePhenotype']
+    else:
+        selected_phenotype = default_name
+
+    matrices   = numpy_data(plot_array, phenotypes, selected_phenotype)
 
     row     = matrices[0]
     column  = matrices[1]
@@ -124,7 +134,7 @@ def single_plot(request, plot_id):
     image    = seaborn_plot(static,   traitName,  units)
     
     return render(request, 'plots.html', {'data': plot, 'plot_id': plot_id, 'study_name': study_name, 
-        'plot_div': plot_div, 'heatmap':image})
+        'plot_div': plot_div, 'heatmap':image, 'dictTraits':dictTraits})
 
 '''
 Search field trial page request

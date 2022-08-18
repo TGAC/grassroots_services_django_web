@@ -111,8 +111,20 @@
 
 
 <section id="TEST3">
-        <h4 id="title"> Tests of heatmaps</h4>
+        <h4 id="title">Interactive heatmap tests</h4>
 <p>Heatmap of a single phenotype using interactive plotly library </p>
+
+<form action = "">
+<p> Select phenotype:
+<select name="singlePhenotype">
+{% for key, value in dictTraits.items %}
+    <option value="{{ key }}">{{ value }}</option>
+{% endfor %}
+</select>
+<input type="submit" value="Submit">
+</p>
+</form>
+
   {% autoescape off %}
   {{ plot_div }}
   {% endautoescape %}

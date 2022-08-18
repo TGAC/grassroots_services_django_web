@@ -124,7 +124,7 @@ def plotly_plot(numpy_matrix, accession, title, unit, IDs, treatments):
         fig.update_traces(
         customdata = np.moveaxis([accession, s_matrix, plotID, treatments], 0,-1),
         #hovertemplate="Accession: %{customdata[0]}<br>raw value: %{customdata[1]:.2f}  <extra></extra>")
-        hovertemplate="Accession: %{customdata[0]}<br>Raw value: %{customdata[1]}<br>Plot ID: %{customdata[2]} (column: %{x}, row:%{y})<br>Treatment: %{customdata[3]} <extra></extra>")
+        hovertemplate="Accession: %{customdata[0]}<br>Raw value: %{customdata[1]}<br>Plot ID: %{customdata[2]} (column: %{x}, row: %{y})<br>Treatment: %{customdata[3]} <extra></extra>")
 
     else:
         fig.update_traces(
@@ -223,7 +223,7 @@ def seaborn_plot(numpy_matrix, title, unit):
 
 
 
-###############################################################################################################
+#########################################################################################################
 '''
 create treatments array for plotly text 
 '''
@@ -270,14 +270,43 @@ def treatments(arraysJson, rows, columns):
     return matrix
 
 
+###################################################################
+def dict_phenotypes(pheno, plots):
+
+    names  = []
+    traits = []
+    
+    for key in pheno:
+        names.append(key)
+        traits.append(pheno[key]['definition']['trait']['so:name'])
+
+    phenoDict = dict(zip(names, traits))    # dictionary for the dropdown menu options
+
+    for j in range(len(plots)):
+        if ( 'discard' in plots[j]['rows'][0] ):
+            pass
+        
+        if ('observations' in plots[j]['rows'][0]):
+            for k in range(len(plots[j]['rows'][0]['observations'])):
+                
+                if type(plots[j]['rows'][0]['observations'][k]['raw_value'])== str:  # search for string and remove them
+                    name = plots[j]['rows'][0]['observations'][k]['phenotype']['variable']
+                    if ( name in phenoDict.keys() ):
+                        #print("check", phenoDict[name])
+                        del phenoDict[name]
+
+            #break
+
+    return phenoDict
+
 ###############################################################################################################
 '''
 Create numpy arrays for plotly script. Matrix of raw values and matrix of accession 
 '''
-def numpy_data(json, pheno):
+def numpy_data(json, pheno, current_name):
     test=json[0]['rows'][0]['study_index']
 
-    current_name =  json[3]['rows'][0]['observations'][2]['phenotype']['variable'] # SELECT RANDOM PHENOTYPE FOR TESTS 
+    #current_name =  json[3]['rows'][0]['observations'][2]['phenotype']['variable'] # SELECT RANDOM PHENOTYPE FOR TESTS 
     traitName = searchPhenotypeTrait(pheno, current_name)
     unit      = searchPhenotypeUnit( pheno, current_name)
 
@@ -356,7 +385,7 @@ def numpy_data(json, pheno):
     matrices.append(unit)
     matrices.append(plotsIds)
     
-    print("phenotype-", current_name )
+    print("phenotype plotted:", current_name )
     return matrices
 
 ################################################################################################################################
