@@ -339,11 +339,14 @@ def numpy_data(json, pheno, current_name):
         if ( int( json[j]['row_index'] ) == row ):
             if  (int( json[j]['column_index'] ) == column):   
                if   ( 'discard' in json[j]['rows'][0] ):
-                    
                     row_raw  = np.append(row_raw, np.nan )  # use NaN for discarded plots
                     row_acc  = np.append(row_acc, np.nan )  
                     plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
-               
+               elif ( 'blank' in json[j]['rows'][0] ):
+                    row_raw  = np.append(row_raw, np.nan )  # use NaN for discarded plots
+                    row_acc  = np.append(row_acc, np.nan )  
+                    plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
+     
                elif ( 'observations' in json[j]['rows'][0] ):
                     if( search_phenotype(json[j]['rows'][0]['observations'], current_name) ):
                         indexCurrentPhenotype = search_phenotype_index (json[j]['rows'][0]['observations'], current_name)
@@ -363,6 +366,11 @@ def numpy_data(json, pheno, current_name):
                     row_raw  = np.append(row_raw, np.nan )  
                     row_acc  = np.append(row_acc, np.nan )  
                     plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
+            elif ( 'blank' in json[j]['rows'][0] ):
+                    row_raw  = np.append(row_raw, np.nan )  # use NaN for discarded plots
+                    row_acc  = np.append(row_acc, np.nan )  
+                    plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
+
             elif ( 'observations' in json[j]['rows'][0] ):
                     if( search_phenotype(json[j]['rows'][0]['observations'], current_name) ):
                         indexCurrentPhenotype = search_phenotype_index (json[j]['rows'][0]['observations'], current_name)
