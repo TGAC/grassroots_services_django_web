@@ -240,6 +240,13 @@ def treatments(arraysJson, rows, columns):
             i=i-1
             j=j-1
             matrix[i][j] = 'N/A'
+        elif  ( 'blank' in arraysJson[r]['rows'][0] ):
+            i = int( arraysJson[r]['row_index']    )
+            j = int( arraysJson[r]['column_index'] )
+            i=i-1
+            j=j-1
+            matrix[i][j] = 'N/A'
+    
 
         elif ( 'treatments' in arraysJson[r]['rows'][0] ):
             i = int( arraysJson[r]['row_index']    )
@@ -263,8 +270,8 @@ def treatments(arraysJson, rows, columns):
             string = ', '.join(treat)
             matrix[i][j] = string
 
-        else:
-            matrix[i][j] = np.inf
+        ##else:
+        ##    matrix[i][j] = np.inf.  Possible Warning? No treatment saved in plots...
 
     matrix  = matrix.flatten()
     return matrix
@@ -285,11 +292,16 @@ def dict_phenotypes(pheno, plots):
     for j in range(len(plots)):
         if ( 'discard' in plots[j]['rows'][0] ):
             pass
+        if ( 'blank' in plots[j]['rows'][0] ):
+            pass
         
         if ('observations' in plots[j]['rows'][0]):
             for k in range(len(plots[j]['rows'][0]['observations'])):
-                
-                if type(plots[j]['rows'][0]['observations'][k]['raw_value'])== str:  # search for string and remove them
+                if ('raw_value' in plots[j]['rows'][0]['observations'][k]):
+                    rawValue = plots[j]['rows'][0]['observations'][k]['raw_value']
+                if ('corrected_value' in plots[j]['rows'][0]['observations'][k]):
+                    rawValue = plots[j]['rows'][0]['observations'][k]['corrected_value']
+                if ( type(rawValue) == str):                # Remove values that are strings,e.g., dates. 
                     name = plots[j]['rows'][0]['observations'][k]['phenotype']['variable']
                     if ( name in phenoDict.keys() ):
                         #print("check", phenoDict[name])
@@ -405,6 +417,12 @@ def oddShapeValues(arraysJson, rows, columns, phenotype):
             i=i-1
             j=j-1
             matrix[i][j] = np.nan
+        if  ( 'blank' in arraysJson[r]['rows'][0] ):
+            i = int( arraysJson[r]['row_index']    )
+            j = int( arraysJson[r]['column_index'] )
+            i=i-1
+            j=j-1
+            matrix[i][j] = np.nan
 
         elif ( 'observations' in arraysJson[r]['rows'][0] ):
             i = int( arraysJson[r]['row_index']    )
@@ -412,7 +430,12 @@ def oddShapeValues(arraysJson, rows, columns, phenotype):
             i=i-1
             j=j-1
             if( search_phenotype(arraysJson[r]['rows'][0]['observations'], phenotype) ):
-                matrix[i][j] = arraysJson[r]['rows'][0]['observations'][0]['raw_value']
+                indexCurrentPhenotype = search_phenotype_index (arraysJson[r]['rows'][0]['observations'], phenotype)
+                if ('raw_value' in arraysJson[r]['rows'][0]['observations'][indexCurrentPhenotype]):
+                    rawValue = arraysJson[r]['rows'][0]['observations'][indexCurrentPhenotype]['raw_value']
+                if ('corrected_value' in arraysJson[r]['rows'][0]['observations'][indexCurrentPhenotype]):
+                    rawValue = arraysJson[r]['rows'][0]['observations'][indexCurrentPhenotype]['corrected_value']
+                matrix[i][j] = rawValue
             else:
                 matrix[i][j] = np.inf
 
