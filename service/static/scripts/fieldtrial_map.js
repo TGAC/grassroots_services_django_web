@@ -1231,7 +1231,7 @@ function formatPlotModal(plot) {
     
    //phenotypearray.push('<table class="table plots" id="plots_table"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th><th>Index</th></tr></thead><tbody id="phenotypes">'); //original  9 columns
    //phenotypearray.push('<table class="table plots" id="plots_table"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Raw Value Replicate</th><th>Trait</th><th>Measurement</th><th>Unit</th><th>Index</th></tr></thead><tbody id="phenotypes">');  // TEST 9 columns  extra raw value
-   phenotypearray.push('<table class="table plots" id="plots_table"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Raw Value Replicate</th><th>Raw Value Replicate</th><th>Trait</th><th>Measurement</th><th>Unit</th><th>Index</th></tr></thead><tbody id="phenotypes">');// 10 columns
+   phenotypearray.push('<table class="table plots" id="plots_table"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Raw Value Replicate</th><th>Raw Value Replicate</th><th>Trait</th><th>Measurement</th><th>Unit</th><th>Index</th></tr></thead><tbody id="phenotypes">');// Restore corrected Value 
 
     let formatted_plot = format_plot_rows(plot, false);
 
@@ -1460,9 +1460,9 @@ function simpleOrAdvanced_pheno(string) {
         pheno_table.column(1).visible(false);
         pheno_table.column(2).visible(false);
         pheno_table.column(3).visible(true); // raw value current plot
-        pheno_table.column(4).visible(true); // Replicate
-        pheno_table.column(5).visible(true); // Replicate
-        pheno_table.column(6).visible(true);
+        pheno_table.column(4).visible(false);// corrected value
+        pheno_table.column(5).visible(true); // Replicate 1
+        pheno_table.column(6).visible(true);//  Replicate 2
         pheno_table.column(7).visible(false);
         pheno_table.column(8).visible(true);
         pheno_table.column(9).visible(true);// Index 
@@ -1472,9 +1472,10 @@ function simpleOrAdvanced_pheno(string) {
         pheno_table.column(3).visible(true);
         pheno_table.column(4).visible(true);
         pheno_table.column(5).visible(true); 
-        pheno_table.column(6).visible(true);// 6 trait
-        pheno_table.column(7).visible(true);// measurement.
-        pheno_table.column(8).visible(true);// unit
+        pheno_table.column(6).visible(true); 
+        pheno_table.column(7).visible(true);// Trait
+        pheno_table.column(8).visible(true);// Measurement
+        pheno_table.column(9).visible(true);// Unit
         pheno_table.column(9).visible(false);// Index
     }
 
@@ -1975,6 +1976,7 @@ function format_pheno(plotCurrent, replicateIds, replicates, noReplicates){
         phenotypearray.push('<td>' + SafePrint(plotCurrent['rows'][0]['rack_index']) + '</td>');
 	phenotypearray.push('<td>' + SafePrint(observation['date'])      + '</td>');
 	phenotypearray.push('<td>' + round2Fixed(SafePrint(observation['raw_value']))  + '</td>');
+	phenotypearray.push('<td>' + SafePrint(observation['corrected_value']) + '</td>'); // Restore corrected value.
 	
 	// ******* Two extra columns of raw values of exact replicate plots. ********** 
 	if(noReplicates==false){
@@ -1991,7 +1993,6 @@ function format_pheno(plotCurrent, replicateIds, replicates, noReplicates){
                  phenotypearray.push('<td style="background-color:' + colors[i] + '">'+ round2Fixed(SafePrint(raw[phenotype_name]))  + '<br>'+ link  +'</td>');
                 }
         }
-	 // phenotypearray.push('<td>' + SafePrint(observation['corrected_value']) + '</td>'); // corrected value column temporarily removed.
 
        if (lookup( phenotype_name,  'trait', 'so:sameAs').startsWith('CO')) {
             phenotypearray.push('<td class="tooltip-test"  title="' + lookup(phenotype_name, 'trait','so:description') + '"><a class="newstyle_link" target="_blank" href="' + crop_onotology_url + lookup(phenotype_name, 'trait','so:sameAs') + '">' + lookup(phenotype_name, 'trait','so:name') + '</a></td>');
