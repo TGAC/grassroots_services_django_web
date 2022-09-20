@@ -256,7 +256,7 @@ def treatments(arraysJson, rows, columns):
             value = []
             label = []
             treat = []
-            for k in range(len(arraysJson[j]['rows'][0]['treatments'])):
+            for k in range(len(arraysJson[r]['rows'][0]['treatments'])):
                     value  = np.append(value, arraysJson[r]['rows'][0]['treatments'][k]["so:sameAs"] )
                     label  = np.append(label, arraysJson[r]['rows'][0]['treatments'][k]["label"] )
 
@@ -331,13 +331,18 @@ def numpy_data(json, pheno, current_name):
     plotsIds  = np.array([], dtype=dtID)  #format of strings
 
     matrices = []
-
+    
+    num_columns = 1
+    
     row    = 1
     column = 1
     #loop throght observations in the same fashion as in old JS code. 
     for j in range(len(json)):
         if ( int( json[j]['row_index'] ) == row ):
-            if  (int( json[j]['column_index'] ) == column):   
+            if  (int( json[j]['column_index'] ) == column): 
+               if column > num_columns:
+                   num_columns = column
+
                if   ( 'discard' in json[j]['rows'][0] ):
                     row_raw  = np.append(row_raw, np.nan )  # use NaN for discarded plots
                     row_acc  = np.append(row_acc, np.nan )  
@@ -368,6 +373,9 @@ def numpy_data(json, pheno, current_name):
                columns = json[j]['column_index']#
 
         elif ( int( json[j]['row_index'] ) > row  ):
+            if column > num_columns:
+                   num_columns = column
+
             if   ( 'discard' in json[j]['rows'][0] ):
                     row_raw  = np.append(row_raw, np.nan )  
                     row_acc  = np.append(row_acc, np.nan )  
@@ -396,10 +404,12 @@ def numpy_data(json, pheno, current_name):
 
             row+=1
             column=2
-            columns = json[j]['column_index']
+            ##columns = json[j]['column_index']
 
 
-    column = columns # use actual number of columns instead of counter
+    ##column = columns # use actual number of columns instead of counteri
+
+    column = num_columns 
     
     #print("number of plots and shape check", len(json), row, column, row*(column) )
     if (len(json) != row*column):
