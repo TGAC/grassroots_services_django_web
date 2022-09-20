@@ -357,6 +357,12 @@ def numpy_data(json, pheno, current_name):
                         row_raw  = np.append(row_raw, np.inf )  # use infinity for N/A data
                         row_acc  = np.append(row_acc, json[j]['rows'][0]['material']['accession'])  
                         plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
+               else:
+                  if('rows' in json[j]):      # when plots have rows but no observations!!
+                        row_raw = np.append(row_raw, np.inf ) #   use infinity for N/A data
+                        row_acc = np.append(row_acc, json[j]['rows'][0]['material']['accession'])  
+                        plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )  
+         
   
                column+=1
                columns = json[j]['column_index']#
@@ -381,6 +387,12 @@ def numpy_data(json, pheno, current_name):
                         row_raw  = np.append(row_raw, np.inf )
                         row_acc  = np.append(row_acc, json[j]['rows'][0]['material']['accession'])  
                         plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
+            else:
+                  if('rows' in json[j]):      # when plots have rows but no observations!!
+                        row_raw = np.append(row_raw, np.inf ) #   use infinity for N/A data
+                        row_acc = np.append(row_acc, json[j]['rows'][0]['material']['accession'])  
+                        plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )  
+            
 
             row+=1
             column=2
