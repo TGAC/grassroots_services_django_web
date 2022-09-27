@@ -409,7 +409,7 @@ def numpy_data(json, pheno, current_name):
 
     ##column = columns # use actual number of columns instead of counteri
 
-    column = num_columns 
+    column = num_columns-1
     
     #print("number of plots and shape check", len(json), row, column, row*(column) )
     if (len(json) != row*column):
@@ -447,7 +447,7 @@ def oddShapeValues(arraysJson, rows, columns, phenotype):
             i=i-1
             j=j-1
             matrix[i][j] = np.nan
-        if  ( 'blank' in arraysJson[r]['rows'][0] ):
+        elif  ( 'blank' in arraysJson[r]['rows'][0] ):
             i = int( arraysJson[r]['row_index']    )
             j = int( arraysJson[r]['column_index'] )
             i=i-1
@@ -488,16 +488,27 @@ def oddShapeAccession(arraysJson, rows, columns, phenotype):
             i=i-1
             j=j-1
             matrix[i][j] = np.nan         #discarded plot
+        elif  ( 'discard' in arraysJson[r]['rows'][0] ):
+            i = int( arraysJson[r]['row_index']    )
+            j = int( arraysJson[r]['column_index'] )
+            i=i-1
+            j=j-1
+            matrix[i][j] = np.nan         #discarded plot
 
         elif ( 'observations' in arraysJson[r]['rows'][0] ):
             i = int( arraysJson[r]['row_index']    )
             j = int( arraysJson[r]['column_index'] )
             i=i-1
             j=j-1
-            if( search_phenotype(arraysJson[r]['rows'][0]['observations'], phenotype) ):
-                matrix[i][j] = arraysJson[r]['rows'][0]['material']['accession']
-            else:
-                matrix[i][j] = arraysJson[r]['rows'][0]['material']['accession']
+         #   if( search_phenotype(arraysJson[r]['rows'][0]['observations'], phenotype) ):
+            matrix[i][j] = arraysJson[r]['rows'][0]['material']['accession']
+        elif('rows' in arraysJson[r]):
+            i = int( arraysJson[r]['row_index']    )
+            j = int( arraysJson[r]['column_index'] )
+            i=i-1
+            j=j-1
+            matrix[i][j] = arraysJson[r]['rows'][0]['material']['accession']
+
 
     matrix  = matrix.flatten()
 
