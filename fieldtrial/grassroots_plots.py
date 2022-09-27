@@ -418,7 +418,7 @@ def numpy_data(json, pheno, current_name):
         row_raw  = oddShapeValues(   json, row, column, current_name)
         row_acc  = oddShapeAccession(json, row, column, current_name)
         plotsIds = oddShapePlotID(   json, row, column, current_name)
-
+   
     matrices.append(row)
     matrices.append(column)
     matrices.append(row_raw)
@@ -469,6 +469,15 @@ def oddShapeValues(arraysJson, rows, columns, phenotype):
             else:
                 matrix[i][j] = np.inf
 
+        else:
+            if('rows' in arraysJson[r]):        #rows field exists but it has no observations!
+               i = int( arraysJson[r]['row_index']    )
+               j = int( arraysJson[r]['column_index'] )
+               i=i-1
+               j=j-1
+               matrix[i][j] = np.inf  # consider it N/A instead as default discarded (nan)
+    
+
     #matrix = np.flipud(matrix)
     #print(matrix)
     matrix  = matrix.flatten()
@@ -488,7 +497,7 @@ def oddShapeAccession(arraysJson, rows, columns, phenotype):
             i=i-1
             j=j-1
             matrix[i][j] = np.nan         #discarded plot
-        elif  ( 'discard' in arraysJson[r]['rows'][0] ):
+        elif  ( 'blank' in arraysJson[r]['rows'][0] ):
             i = int( arraysJson[r]['row_index']    )
             j = int( arraysJson[r]['column_index'] )
             i=i-1
