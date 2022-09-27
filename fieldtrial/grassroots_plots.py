@@ -407,9 +407,10 @@ def numpy_data(json, pheno, current_name):
             ##columns = json[j]['column_index']
 
 
-    ##column = columns # use actual number of columns instead of counteri
-
     column = num_columns-1
+    
+    if column<columns:
+        column=columns #correction when only 1 row.
     
     #print("number of plots and shape check", len(json), row, column, row*(column) )
     if (len(json) != row*column):

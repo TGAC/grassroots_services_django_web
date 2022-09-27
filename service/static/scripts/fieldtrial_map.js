@@ -1463,8 +1463,8 @@ function simpleOrAdvanced_pheno(string) {
         pheno_table.column(4).visible(false);// corrected value
         pheno_table.column(5).visible(true); // Replicate 1
         pheno_table.column(6).visible(true);//  Replicate 2
-        pheno_table.column(7).visible(false);
-        pheno_table.column(8).visible(true);
+        pheno_table.column(7).visible(true);// TRAIT
+        pheno_table.column(8).visible(false);
         pheno_table.column(9).visible(true);// Index 
     } else if (string === 'show_advanced') {
         pheno_table.column(1).visible(true);// rack
