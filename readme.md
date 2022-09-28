@@ -15,7 +15,7 @@ The next stage is to set up the virtual environment to run the application in wh
 the following commands:
 
 ```
-virtualenv -p python3 venv
+virtualenv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
