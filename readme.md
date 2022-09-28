@@ -54,20 +54,20 @@ source venv/bin/activate
 After an initial install or after any changes to the static files, these need to be copied to the Apache webserver which can be done with:
 
 ```
-python3 manage.py collectstatic
+python manage.py collectstatic
 ```
 
 
 To run the application, the command is 
 
 ```
-python3 manage.py runserver <PORT>
+python manage.py runserver <PORT>
 ```
 
 where *<PORT>* is the port that you wish to run the application on. For instance to run it on port 8000, the command would be:
 	
 ```
-python3 manage.py runserver 8000
+python manage.py runserver 8000
 ```
 
 So by browsing to *http://localhost:<PORT\>*, or in the example above *http://localhost:8000*. you can access the application.
