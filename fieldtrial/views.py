@@ -100,6 +100,9 @@ def single_plot(request, plot_id):
     plot_array = plot_json['results'][0]['results'][0]['data']['plots']       # send only array of 'plots' to plotly
     treatment_factors = plot_json['results'][0]['results'][0]['data']['treatment_factors']
     phenotypes = plot_json['results'][0]['results'][0]['data']['phenotypes']  # Details of all the phenotypes
+
+    total_rows    = plot_json['results'][0]['results'][0]['data']['num_rows']
+    total_columns = plot_json['results'][0]['results'][0]['data']['num_columns']
    
     dictTraits = dict_phenotypes(phenotypes, plot_array)  # dictionary to fill dropdown menu
     default_name = list(dictTraits.keys())[0]             # select first phenotype as default
@@ -110,7 +113,7 @@ def single_plot(request, plot_id):
     else:
         selected_phenotype = default_name
 
-    matrices   = numpy_data(plot_array, phenotypes, selected_phenotype)
+    matrices   = numpy_data(plot_array, phenotypes, selected_phenotype, total_rows, total_columns)
 
     row     = matrices[0]
     column  = matrices[1]

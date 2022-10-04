@@ -315,7 +315,7 @@ def dict_phenotypes(pheno, plots):
 '''
 Create numpy arrays for plotly script. Matrix of raw values and matrix of accession 
 '''
-def numpy_data(json, pheno, current_name):
+def numpy_data(json, pheno, current_name, total_rows, total_columns):
     test=json[0]['rows'][0]['study_index']
 
     #current_name =  json[3]['rows'][0]['observations'][2]['phenotype']['variable'] # SELECT RANDOM PHENOTYPE FOR TESTS 
@@ -404,7 +404,7 @@ def numpy_data(json, pheno, current_name):
 
             row+=1
             column=2
-            ##columns = json[j]['column_index']
+            columns = json[j]['column_index']
 
 
     column = num_columns-1
@@ -415,6 +415,9 @@ def numpy_data(json, pheno, current_name):
     #print("number of plots and shape check", len(json), row, column, row*(column) )
     if (len(json) != row*column):
         print("NOT rectangular")
+
+        if(column<total_columns):
+           column=total_columns
         # fit odd shape plot into bigger rectangular plot.
         row_raw  = oddShapeValues(   json, row, column, current_name)
         row_acc  = oddShapeAccession(json, row, column, current_name)
