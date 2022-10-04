@@ -415,9 +415,9 @@ def numpy_data(json, pheno, current_name, total_rows, total_columns):
     #print("number of plots and shape check", len(json), row, column, row*(column) )
     if (len(json) != row*column):
         print("NOT rectangular")
-
-        if(column<total_columns):
-           column=total_columns
+        if(total_columns!=None):
+           if(column<total_columns):
+               column=total_columns
         # fit odd shape plot into bigger rectangular plot.
         row_raw  = oddShapeValues(   json, row, column, current_name)
         row_acc  = oddShapeAccession(json, row, column, current_name)
