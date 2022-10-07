@@ -321,7 +321,7 @@ function produceFieldtrialTable(data, type_param) {
                 }
             },
             {
-                title: 'Download<i id="download_question" class="fas fa-question newstyle_link"></i>',
+		title: 'Download<i id="download_question" class="fas fa-question newstyle_link"></i>',
                 "render": function (data, type, full, meta) {
                     var download = '';
                     if (full['so:contentUrl'] !== undefined) {
@@ -776,7 +776,7 @@ function create_study_info_html(studyJson) {
     }
 
     if (studyJson['so:contentUrl'] !== undefined) {
-        AddTableRow (htmlarray, 'Download <i id="download_question" class="fas fa-question newstyle_link"></i>', '<a href="' + studyJson['so:contentUrl'] + '" target="_blank" style="newstyle_link">link</a>');
+        AddTableRow (htmlarray, 'Download frictionless data package', '<a href="' + studyJson['so:contentUrl'] + '" target="_blank" style="newstyle_link">Frictionless data</a>');
     }
 
     if (studyJson["handbook"] !== undefined) {
