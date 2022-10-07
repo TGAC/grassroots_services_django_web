@@ -111,12 +111,11 @@
 
 
 <section id="TEST3">
-        <h4 id="title">Interactive heatmap tests</h4>
-<p>Heatmap of a single phenotype using interactive plotly library </p>
-
+        <h4 id="title">Interactive heatmap</h4>
 <form action = "">
 <p> Select phenotype:
 <select name="singlePhenotype">
+<option selected="selected" disabled="disabled">Select phenotype</option>
 {% for key, value in dictTraits.items %}
     <option value="{{ key }}">{{ value }}</option>
 {% endfor %}
@@ -129,8 +128,6 @@
   {{ plot_div }}
   {% endautoescape %}
 
-  <p>Sample of static image for paper/handbook: </p>
-   <p>  <img src="data:image/png;base64 , {{ heatmap|safe }}">  </p>
 
 </section>
 
