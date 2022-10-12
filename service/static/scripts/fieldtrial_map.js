@@ -771,6 +771,8 @@ function create_study_info_html(studyJson) {
 
     AddTableRow (htmlarray, "Contact", format_study_contact(studyJson));
 
+    AddTableRow (htmlarray, "Images collected", SafePrint(studyJson['image_collection_notes']));
+
     if (studyJson['so:url'] !== undefined && studyJson['so:url'] !== null) {
         AddTableRow (htmlarray, "More info", '<a href="' + studyJson['so:url'] + '" target="_blank" style="newstyle_link">link</a>');
     }
