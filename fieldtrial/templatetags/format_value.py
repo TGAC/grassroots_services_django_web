@@ -152,10 +152,10 @@ def format_address(dictionary, keys, default=None):
 
     address = name 
 
-    if locality != None:
+    if locality != None and locality != name:
          address = address +'<br>'+ locality
 
-    if country != None:
+    if country != None and country != name:
          address = address +'<br>'+ country
 
     if postal_code != None:

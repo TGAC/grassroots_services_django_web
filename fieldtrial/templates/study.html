@@ -1,4 +1,4 @@
-{%  include "header.html" %}
+{%  include "header2.html" %}
  {% load static %}
  
  {% load fieldtrial_tag %}
@@ -40,7 +40,7 @@
     max-width: 70%;
 }
     .modal-body {
-        height: 250px;
+        max-height: 15vh;
         overflow-y: auto;
     }
 
@@ -117,10 +117,10 @@
                </span>
             </div>
         </div>
-        <div id="tableWrapper">
+<!--        <div id="tableWrapper">
 		          <table id="resultTable"></table> 
-       </div> 
-
+       </div>  
+-->
         <!-- Modal -->
         <div class="modal " tabindex="-1" role="dialog" id="plotModal" style="z-index: 999999;">
             <div class="modal-dialog  modal-dialog-centered" role="document">
@@ -234,16 +234,10 @@
     </div>
 </section>
 
- 
-
-<!--footer-->
-<!--
 <section id="new_stuff" >
-
 <table class="table table-bordered dataTable no-footer">
         <col style="width:40%">
         <col style="width:60%">
-
 {% if "so:name" in study_json %}
    <tr><td><strong>Study Name:</strong></td> <td>{%lookup_keys study_json 'so:name'%}</td></tr>
 {% endif %}
@@ -272,7 +266,7 @@
         <tr><td><strong>Growing conditions:</strong></td><td>{% lookup_keys study_json "growing_conditions" %}</td></tr>
 {% endif %}
 
-{% if "phenotype_gathering_notes" in study_json %}
+{% if "phenotype_gathering_notes" in study_json and study_json.phenotype_gathering_notes != None  %}
         <tr><td><strong>Phenotype Gathering Notes:</strong></td><td>{% lookup_keys study_json "phenotype_gathering_notes" %}</td></tr>
 {% endif %}
 
@@ -288,7 +282,7 @@
         <tr><td><strong>Team:</strong></td><td>{% lookup_keys study_json "parent_field_trial.team" %}</td></tr>
 {% endif %}
 
-{% if "envo:00002000" in study_json  %}
+{% if "envo:00002000" in study_json %}
 <tr><td><strong> Slope:</strong></td><td>{% lookup_keys study_json "envo:00002000" %}</td></tr>
 {% endif %}
 
@@ -335,11 +329,14 @@
         <tr><td><strong>Contact:</strong></td><td>{%format_contact study_json "contact.so:name" %} </td></tr>
 {% endif %}
 
+{% if "image_collection_notes" in study_json and study_json.image_collection_notes != None %}
+        <tr><td><strong>Images Collected:</strong></td><td>{% lookup_keys study_json "image_collection_notes" %}</td></tr>
+{% endif %}
 
 {% if "so:contentUrl" in study_json %}
-        <tr><td><strong>Download: </strong><a tabindex="0" class="btn bt-lg btn-danger"  role="button" data-toggle="popover" data-trigger="focus"  data-content="A Frictionless Data Package contains all of the data associated with a study including its parent field trial and programme. For more information and the tool to unpack these packages, go <a href='https://grassroots.tools/frictionless-data/grassroots-fd-client.md'>here</a>   "> ? </a>
+        <tr><td><strong>Download Frictionless Data Package: </strong><a tabindex="0" class="btn bt-lg btn-danger"  role="button" data-toggle="popover" data-trigger="focus"  data-content="A Frictionless Data Package contains all of the data associated with a study including its parent field trial and programme. For more information and the tool to unpack these packages, go <a href='https://grassroots.tools/frictionless-data/grassroots-fd-client.md'>here</a>   "> ? </a>
 	 </td><td>
-		 <a href="{% lookup_keys study_json "so:contentUrl" %}">link</a></td></tr>
+		 <a href="{% lookup_keys study_json "so:contentUrl" %}">Frictionless data</a></td></tr>
 {% endif %}
 
 {% if "handbook" in study_json %}
@@ -349,7 +346,7 @@
 
 
 </table>
-
 </section>
--->
+
+
 {% include "footer.html" %}
