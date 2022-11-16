@@ -1404,6 +1404,7 @@ function do_ajax_search(type) {
         $('#ajax_result').html('Searching...');
         var timer;
 
+				/*
         var submit_json = {
             "services": [
                 {
@@ -1434,6 +1435,39 @@ function do_ajax_search(type) {
                 }
             ]
         };
+				*/
+
+        var submit_json = {
+            "services": [
+                {
+                    "start_service": true,
+                    "so:name": "Search Grassroots",
+                    "parameter_set": {
+                        "level": "simple",
+                        "parameters": [
+
+                            {
+                                "param": "SS Keyword Search",
+                                "current_value": input + input_tail
+                            },
+                            {
+                                "param": "SS Facet",
+                                "current_value": type
+                            },
+                            {
+                                "param": "FT Results Page Number",
+                                "current_value": 0
+                            },
+                            {
+                                "param": "FT Results Page Size",
+                                "current_value": 500
+                            }
+                        ]
+                    }
+                }
+            ]
+        };
+
         console.log(JSON.stringify(submit_json));
 
         clearTimeout(timer);
