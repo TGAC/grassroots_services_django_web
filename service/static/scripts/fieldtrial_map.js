@@ -1873,7 +1873,16 @@ function filter_plot() {
             const plotId = plot_json[i]['_id']['$oid'];
             var rows = plot_json[i]['rows'];
             for (r = 0; r < rows.length; r++) {
-                var accession = rows[r]['material']['accession'].toLowerCase();
+                //var accession = rows[r]['material']['accession'].toLowerCase(); OLD structure
+		if (rows[r]['discard'])
+                {
+                   var accession = 'discard';
+                }
+                else if (rows[r]['material'])
+                {
+                   var accession = rows[r]['material']['accession'].toLowerCase();
+                }
+
                 if (accession != undefined) {
                     if (searchStr === accession || accession.includes(searchStr)) {
                         // bool = true;
