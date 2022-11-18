@@ -1454,15 +1454,7 @@ function do_ajax_search(type) {
                                 "param": "SS Facet",
                                 "current_value": type
                             },
-                            {
-                                "param": "FT Results Page Number",
-                                "current_value": 0
-                            },
-                            {
-                                "param": "FT Results Page Size",
-                                "current_value": 500
-                            }
-                        ]
+                                      ]
                     }
                 }
             ]
