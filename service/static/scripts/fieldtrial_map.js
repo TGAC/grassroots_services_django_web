@@ -1873,7 +1873,6 @@ function filter_plot() {
             const plotId = plot_json[i]['_id']['$oid'];
             var rows = plot_json[i]['rows'];
             for (r = 0; r < rows.length; r++) {
-<<<<<<< HEAD
                 //var accession = rows[r]['material']['accession'].toLowerCase(); OLD structure
 		if (rows[r]['discard'])
                 {
@@ -1884,18 +1883,6 @@ function filter_plot() {
                    var accession = rows[r]['material']['accession'].toLowerCase();
                 }
 
-=======
-	       //var accession = rows[r]['material']['accession'].toLowerCase(); OLD structure
-               if (rows[r]['discard'])
-               {
-                   var accession = 'discard';
-               }
-               else if (rows[r]['material'])
-               {
-                   var accession = rows[r]['material']['accession'].toLowerCase();
-               }
-    
->>>>>>> 8e92663557e8b0be49d02002bd32b60b519d53c3
                 if (accession != undefined) {
                     if (searchStr === accession || accession.includes(searchStr)) {
                         // bool = true;
