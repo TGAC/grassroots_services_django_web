@@ -21,6 +21,7 @@ var colorJSON = {
 
 // plots details
 var plotsModalInfo = {};
+var plotsInfoGPS =   {};  //NEW variable for hovering table over GPS maps of single studies.
 
 // treatment table
 var s_formatted_treatments = [];
@@ -104,6 +105,7 @@ function startFieldTrialGIS(jsonArray, type_param) {
                     if (plot['rows'][0]['study_index'] !== undefined) {
                         let plotId = plot['rows'][0]['study_index'];
                         plotsModalInfo[plotId] = formatPlotModal(plot);
+                        plotsInfoGPS[plotId]   = formatGPSPlot(plot);   // NEW variable for tables over maps
 			
                         // show other plots info, but performance issue
                         // let searchStr = '';
@@ -879,7 +881,8 @@ function displayFTLocations(array, type_param) {
                         var plotId = feature.properties['plot_id'];
                         var popupContent = 'Study: ' + SafePrint(geo_json['name']) + '<br/>Plot ID: ' + SafePrint(feature.properties['plot_id']);
                         if (type_param_global === 'Grassroots:Study' && plotsModalInfo[plotId] !== undefined) {
-                            var popupContent = plotsModalInfo[plotId];
+                           //var popupContent = plotsModalInfo[plotId];
+			   var popupContent = plotsInfoGPS[plotId]; //Correction for incomplete table over maps
                         }
                         layer.bindPopup(popupContent, {maxWidth: 800, maxHeight: 400});
                         // layer.bindPopup('<p>Plot No.:</p>');
@@ -1209,6 +1212,102 @@ function plotModal(plotId) {
     simpleOrAdvanced_rows('show_simple');
 
 }
+
+/*
+ * @param {JSON} plot - Plot JSON.  // NEW function variations of original formatPlotModal
+ */
+function formatGPSPlot(plot) {
+
+    let htmlarray = [];
+    let phenotypearray = [];
+    let rowsInfoarray = [];
+
+    let plot_actual_id = '';
+
+    
+   if (plot['rows'][0]['study_index'] !== undefined) {
+        plot_actual_id = plot['rows'][0]['study_index'];
+    }
+
+    rowsInfoarray.push('<table class="table racks" id="plots_table_rows"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Links</th><th>Treatments</th></tr></thead><tbody id="rowsInfo">'); // remove Gene Bank temporarily
+    
+   //phenotypearray.push('<table class="table plots" id="plots_table"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Raw Value Replicate</th><th>Raw Value Replicate</th><th>Trait</th><th>Measurement</th><th>Unit</th><th>Index</th></tr></thead><tbody id="phenotypes">');// Restore corrected Value 
+    phenotypearray.push('<table class="table plots" id="plots_table"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th><th>Index</th></tr></thead><tbody id="phenotypes">');  // OLD STRUCTURE
+
+
+    let formatted_plot = format_plot_rows(plot, false);
+    
+    console.log("Check 2: Add phenotypes");
+    rowsInfoarray  = rowsInfoarray.concat(formatted_plot['rowsInfo']);
+    phenotypearray = phenotypearray.concat(formatted_plot['phenotypes']); // restore for this case
+
+   
+    rowsInfoarray.push('</tbody></table>');
+    phenotypearray.push('</tbody></table>');
+    htmlarray.push('<div class="row justify-content-between">');
+    htmlarray.push('<div class="col-4">');
+    htmlarray.push('Plot ID: ' + plot_actual_id + '<br/>');
+    htmlarray.push('Row: ' + plot['row_index'] + '<br/>');
+    htmlarray.push('Column: ' + plot['column_index'] + '<br/>');
+    htmlarray.push('Length: ' + SafePrint_with_value(plot['length'], default_length) + 'm<br/>');
+    htmlarray.push('Width: ' + SafePrint_with_value(plot['width'], default_width) + 'm<br/>');
+    htmlarray.push('Study Design: ' + SafePrint_with_value(plot['study_design'], default_design) + '<br/>');
+    htmlarray.push('Sowing Date: ' + SafePrint_with_value(plot['sowing_date'], default_sowing_date) + '<br/>');
+    htmlarray.push('Harvest Date: ' + SafePrint_with_value(plot['harvest_date'], default_harvest_date) + '<br/>');
+    htmlarray.push('Sowing Order: ' + SafePrint(plot['sowing_order']) + '<br/>');
+    htmlarray.push('Walking Order: ' + SafePrint(plot['walking_order']) + '<br/>');
+    // htmlarray.push('Treatment: ' + SafePrint(plot['treatment']) + '<br/>');
+    htmlarray.push('Comment: ' + SafePrint(plot['comment']) + '<br/>');
+
+    // if (plot['so:url'] != undefined) {
+    //     var link = plot['so:url'];
+    //     htmlarray.push('Link: <a href="' + link + '" target="_blank">' + link + '</a><br/>');
+    // }
+    htmlarray.push('</div>');
+    htmlarray.push('<div class="col-4">');
+    if (plot['so:image'] != undefined) {
+        if (plot['so:image']['contentUrl'] != undefined && plot['so:image']['thumbnail']) {
+            let contentUrl = plot['so:image']['contentUrl'];
+            let thumbnail = plot['so:image']['thumbnail'];
+            htmlarray.push('<a <a href="' + contentUrl + '" target="_blank"><img height="300" src=" ' + thumbnail + '"/></a>');
+        }
+    }
+    htmlarray.push('</div>');
+    htmlarray.push('</div>');
+    htmlarray.push(s_formatted_treatments);
+    htmlarray.push('<hr/>');
+    htmlarray.push('<h5>Rows:</h5>');
+    htmlarray.push('        <div id="simpleAdvanceWrapper1" style="display:none;" >\n' +
+        '            <label class="radio-inline" style="margin-right: 20px;"><input type="radio" name="simpleadvancedrows"\n' +
+        '                                                                           value="show_simple"\n' +
+        '                                                                           onclick="simpleOrAdvanced_rows(this.value)"\n' +
+        '                                                                           checked>\n' +
+        '                Simple view </label>\n' +
+        '            <label class="radio-inline"><input type="radio" name="simpleadvancedrows" value="show_advanced"\n' +
+        '                                               onclick="simpleOrAdvanced_rows(this.value)"> Advanced view</label>\n' +
+        '        </div>');
+    htmlarray.push(rowsInfoarray.join(""));
+    htmlarray.push('<hr/>');
+    htmlarray.push('<h5>Phenotypes</h5>');
+    htmlarray.push('        <div id="simpleAdvanceWrapper2" style="display:none;"  >\n' +
+        '            <label class="radio-inline" style="margin-right: 20px;"><input type="radio" name="simpleadvanced"\n' +
+        '                                                                           value="show_simple"\n' +
+        '                                                                           onclick="simpleOrAdvanced_pheno(this.value)"\n' +
+        '                                                                           checked>\n' +
+        '                Simple view </label>\n' +
+        '            <label class="radio-inline"><input type="radio" name="simpleadvanced" value="show_advanced"\n' +
+        '                                               onclick="simpleOrAdvanced_pheno(this.value)"> Advanced view</label>\n' +
+        '        </div>');
+    htmlarray.push(phenotypearray.join(""));
+
+    return htmlarray.join("");
+
+
+}
+
+
+
+
 
 /**
  * Format plot modal in html
