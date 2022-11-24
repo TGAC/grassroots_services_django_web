@@ -2095,13 +2095,26 @@ function format_pheno(plotCurrent, replicateIds, replicates, noReplicates){
                 console.log("No Replicates", noReplicates);
         }
         if(noReplicates==true){
-                for (i = 0; i < 2; i++) {    //ADD two extra columns for exact replicates
-                let raw = {};
-                raw = RawVals[i];
-                link =links[i];
+		console.log("number of replicates: ", RawVals.length );
+		if(RawVals.length >= 2){
+                	for (i = 0; i < 2; i++) {    //ADD two extra columns for exact replicates
+	                 let raw = {};
+        	         raw = RawVals[i];
+                	 link =links[i];
 
-                 phenotypearray.push('<td style="background-color:' + colors[i] + '">'+ round2Fixed(SafePrint(raw[phenotype_name]))  + '<br>'+ link  +'</td>');
-                }
+	                  phenotypearray.push('<td style="background-color:' + colors[i] + '">'+ round2Fixed(SafePrint(raw[phenotype_name]))  + '<br>'+ link  +'</td>');
+                	}
+		}
+		if(RawVals.length == 1){
+                	for (i = 0; i < 1; i++) {    //1 exact replicate only
+	                 let raw = {};
+        	         raw = RawVals[i];
+                	 link =links[i];
+
+	                  phenotypearray.push('<td style="background-color:' + colors[i] + '">'+ round2Fixed(SafePrint(raw[phenotype_name]))  + '<br>'+ link  +'</td>');
+                	}
+                        phenotypearray.push('<td> No replicate </td>');
+		}
         }
 
        if (lookup( phenotype_name,  'trait', 'so:sameAs').startsWith('CO')) {
