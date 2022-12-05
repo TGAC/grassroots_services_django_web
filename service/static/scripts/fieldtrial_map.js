@@ -733,7 +733,7 @@ function create_study_info_html(studyJson) {
 
     AddTableRow (htmlarray, "Phenotype Gathering Notes", SafePrint(studyJson['phenotype_gathering_notes']));
 
-    AddTableRow (htmlarray, "Physical Smples Collected", SafePrint(studyJson['physical_smaples_collected']));
+    AddTableRow (htmlarray, "Physical Samples Collected", SafePrint(studyJson['physical_samples_collected']));
 
     AddTableRow (htmlarray, "Data not included", SafePrint(studyJson['data_not_included']));
 
