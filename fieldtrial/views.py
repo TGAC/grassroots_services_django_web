@@ -26,6 +26,8 @@ from .grassroots_plots import seaborn_plot
 from .grassroots_plots import treatments
 from .grassroots_plots import dict_phenotypes
 
+from .grassroots_csv import create_CSV
+
 '''
 Field trial index page request, pre-load the template
 '''
@@ -132,12 +134,12 @@ def single_plot(request, plot_id):
     if ( len(treatment_factors)>0):
           treatment = treatments(plot_array, row, column)
 
-
+    create_CSV(plot_array, phenotypes, treatment_factors, plot_id)
     plot_div = plotly_plot(row_raw, accession, traitName, units, plotIDs, treatment)
-    image    = seaborn_plot(static,   traitName,  units)
+    #image    = seaborn_plot(static,   traitName,  units)
     
     return render(request, 'plots.html', {'data': plot, 'plot_id': plot_id, 'study_name': study_name, 
-        'plot_div': plot_div, 'heatmap':image, 'dictTraits':dictTraits})
+        'plot_div': plot_div, 'dictTraits':dictTraits})
 
 '''
 Search field trial page request
