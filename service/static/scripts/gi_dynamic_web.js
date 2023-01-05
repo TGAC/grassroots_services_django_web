@@ -1186,7 +1186,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id, refreshed) 
             if (parameter['current_value'] != undefined) {
                 current_table_value = parameter['current_value'];
                 if (parameter['current_value'].length > 0 && table_id !== 'PL_Upload') {
-                    form_html.push(table_body_formatter(cHeading, current_table_value, param, repeatable, counter, refreshed));
+                //*-*   form_html.push(table_body_formatter(cHeading, current_table_value, param, repeatable, counter, refreshed));
                 }
             }
             form_html.push('</table>');
@@ -2637,6 +2637,29 @@ function display_result(json) {
         }
 
     }
+     else if (selected_service_name === 'field_trial-submit_study') {
+ 	console.log((selected_service_name));
+        $('#status').html('');
+        var status_text_key = json['results'][0]['status_text'];
+        if (status_text_key == 'Succeeded') {
+            $('#result').html("Done");
+            var url = json['results'][0]['so:url'];
+            $('#url').html( 'See study: <a href="'+ url +' " target="_blank">'+ url  ); //new tag ID
+            if (json['results'][0]['results'] !== undefined) {
+                downloadFile(json['results'][0]['results'][0]['data'], selected_service_name);
+            }
+        } else if (status_text_key == 'Partially succeeded') {
+            $('#result').html("Done, but with errors.");
+            handle_errors(json['results'][0]);
+        } else if (status_text_key == 'Failed' || status_text_key == 'Failed to start' || status_text_key == 'Error') {
+            var general_error = get_general_errors(json['results'][0]);
+            $('#result').html('Job ID: ' + json['results'][0]['job_uuid'] + ' ' + status_text_key + '<br/>  ' + general_error);
+            handle_errors(json['results'][0]);
+            Utils.ui.reenableButton('submit_button', 'Submit');
+        }
+
+    }  
+
     // new services result can be added here
     else {
         $('#status').html('');
