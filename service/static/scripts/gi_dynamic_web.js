@@ -1148,7 +1148,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id, refreshed) 
         }
         // tabular
         else if (grassroots_type == "params:tabular" || grassroots_type == "params:json_array") {
-           //*-* var cHeading = parameter['store']['Column Headings'];
+            var cHeading = parameter['store']['Column Headings']; //uncomment. needed 
             var each_table_obj = {};
             var table_id = param.replace(/ /g, "_");
             var display_style = '';
@@ -1165,7 +1165,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id, refreshed) 
             var current_table_value = [];
 
             each_table_obj['table_id'] = table_id;
-           //*-* each_table_obj['cHeadings'] = cHeading;
+            each_table_obj['cHeadings'] = cHeading;  //uncomment. needed 
             // if (!refreshed) {
             datatable_param_list.push(each_table_obj);
             // }
