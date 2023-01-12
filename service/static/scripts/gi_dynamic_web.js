@@ -1178,7 +1178,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id, refreshed) 
             form_html.push('<table id="' + table_id + '" class="display datatable_param">');
             form_html.push('<thead id="' + table_id + 'thead" >');
             // }
-            //*-*  form_html.push(table_thead_formatter(cHeading));
+            form_html.push(table_thead_formatter(cHeading)); //2023fixed heading for treatment
             form_html.push('</thead>');
             // form_html.push('<label title="' + description + '">' + display_name + '</label>');
             // form_html.push('<input  type="text" class=" form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '"/>');
@@ -1187,6 +1187,7 @@ function produce_one_parameter_form(parameter, repeatable, group_id, refreshed) 
                 current_table_value = parameter['current_value'];
                 if (parameter['current_value'].length > 0 && table_id !== 'PL_Upload') {
                 //*-*   form_html.push(table_body_formatter(cHeading, current_table_value, param, repeatable, counter, refreshed));
+                  form_html.push(table_body_formatter(cHeading, current_table_value, param, repeatable, counter, refreshed));  // 2023, needed for showing the treatment values already saved
                 }
             }
             form_html.push('</table>');
