@@ -34,13 +34,13 @@ def download_file(request):
 
 
 # Define function to download pdf file using template
-def download_TEST(request, filename=''):
+def download_CSV(request, filename=''):
     if filename != '':
         # Define Django project base directory
         BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         # Define the full file path
         filepath = BASE_DIR + '/filedownload/Files/' + filename + '.csv'
-        print("----------PATH", filepath)
+        print("csv path: ", filepath)
         # Open the file for reading content
         path = open(filepath, 'rb')
         # Set the mime type
