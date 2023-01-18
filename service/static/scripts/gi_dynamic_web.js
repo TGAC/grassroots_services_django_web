@@ -2666,6 +2666,7 @@ function display_result(json) {
         var status_text_key = json['results'][0]['status_text'];
         if (status_text_key == 'Succeeded') {
             $('#result').html("Done");
+            handle_errors(json['results'][0]);//2023, show extra error still occur in sucessful submission
             var url = json['results'][0]['so:url'];
             $('#url').html( 'See plot table: <a href="'+ url +' " target="_blank">'+ url  ); //new tag ID
             if (json['results'][0]['results'] !== undefined) {
@@ -2899,10 +2900,16 @@ function handle_errors(json) {
                                 if (tabular_error_array.length > 0) {
                                     error_html += 'PL Upload Sheet: <br/>';
                                     for (var t = 0; t < tabular_error_array.length; t++) {
-                                        var row = tabular_error_array[t]['row'];
-                                        var column = tabular_error_array[t]['column'];
-                                        var cell_error = tabular_error_array[t]['error'];
-                                        error_html += 'Row: ' + row + ' Column: ' + column + ' Error: ' + cell_error + '<br/>';
+					if (tabular_error_array[t]['row'] != undefined){ //2023. new check!
+                                          var row = tabular_error_array[t]['row'];
+                                          var column = tabular_error_array[t]['column'];
+                                          var cell_error = tabular_error_array[t]['error'];
+                                          error_html += 'Row: ' + row + ' Column: ' + column + ' Error: ' + cell_error + '<br/>';
+					  }else{ //when error has no column or row, usually in successful submission
+                                           var other_message =  tabular_error_array[t];
+                                           error_html += other_message+'<br/>';
+                                          }
+
                                     }
                                 }
                             }
