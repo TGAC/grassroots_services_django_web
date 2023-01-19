@@ -2675,6 +2675,8 @@ function display_result(json) {
         } else if (status_text_key == 'Partially succeeded') {
             $('#result').html("Done, but with errors.");
             handle_errors(json['results'][0]);
+	    var url = json['results'][0]['so:url'];  // study submitted,  show url despite errors
+            $('#url').html( 'See plot table: <a href="'+ url +' " target="_blank">'+ url  );//2023new tag
         } else if (status_text_key == 'Failed' || status_text_key == 'Failed to start' || status_text_key == 'Error') {
             var general_error = get_general_errors(json['results'][0]);
             $('#result').html('Job ID: ' + json['results'][0]['job_uuid'] + ' ' + status_text_key + '<br/>  ' + general_error);
