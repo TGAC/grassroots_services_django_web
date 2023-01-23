@@ -694,6 +694,7 @@ function format_crop(crop_json) {
  * @param {JSON} studyJson - Study JSON.
  */
 function create_study_info_html(studyJson) {
+    studyID = studyJson["_id"]["$oid"] //2023 for CSV file name and  link	
     var htmlarray = [];
     htmlarray.push('<table class="table table-bordered">');
     htmlarray.push('<thead>');
@@ -788,7 +789,11 @@ function create_study_info_html(studyJson) {
 
         AddTableRow (htmlarray, "Handbook pdf", handbook); 
     }
-	
+
+    if (check_plots(studyJson)){
+        let CSV_link = '<a target="_blank" style="newstyle_link" href="' + root_dir + 'download/' + studyID + '" target="_blank">' +"Plot data of "+ studyJson['parent_field_trial']['so:name'] + '</a>';
+        AddTableRow(htmlarray, "CSV file ", CSV_link);
+    }
 
     htmlarray.push('</tbody>');
     htmlarray.push('</table>');

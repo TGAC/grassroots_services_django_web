@@ -55,8 +55,13 @@ def single_study(request, study_id):
     
     result_json = json.loads (study)
     study_json = result_json ['results'][0]['results'][0]['data']
+    if  "phenotypes" in study_json: 
+        phenotypes = result_json['results'][0]['results'][0]['data']['phenotypes']  # for CSV file
+    if  'plots' in study_json: 
+        plot_array = result_json['results'][0]['results'][0]['data']['plots']       # for CSV 
+    if  'treatment_factors' in study_json:
+        treatment_factors = result_json['results'][0]['results'][0]['data']['treatment_factors'] # for CSV
 
-    ##print (json.dumps (study_json))
     #print (settings.BASE_DIR)
     full_path=request.build_absolute_uri()
     
@@ -78,7 +83,9 @@ def single_study(request, study_id):
             counters.append (ranges)
             flag=True
    
-    #print(len(study_json['treatment_factors'])) 
+    ## create CSV file /filedownload/Files for link grassroots.tools/download/ID 
+    if  "phenotypes" in study_json: 
+        create_CSV(plot_array, phenotypes, treatment_factors, study_id)
 
     ### replace 'study' for 'plots' to create the link to the plots in given study ###
     full_path_plots=full_path.replace('study', 'plots')
