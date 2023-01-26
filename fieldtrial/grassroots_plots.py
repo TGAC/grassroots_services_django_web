@@ -318,9 +318,14 @@ Create numpy arrays for plotly script. Matrix of raw values and matrix of access
 def numpy_data(json, pheno, current_name, total_rows, total_columns):
     test=json[0]['rows'][0]['study_index']
 
-    #current_name =  json[3]['rows'][0]['observations'][2]['phenotype']['variable'] # SELECT RANDOM PHENOTYPE FOR TESTS 
-    traitName = searchPhenotypeTrait(pheno, current_name)
-    unit      = searchPhenotypeUnit( pheno, current_name)
+    if  "No Data" in pheno:
+        print("No 'phenotypes' key in current study.")
+        traitName = 'No Data'
+        unit      = 'No Data'
+    else:
+        traitName = searchPhenotypeTrait(pheno, current_name)
+        unit      = searchPhenotypeUnit( pheno, current_name)
+
 
     dtID= np.dtype(('U', 4))
 

@@ -105,16 +105,25 @@ def single_plot(request, plot_id):
     plot = get_plot(plot_id)
     plot_json = json.loads(plot)
     study_name = plot_json['results'][0]['results'][0]['data']['so:name']
+    study_data = plot_json ['results'][0]['results'][0]['data']
 
-    plot_array = plot_json['results'][0]['results'][0]['data']['plots']       # send only array of 'plots' to plotly
+    plot_array = plot_json['results'][0]['results'][0]['data']['plots']     
     treatment_factors = plot_json['results'][0]['results'][0]['data']['treatment_factors']
-    phenotypes = plot_json['results'][0]['results'][0]['data']['phenotypes']  # Details of all the phenotypes
 
     total_rows    = plot_json['results'][0]['results'][0]['data']['num_rows']
     total_columns = plot_json['results'][0]['results'][0]['data']['num_columns']
+
+
+    if  'phenotypes' in study_data:
+        phenotypes = plot_json['results'][0]['results'][0]['data']['phenotypes']  #
+        dictTraits = dict_phenotypes(phenotypes, plot_array)  # dictionary to fill dropdown menu
+        default_name = list(dictTraits.keys())[0]             # select first phenotype as default
+    else:
+        dictTraits = {'No Data':'No data'}  #
+        phenotypes = {'No Data': 'No Data'}
+        default_name = list(dictTraits.keys())[0]       
+
    
-    dictTraits = dict_phenotypes(phenotypes, plot_array)  # dictionary to fill dropdown menu
-    default_name = list(dictTraits.keys())[0]             # select first phenotype as default
     print("Default phenotype: ", default_name )
 
     if 'singlePhenotype' in request.GET:
