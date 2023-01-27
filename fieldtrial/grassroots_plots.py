@@ -336,7 +336,11 @@ def numpy_data(json, pheno, current_name, total_rows, total_columns):
     plotsIds  = np.array([], dtype=dtID)  #format of strings
 
     matrices = []
-    
+
+    max_value = np.array([])# new array to find the largest index in columns
+    for j in range(len(json)):
+         max_value = np.append(max_value, int(json[j]['column_index']) )
+
     num_columns = 1
     
     row    = 1
@@ -416,6 +420,8 @@ def numpy_data(json, pheno, current_name, total_rows, total_columns):
     
     if column<columns:
         column=columns #correction when only 1 row.
+
+    column = int(np.max(max_value))
     
     #print("number of plots and shape check", len(json), row, column, row*(column) )
     if (len(json) != row*column):
