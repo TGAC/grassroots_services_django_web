@@ -418,8 +418,8 @@ def numpy_data(json, pheno, current_name, total_rows, total_columns):
 
     column = num_columns-1
     
-    if column<columns:
-        column=columns #correction when only 1 row.
+    #if column<columns:
+    #    column=columns #correction when only 1 row.
 
     column = int(np.max(max_value))
     
