@@ -28,8 +28,7 @@ def getRowCsv(row_json):
     if  ( 'observations' in row_json['rows'][0] ):
         observations = row_json['rows'][0]['observations']
         for i in range(len(observations)):
-            if  ( 'corrected_value' in observations[i] ):
-                #variables.append(observations[i]['phenotype']['variable'])  # correction!!
+            if  ( 'corrected_value' in observations[i] ):                
                 raw_value.append(observations[i]['corrected_value'])
                 phenotypeNames.append(observations[i]['phenotype']['variable'])  # TEST correction
             elif ( 'raw_value' in observations[i] ):            
@@ -39,33 +38,42 @@ def getRowCsv(row_json):
             if ( 'date' in observations[i] ):
                 only_date = observations[i]['date'].split('T')[0]
                 phenotype_date = phenotypeNames[i] + " " + only_date
-                phenotypeNames[i] = phenotype_date # Replace name with name + date                
-            #all observations have index
+                if 'end_date' in observations[i]:
+                        end_date = observations[i]['end_date'].split('T')[0]
+                        phenotype_date = phenotypeNames[i] + " " + only_date + " " + end_date                        
+                phenotypeNames[i] = phenotype_date # Replace name                
+            
             sample = observations[i]['index']
             #Check if sample exists and add it to the name as sample_1
-            # for that we need to run a loop if current observation has another observation
-            # ... marked as sample_2
+           # for that we need to run a loop if current observation has another observation
+           # ... marked as sample_2
             if sample==1 and (i < len(observations)-1):                                    
-                    current_name = observations[i]['phenotype']['variable']                    
-                    # inner loop to check if next observation has a index>2
+                    current_name = observations[i]['phenotype']['variable']   
                     for j in range(i+1, len(observations)):
-                        name = observations[j]['phenotype']['variable']
-                        if current_name == name:
-                            check_sample2 = observations[j]['index']
+                        name = observations[j]['phenotype']['variable'] 
+                        check_sample2 = observations[j]['index']  
+                        if current_name == name:                            
                             if 'date' in observations[j]:
-                                date = observations[j]['date'].split('T')[0]                            
-                                if check_sample2==2 and date==only_date:                                                        
-                                    phenotype_sample = name + " " + only_date + " sample_1" 
-                                    phenotypeNames[i] = phenotype_sample                                                   
-                            if 'date' not in observations[j]:   
+                                if 'date' not in observations[i]:
+                                    only_date=None
+                                date = observations[j]['date'].split('T')[0]
+                                if date==only_date:
+                                    if check_sample2==2 and date==only_date:                                                        
+                                        phenotype_sample = name + " " + only_date + " sample_1" 
+                                        phenotypeNames[i] = phenotype_sample                                        
+                                        break
+                                    
+                            elif 'date' not in observations[j]:
+                                if 'date' in observations[i]:
+                                    break                                
                                 if check_sample2==2:                                                                                            
                                     phenotype_sample1 = name + " sample_1" 
-                                    phenotypeNames[i] = phenotype_sample1                                
+                                    phenotypeNames[i] = phenotype_sample1                                    
                                     break                                                
-            # Check rest of samples                        
+
             if  sample>1:                
                 phenotype_sample = phenotypeNames[i] + " sample_" + str(sample)
-                phenotypeNames[i] = phenotype_sample                
+                phenotypeNames[i] = phenotype_sample
     
 
     if  ( 'treatments' in row_json['rows'][0] ):
@@ -110,49 +118,49 @@ def create_CSV(plot_data, phenotypes, treatment_factors, plot_id):
     array_rows  = []
     
     pheno_headers = list(phenotypes.keys())
-    new_headers = pheno_headers.copy()
-    #CHECK IF DATES OR SAMPLES EXIST. if so, add them to the name
+    new_headers = pheno_headers.copy()    
+    #Check if date or samples exists and add it to the name. These are the general headers
     for data in plot_data:
         if 'observations' in data['rows'][0]:
             observations = data['rows'][0]['observations']
-            for i, observation in enumerate(observations):
-                phenoname = observation['phenotype']['variable']
+            for i, observation in enumerate(observations):                
+                phenoname = observation['phenotype']['variable']                
                 #Check if date exists and add it to the name
-                if 'date' in observation:
+                if 'date' in observation:                    
                     only_date = observation['date'][:10]                    
                     dated_name = phenoname + " " + only_date
-                    if phenoname in new_headers:
+                    if 'end_date' in observation:
+                        end_date = observation['end_date'][:10]
+                        dated_name = phenoname + " " + only_date + " " + end_date#!!!!!                    
+                    if phenoname in new_headers:                        
                         index = new_headers.index(phenoname)
                         new_headers[index] = dated_name 
-                        phenoname = dated_name                        
+                        phenoname = dated_name                                                
                     elif dated_name not in new_headers:
                         new_headers.append(dated_name)
                         phenoname = dated_name
                         index = new_headers.index(phenoname)
+
                 sample = observation['index'] #index always exists when no samples used and it is 1
                 # To check if current observation has sample on its name...
                 # ... you need to check if its next observation (if any) has a index>2                                
                 if sample==1 and (i < len(observations)-1):                
                     phenoname = observation['phenotype']['variable']
                     for j in range(i+1, len(observations)):
-                        name = observations[j]['phenotype']['variable']
-                        
-                        if phenoname == name:
-                            check_sample2 = observations[j]['index']
-                            #print("BEFORE IFS-----",j, check_sample2)
+                        next_name = observations[j]['phenotype']['variable']                        
+                        if phenoname == next_name:
+                            check_sample2 = observations[j]['index']                            
                             if 'date' in observations[j]:
                                 date = observations[j]['date'].split('T')[0]                            
                                 if check_sample2==2 and date==only_date:
-                                    phenotype_dated = name + " " + only_date
+                                    phenotype_dated = phenoname + " " + only_date
                                     if phenotype_dated in new_headers:
-                                        new_headers[index] = phenotype_dated + " sample_1"
-                                        #print("++GENERAL (name and date)", phenotype_dated)
+                                        new_headers[index] = phenotype_dated + " sample_1"                                        
                             if 'date' not in observations[j]:   
                                 if check_sample2==2:                    
                                     if phenoname in new_headers:
                                         index = new_headers.index(phenoname)                                        
-                                        new_headers[index] = phenoname + " sample_1" 
-                                        #print("GENERAL (samples)",new_headers[index]) 
+                                        new_headers[index] = phenoname + " sample_1"                                         
                                         
                 if  sample>1:                    
                     if 'date' in observation:                        
