@@ -27,7 +27,9 @@
         <h2 id="title">Field Trial Details</h2>
 
         <p id="description"><br/>Study: <a href="/fieldtrial/study/{{ plot_id|safe }}" target="_blank">{{ study_name|safe }}</a></p>
-	<p><a href="{% url 'downloads:download' filename=plot_id %} ">Download csv file of plot data</a></p>
+        <p><a href="{% url 'downloads:download' filename=plot_id %} ">Download csv file of plot data</a>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="#heatmap">Jump to Interactive heatmap visualisation.</a></p>
         <form id="form" role="form">
             <div class="list_service_table">
                 <table id="listTable"></table>
@@ -110,7 +112,7 @@
 </section>
 
 
-<section id="TEST3">
+<section id="heatmap">
         <h4 id="title">Interactive heatmap</h4>
 <form action = "">
 <p> Select phenotype:
