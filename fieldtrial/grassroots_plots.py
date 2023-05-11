@@ -363,8 +363,11 @@ def numpy_data(json, pheno, current_name, total_rows, total_columns):
      
                elif ( 'observations' in json[j]['rows'][0] ):
                     if( search_phenotype(json[j]['rows'][0]['observations'], current_name) ):
-                        indexCurrentPhenotype = search_phenotype_index (json[j]['rows'][0]['observations'], current_name)
-                        row_raw  = np.append(row_raw, json[j]['rows'][0]['observations'][indexCurrentPhenotype]['raw_value']) 
+                        indexCurrentPhenotype = search_phenotype_index (json[j]['rows'][0]['observations'], current_name)                        
+                        if 'raw_value' in json[j]['rows'][0]['observations'][indexCurrentPhenotype]:
+                            row_raw  = np.append(row_raw, json[j]['rows'][0]['observations'][indexCurrentPhenotype]['raw_value'])
+                        if 'corrected_value' in json[j]['rows'][0]['observations'][indexCurrentPhenotype]:
+                            row_raw  = np.append(row_raw, json[j]['rows'][0]['observations'][indexCurrentPhenotype]['corrected_value'])
                         row_acc  = np.append(row_acc, json[j]['rows'][0]['material']['accession']) 
                         plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
                     else:
@@ -397,7 +400,10 @@ def numpy_data(json, pheno, current_name, total_rows, total_columns):
             elif ( 'observations' in json[j]['rows'][0] ):
                     if( search_phenotype(json[j]['rows'][0]['observations'], current_name) ):
                         indexCurrentPhenotype = search_phenotype_index (json[j]['rows'][0]['observations'], current_name)
-                        row_raw  = np.append(row_raw, json[j]['rows'][0]['observations'][indexCurrentPhenotype]['raw_value'])  
+                        if 'raw_value' in json[j]['rows'][0]['observations'][indexCurrentPhenotype]:
+                            row_raw  = np.append(row_raw, json[j]['rows'][0]['observations'][indexCurrentPhenotype]['raw_value'])
+                        if 'corrected_value' in json[j]['rows'][0]['observations'][indexCurrentPhenotype]:
+                            row_raw  = np.append(row_raw, json[j]['rows'][0]['observations'][indexCurrentPhenotype]['corrected_value'])
                         row_acc  = np.append(row_acc, json[j]['rows'][0]['material']['accession']) 
                         plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
                     else:
