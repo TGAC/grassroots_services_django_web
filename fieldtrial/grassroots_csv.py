@@ -274,7 +274,9 @@ def create_CSV(plot_data, phenotypes, treatment_factors, plot_id):
     # create a new CSV file without the empty columns
     if empty_columns:
         removed_columns = [col for col in empty_columns if col not in exception]
-        print(f"The following columns have been removed due to being empty: {', '.join(removed_columns)}")
+        removed_columns_message = "The following columns have been removed due to being empty: {}".format(', '.join(removed_columns))
+        print(removed_columns_message)
+        #print(f"The following columns have been removed due to being empty: {', '.join(removed_columns)}")
 
         with open('data_cleaned.csv', 'w', encoding='UTF8', newline='') as f:
             writer = csv.DictWriter(f, fieldnames=[col for col in headers if col in exception or col not in empty_columns])
