@@ -58,7 +58,7 @@ def getRowCsv(row_json):
                                     only_date=None
                                 date = observations[j]['date'].split('T')[0]
                                 end_date = None
-                                if 'end_date' in observations[i]:        
+                                if 'end_date' in (observations[i] and observations[j]):
                                     end_date = observations[j]['end_date'].split('T')[0]
                                     full_date = only_date + " " + end_date 
                                 if date==only_date:
