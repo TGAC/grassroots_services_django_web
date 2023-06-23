@@ -2241,8 +2241,13 @@ function construct_parameters(form) {
             var type = name[2];
             var group = name[3];
             var value = form[i]['value'];
+            var modify = false; // new for correction
             if (form[i]['value'] === "") {
                 value = null;
+            }
+            if (param === 'TF Name' && value === null) { // new for correction for editing study with no treatment factor
+                modify=true;
+                console.log("correct FT levels");
             }
             var parameter = {};
             parameter['param'] = param;
@@ -2269,6 +2274,16 @@ function construct_parameters(form) {
             }
             parameters.push(parameter);
         }
+    }
+    if (modify === true){
+        for (var i = 0; i < parameters.length; i++) {
+             console.log("correction------", parameters[i].param)
+            if (parameters[i].param === "TF Levels-0") {
+              //  console.log("correction------MATCH", parameters[i].param)
+              parameters[i].current_value = [null];              
+              break; // Stop iterating once the desired dictionary is found
+            }
+          }        
     }
     return process_repeatable_parameters(parameters);
 }
