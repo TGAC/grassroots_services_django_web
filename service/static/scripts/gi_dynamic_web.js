@@ -1667,6 +1667,9 @@ function format_treatment_ajax_result(array, type) {
                 html.push('</td>');
                 html.push('<td>');
                 html.push(variable['so:name']);
+                if (variable['so:sameAs'].startsWith('CO')) {
+                    html.push('<br><img src="https://grassroots.tools/images/crop_ontology_logo_2.png" style="width: 70%;">');
+                  }
                 html.push('</td>');
                 html.push('<td>');
                 html.push(variable['so:sameAs']);
