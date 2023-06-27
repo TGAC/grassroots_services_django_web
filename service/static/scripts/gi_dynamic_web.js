@@ -621,7 +621,10 @@ function populate_page_with_json(json, refreshed) {
         var buttons = [];
         // DAN  ? -- $('#' + datatableId).DataTable().destroy();
         if (datatableId === 'PL_Upload') {
-            add_plot_datatable(datatableId);
+            //########## NEW correction, no table ###########
+            if (selected_service_name !== 'field_trial-submit_plots'){   // DAN 2023 
+            add_plot_datatable(datatableId);   // remove table and edit button in submit plot service
+            }
         } else {
             var ndt = $('#' + datatableId).DataTable({
                 scrollX: true,
@@ -1176,20 +1179,25 @@ function produce_one_parameter_form(parameter, repeatable, group_id, refreshed) 
             form_html.push('<label id="' + table_id + 'dropstatus" ' + display_style + '></label><br/>');
 
             form_html.push('<table id="' + table_id + '" class="display datatable_param">');
-            form_html.push('<thead id="' + table_id + 'thead" >');
-            // }
-            form_html.push(table_thead_formatter(cHeading)); //2023fixed heading for treatment
-            form_html.push('</thead>');
-            // form_html.push('<label title="' + description + '">' + display_name + '</label>');
-            // form_html.push('<input  type="text" class=" form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '"/>');
+            ///################# 2023 removing editing from submit plot service ######################
+            if (selected_service_name !== 'field_trial-submit_plots'){   // DAN 2023 do not show header for field_trial-submit_plots
+                form_html.push('<thead id="' + table_id + 'thead" >');            		        
+		        console.log("one parameter_form: ",parameter);	
+                form_html.push(table_thead_formatter(cHeading));  //2023 NEEDED!! MANAGER SERVICE
+		
+                form_html.push('</thead>');
+                    // form_html.push('<label title="' + description + '">' + display_name + '</label>');
+                    // form_html.push('<input  type="text" class=" form-control"  name="' + param + '^' + grassroots_type + '^' + type + '^' + group + '" id="' + param + '" value="' + default_value + '"/>');
 
-            if (parameter['current_value'] != undefined) {
-                current_table_value = parameter['current_value'];
-                if (parameter['current_value'].length > 0 && table_id !== 'PL_Upload') {
-                //*-*   form_html.push(table_body_formatter(cHeading, current_table_value, param, repeatable, counter, refreshed));
-                  form_html.push(table_body_formatter(cHeading, current_table_value, param, repeatable, counter, refreshed));  // 2023, needed for showing the treatment values already saved
+                if (parameter['current_value'] != undefined) {
+                    current_table_value = parameter['current_value'];
+                    if (parameter['current_value'].length > 0 && table_id !== 'PL_Upload') {
+                    // *-*    form_html.push(table_body_formatter(cHeading, current_table_value, param, repeatable, counter, refreshed)); // TEST parameters error.
+                       form_html.push(table_body_formatter(cHeading, current_table_value, param, repeatable, counter, refreshed));
+                    }
                 }
-            }
+            }   
+            ///################# 2023 removing editing from submit plot service ######################
             form_html.push('</table>');
             form_html.push('</div><hr/>');
         }
