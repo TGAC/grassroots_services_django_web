@@ -3708,6 +3708,18 @@ function handleXlsxFileSelect(evt) {
     var files = evt.dataTransfer.files; // FileList object.
     var table_id = evt.target.id;
 
+    //#################
+    tableId = 'PL_Upload';
+    var table = $('#' + tableId);
+    if ($.fn.DataTable.isDataTable(table)) {
+      table.DataTable().destroy();
+      table.empty();
+      console.log("initial table destroyed");
+    }else {
+        console.log("TABLE NOT FOUND");
+      }
+    //#################
+
     // files is a FileList of File objects. List some properties.
     var f = files[0];
 
@@ -3725,9 +3737,10 @@ function handleXlsxFileSelect(evt) {
                 plots = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {raw: false});
                 var filename = f.name;
                 $('#PL_Uploaddropstatus').html('<span style="color:#18bc9c;">Excel file: <b><i>' + filename + '</i></b> Processing done, ready to submit.</span>');
-                alert('Excel file: ' + filename + ' Processing done, the table will not display the content due to the size.');
+                //alert('Excel file: ' + filename + ' Processing done, the table will not display the content due to the size.');
                 $('#PL_Upload_wrapper').hide();
                 console.log(JSON.stringify(plots));
+                populateDataTable(plots, table_id);
             } else {
                 var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[workbook.SheetNames[0]]);
                 // var json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {header:1});
@@ -3744,6 +3757,41 @@ function handleXlsxFileSelect(evt) {
         alert("Failed to load file");
     }
     Utils.ui.reenableButton('submit_button', 'Submit');
+}
+
+// New to display the plots in a table after being dropped
+function populateDataTable(plots, tableId) {
+    console.log("(populateDatable) tableId: " + tableId); // drop
+    tableId = 'PL_Upload';    
+    var table = $('#' + tableId);
+        
+  if ($.fn.DataTable.isDataTable(table)) {    
+    table.DataTable().destroy();
+    table.empty();
+    console.log("TABLE DESTROYED");
+   }
+
+  var columns = Object.keys(plots[0]).map(function (key) {
+    return { data: key, title: key, defaultContent: "" };
+  });
+
+    //console.log("COLUMNS: ",(columns));
+   
+      var dataTable = table.DataTable({
+            destroy: true,
+            scrollX: true,
+            paging: false,
+            aaSorting: [],
+            columns: columns,
+            data: plots,
+            drawCallback: function () {
+                console.log("TABLE CREATED");
+              }
+            //data: plots.slice(0,30)
+        });
+    
+  dataTable.columns.adjust().draw();
+  return dataTable;
 }
 
 // deprecated
