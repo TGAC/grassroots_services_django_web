@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     # manually added two apps
     'service.apps.ServiceConfig',
     'fieldtrial.apps.ServiceConfig',
+    'filedownload',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
