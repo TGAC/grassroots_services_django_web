@@ -137,8 +137,8 @@ QUEEN_SERVER_URL = "http://10.0.152.54/grassroots/queen_bee_backend"
 
 
 # increase the limit size of files for uploading
-DATA_UPLOAD_MAX_MEMORY_SIZE =  7340032
-FILE_UPLOAD_MAX_MEMORY_SIZE =  7340032
+DATA_UPLOAD_MAX_MEMORY_SIZE =  52428800
+FILE_UPLOAD_MAX_MEMORY_SIZE =  17340032
 
 
 
