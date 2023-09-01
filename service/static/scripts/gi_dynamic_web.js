@@ -3729,27 +3729,63 @@ function handleXlsxFileSelect(evt) {
         reader.onload = function (e) {
             var data = e.target.result;
             data = new Uint8Array(data);
-            // console.log(XLSX.utils.sheet_to_csv((XLSX.read(data, {type: 'array'}))));
-            //  console.log(((XLSX.read(data, {type: 'array'}))));
-            var workbook = XLSX.read(data, {type: 'array'});
+            var workbook = XLSX.read(data, { type: 'array' });
 
             if (selected_service_name === 'field_trial-submit_plots') {
-                plots = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {raw: false});
+                //var plots;  USE GLOBAL VARIABLE!
                 var filename = f.name;
-                $('#PL_Uploaddropstatus').html('<span style="color:#18bc9c;">Excel file: <b><i>' + filename + '</i></b> Processing done, ready to submit.</span>');
-                //alert('Excel file: ' + filename + ' Processing done, the table will not display the content due to the size.');
-                $('#PL_Upload_wrapper').hide();
-                console.log(JSON.stringify(plots));
-                populateDataTable(plots, table_id);
+
+                if (filename.endsWith('.xlsx')) {
+                    plots = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], { raw: false });
+                } else if (filename.endsWith('.csv')) {
+                    var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[workbook.SheetNames[0]]);
+                    var result = Papa.parse(csv, {
+                        header: true,
+                        skipEmptyLines: true, // Skip empty lines in CSV
+                        transformHeader: function (header) {
+                            return header.trim(); // Trim header names
+                        },
+                transform: function (value, header) {
+                // Custom parsing for date values. (CORRECTING FORMAT OF DATES)
+                if (header.toLowerCase().includes('date')) {
+                        //console.log("CHECK DATE: " + value);
+                        var parts = value.split('/');
+                        if (parts.length === 3) {
+                            //correct incorrect CSV parsing of dates. YY -> YYYY. ONLY FOR 2000s!!
+                            var year = parts[2].length === 2 ? '20' + parts[2] : parts[2];
+                            //return parts[2] + '-' + parts[0].padStart(2, '0') + '-' + parts[1].padStart(2, '0');
+                            return year + '-' + parts[0].padStart(2, '0') + '-' + parts[1].padStart(2, '0');
+                        }
+                }
+                return value;
+                }
+                });
+                plots = result.data;//.slice(1); // Exclude the first row (header row)
+                console.log("CHECK CSV RESULT: " + JSON.stringify(result.data));
+                }
+                if (plots && plots.length > 0) {
+                    plots = plots.filter(function (row) {
+                        return Object.values(row).some(function (value) {
+                            return value !== undefined && value !== null && value !== '';
+                        });
+                    });
+
+                    $('#PL_Uploaddropstatus').html('<span style="color:#18bc9c;">File: <b><i>' + filename + '</i></b> Processing done, ready to submit.</span>');
+                    $('#PL_Upload_wrapper').hide();
+                    console.log("FILENAME: " + filename);
+                    console.log(JSON.stringify(plots));
+                    // TEST NEW FUNCTION FOR CREATING TABLE IN SAME PLACE AS THE SERVICE
+                    populateDataTable(plots, table_id);
+                } else {
+                    console.error("Invalid file format or empty data:", filename);
+                    alert("Invalid file format or empty data: " + filename);
+                }
             } else {
                 var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[workbook.SheetNames[0]]);
-                // var json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]], {header:1});
                 console.log('tableid: ' + table_id);
-                // table_add_rows(table_id,json);
                 console.log('csv: ' + csv.trim());
                 table_add_rows_csv(table_id, csv.trim());
             }
-
         };
         reader.readAsArrayBuffer(f);
 
