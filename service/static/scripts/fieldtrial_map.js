@@ -162,38 +162,103 @@ function startFieldTrialGIS(jsonArray, type_param) {
     if (type_param === 'Grassroots:Study') {
 	  create_study_modal_html(filtered_data_without_location.concat(filtered_data_with_location));
     }
+
+    // fix behaviour of popover (Download column, Friccionless info) in main table  
     $('#download_question').popover({
-        content: 'A Frictionless Data Package contains all of the data associated with a study including its parent field trial and programme. For more information and the tool to unpack these packages, go <a class="newstyle_link" href="https://grassroots.tools/frictionless-data/grassroots-fd-client.md" target="_blank">here</a>',
-        html: true,
-        placement: 'left',
-        trigger: 'manual',
-        // delay: {
-        //     show: "0",
-        //     hide: "5000"
-        // },
-        animation: false,
-        container: 'body'
+    content: 'A Frictionless Data Package contains all of the data associated with a study including its parent field trial and programme. For more information and the tool to unpack these packages, go <a class="newstyle_link" href="https://grassroots.tools/frictionless-data/grassroots-fd-client.md" target="_blank">here</a>',
+    html: true,
+    placement: 'left',
+    trigger: 'manual',
+    animation: false,
+    container: 'body'
     });
-    //     .on("mouseenter", function () {
-    //     var _this = this;
-    //     $(this).popover("show");
-    //     $("#download_question").on("mouseleave", function () {
-    //         $(_this).popover('hide');
-    //     });
-    // }).on("mouseleave", function () {
-    //     var _this = this;
-    //     setTimeout(function () {
-    //         if (!$("#download_question:hover").length) {
-    //             $(_this).popover("hide");
-    //         }
-    //     }, 300);
-    // });
-    $('#download_question').on('mouseenter', function () {
-        $(this).popover('toggle');
+
+        var isPopoverVisible = false;  // state to track if the popover is currently visible or not
+        $('#download_question').on('mouseenter', function() {
+    if (isPopoverVisible) {
+        console.log("Mouse entered and hiding the popover.");
+        $(this).popover('hide');
+        isPopoverVisible = false;
+    } else {
+        console.log("Mouse entered and showing the popover.");
+        $(this).popover('show');
+        isPopoverVisible = true;
+    }
+        });
+
+        $(document).on('click', function(event) {
+    var $popoverElement = $('#download_question');
+
+    // If click is outside the popover and the interrogation sign, hide the popover
+    if (!$popoverElement.is(event.target) && $popoverElement.has(event.target).length === 0 && $('.popover').has(event.target).length === 0) {    
+        if (isPopoverVisible) {
+            $popoverElement.popover('hide');
+            isPopoverVisible = false;
+        }
+    }
+        });
+
+        // Added scroll event listener
+        $(window).on('scroll', function() {
+    if (isPopoverVisible) {
+        $('#download_question').popover('hide');
+        isPopoverVisible = false;
+    }
+        });
+
+/*
+//-------- NEW CODE FOR BOOSTRAP 5 -------- //
+    var popoverElement = document.querySelector('#download_question');
+    var popoverInstance = new bootstrap.Popover(popoverElement, {
+    content: 'A Frictionless Data Package contains all of the data associated with a study including its parent field trial and programme. For more information and the tool to unpack these packages, go <a class="newstyle_link" href="https://grassroots.tools/frictionless-data/grassroots-fd-client.md" target="_blank">here</a>',
+    html: true,
+    placement: 'left',
+    trigger: 'manual',
+    animation: false,
+    container: 'body'
     });
-    // $('#download_question').on('mouseover', function () {
-    //     $(this).popover('show');
-    // });
+
+    var isPopoverVisible = false;  // state to track if the popover is currently visible or not
+
+    popoverElement.addEventListener('mouseenter', function() {
+    if (isPopoverVisible) {
+    console.log("Mouse entered and hiding the popover.");
+    popoverInstance.hide();
+    isPopoverVisible = false;
+    } else {
+    console.log("Mouse entered and showing the popover.");
+    popoverInstance.show();
+    isPopoverVisible = true;
+    }
+    });
+
+    document.addEventListener('click', function(event) {
+    // If click is outside the popover and the interrogation sign, hide the popover
+    if (!popoverElement.contains(event.target) && event.target !== popoverElement) {
+    console.log("Document clicked outside the popover.");
+    if (isPopoverVisible) {
+        popoverInstance.hide();
+        isPopoverVisible = false;
+    }
+    }
+    });
+
+    // Added scroll event listener
+    window.addEventListener('scroll', function() {
+    if (isPopoverVisible) {
+    console.log("Page scrolled, hiding the popover.");
+    popoverInstance.hide();
+    isPopoverVisible = false;
+    }
+    });
+//-------- NEW CODE FOR BOOSTRAP 5 -------- //
+// ------------------------
+*/
+
+
+
+
+
 }
 
 /**
