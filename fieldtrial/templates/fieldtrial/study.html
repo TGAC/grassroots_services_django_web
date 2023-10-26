@@ -1,0 +1,388 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% load fieldtrial_tag %}
+{% load format_value %}
+
+{% block all_styles_and_scripts %}
+{{ block.super }} 
+<!-- ********************************************************-->
+    <!-- Leaflet NEWEST VERSION -->
+    <link rel="stylesheet" href="{% static 'fieldtrial/SCRIPTS/leaflet/leaflet.css' %}"/>
+    <script src="{% static 'fieldtrial/SCRIPTS/leaflet/leaflet.js' %}"></script> 
+
+    <!-- Leaflet markercluster NEWEST VERSION -->
+    <link rel="stylesheet" href="{% static 'fieldtrial/SCRIPTS/leaflet.markercluster/MarkerCluster.css' %}"/>
+    <link rel="stylesheet" href="{% static 'fieldtrial/SCRIPTS/leaflet.markercluster/MarkerCluster.Default.css' %}"/>
+    <script src="{% static 'fieldtrial/SCRIPTS/leaflet.markercluster/leaflet.markercluster.js' %}"></script>
+ <style type="text/css">
+    .modal-dialog {
+    max-width: 70%;
+   }
+    .modal-body {
+        max-height: 15vh;
+        overflow-y: auto;
+    }
+
+    @media (min-height: 500px) {
+        .modal-body {
+            height: 400px;
+        }
+    }
+
+    @media (min-height: 800px) {
+        .modal-body {
+            height: 600px;
+        }
+    }
+ <style type="text/css">
+    #resultTable td, th {
+        text-align: center;
+    }
+
+    @media (max-width: 767px) {
+        section h2 {
+            font-size: 1em;
+            margin: 0;
+        }
+
+        #map_buttons {
+            position: absolute;
+            top: 150px;
+            border: 1px solid;
+            display: none;
+        }
+    }
+
+    @media (min-width: 767px) {
+        #map_buttons {
+            position: absolute;
+            top: 200px;
+            display: none;
+        }
+    }
+
+    #new_stuff .table {
+        width: 95%;
+        margin: 0 auto; /* This centers the table */
+        border-collapse: collapse; /* Ensures borders don't double up */
+        border: 1px solid black; 
+    }
+
+    #new_stuff .table td, #new_stuff .table tr {
+        border: 1px solid black;
+    }
+    .centered-title {
+        width: 95%;
+        margin: 0 auto;
+        text-align: left; 
+    }
+    
+ </style>
+
+{% endblock %}
+
+{% block content %}
+
+ <section id="services" style="padding: 100px 0px 1px 0px ! important;">
+    <div class="container">
+        <h2 id="title">Browse Field Trials</h2>
+
+        <p id="description"></p>
+        <form id="form" role="form">
+            <div class="list_service_table">
+                <table id="listTable"></table>
+            </div>
+        </form>
+        <div id="status"></div>
+        <div id="output_format_div" style="display:none; float:right;">
+            <p>Download job format
+                <select id="output_format" onchange="changeDownloadFormat();">
+
+                </select>
+            </p>
+        </div>
+        <div style="clear:both;"></div>
+
+        <div id="result"><img src="../../static/images/ajax-loader.gif"/></div>
+
+        <div id="map"></div>
+        <div id="map_buttons">
+            <div class="input-group">
+               <span class="input-group-btn" id="locationButton">
+                    <button type="button" class="btn btn-default" onclick="update_map_location();">My Location
+                    </button>
+               </span>
+            </div>
+        </div>
+
+	<!-- REMOVE table wrapper  -->
+
+        <!-- Modal -->
+        <div class="modal " tabindex="-1" role="dialog" id="plotModal" style="z-index: 999999;">
+            <div class="modal-dialog  modal-dialog-centered" role="document">
+                <div class="modal-content" style="z-index: 9999999;">
+                    <div class="modal-header">
+                        <h5 class="modal-title"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="modal-body">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>     
+    </div>
+ </section>
+ 
+ <section id="new_stuff">
+    <h3 class="table-title centered-title">Study details</h3>
+    
+    <div id="modal_treatment" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-body"></div>
+           <table class="table">
+                              <thead><tr><th>Treatment</th><th>Ontology term</th><th width="50%">Description</th><th>Values</th></tr></thead><tbody>
+                      {% for j in N_treatments %}
+                       <tr>
+                         <td>{% format_treatment     study_json "treatment_factors" "treatment.so:name"    j %}</td>
+                             <td>{% format_ontology_link study_json "treatment_factors" "treatment.so:sameAs"  j %}</td>
+                             <td>{% format_treatment    study_json "treatment_factors" "treatment.so:description" j %}</td>
+                         <td>
+                           {% for i in counters|index:j %}
+                          {% format_treatment_lists study_json "treatment_factors" "values" "Label" j i %}: 
+                          {% format_treatment_lists study_json "treatment_factors" "values" "Value" j i %} <br>
+                               {% endfor %}
+                        </td>
+                       </tr>
+                      {% endfor %}
+                  </tbody></table>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" data-bs-dismiss="modal">Close</button>
+            </button>
+            </div>
+          </div>
+        </div>
+      </div>
+     
+    <table class="table table-bordered dataTable no-footer">
+            <col style="width:40%">
+            <col style="width:60%">
+    {% if "so:name" in study_json %}
+       <tr><td><strong>Study Name:</strong></td> <td>{%lookup_keys study_json 'so:name'%}</td></tr>
+    {% endif %}
+    {% if "so:description" in study_json %}
+    <tr><td><strong>Study Description:</strong></td><td>{% lookup_keys study_json "so:description" %}</td></tr>
+ {% endif %}
+ 
+ {% if "parent_program" in study_json %} 
+    <tr><td><strong>Programme:</strong></td><td> {% format_programme study_json "parent_program.so:name" %}</td></tr>
+ {% endif %}
+ 
+ {% if "parent_field_trial" in study_json %}
+    <tr><td><strong>Field Trial Name:</strong></td><td> <a href="{{ft_path}}">{% lookup_keys study_json "parent_field_trial.so:name" %}</a></td></tr>
+ {% endif %}
+ 
+ {% if "study_design" in study_json %}
+         <tr><td><strong>Study Design:</strong></td><td>{% lookup_keys study_json "study_design" %}</td></tr>
+ {% endif %}
+ 
+ {% if "plan_changes" in study_json and study_json.plan_changes != None %}
+         <tr><td><strong>Changes to Experiment Plan:</strong></td><td>{% lookup_keys study_json "plan_changes" %}</td></tr>
+ {% endif %}
+ 
+ {% if "growing_conditions" in study_json and study_json.growing_conditions != None %}
+         <tr><td><strong>Growing conditions:</strong></td><td>{% lookup_keys study_json "growing_conditions" %}</td></tr>
+ {% endif %}
+ 
+ {% if "phenotype_gathering_notes" in study_json and study_json.phenotype_gathering_notes != None  %}
+         <tr><td><strong>Phenotype Gathering Notes:</strong></td><td>{% lookup_keys study_json "phenotype_gathering_notes" %}</td></tr>
+ {% endif %}
+ 
+ {% if "physical_samples_collected" in study_json and study_json.physical_samples_collected != None %}
+         <tr><td><strong>Physical samples collected:</strong></td><td>{% lookup_keys study_json "physical_samples_collected" %}</td></tr>
+ {% endif %}
+ 
+ {% if "data_not_included" in study_json and study_json.data_not_included != None  %}
+         <tr><td><strong>Data not included:</strong></td><td>{% lookup_keys study_json "data_not_included" %}</td></tr>
+ {% endif %}
+ 
+ {% if "parent_field_trial" in study_json %}
+         <tr><td><strong>Team:</strong></td><td>{% lookup_keys study_json "parent_field_trial.team" %}</td></tr>
+ {% endif %}
+ 
+ {% if "envo:00002000" in study_json %}
+ <tr><td><strong> Slope:</strong></td><td>{% lookup_keys study_json "envo:00002000" %}</td></tr>
+ {% endif %}
+ 
+ {% if "weather" in study_json and study_json.weather != None  %}
+ <tr><td><strong>  Weather:</strong></td><td>{% lookup_keys study_json "weather" %}</td></tr>
+ {% endif %}
+ 
+ {% if "current_crop" in study_json and study_json.current_crop != None %}
+         <tr><td><strong>Current Crop:</strong></td><td>{% format_crop study_json "current_crop.so:name" %}</td>
+ {% endif %}
+ 
+ {% if "previous_crop" in study_json and study_json.previous_crop != None   %}
+      <tr><td><strong>Previous Crop:</strong></td><td>{% format_crop study_json "previous_crop.so:name" %}</td>
+ 
+ {% endif %}
+ 
+ {% if "sowing_year" in study_json and study_json.sowing_year != None %}
+         <tr><td><strong>Sowing Year:</strong></td><td>{% lookup_keys study_json "sowing_year" %}</td></tr>
+ {% endif %}
+ 
+ {% if "harvest_year" in study_json and study_json.harvest_year != None  %}
+         <tr><td><strong>Harvest Year:</strong></td><td>{% lookup_keys study_json "harvest_year" %}</td></tr>
+ {% endif %}
+ 
+ {% if "plots" in study_json  and  study_json.plots|length > 0  %}
+ <tr><td><strong>  Plots:</strong></td><td><a href="{{path_plots}}">view plots</a></td></tr>
+ {% endif %}
+ 
+ 
+ {% if "address" in study_json %}
+         <tr><td><strong>Address:</strong></td><td>{% format_address study_json "address.name" %} </td></tr>
+ {% endif %}
+ 
+ {% if flag %}
+ <tr><td><strong>Treatment Factors:</strong></td><td><a href="#"  data-bs-toggle="modal" data-bs-target="#modal_treatment">Treatment Factors</a></td></tr>
+ {% endif %}
+ 
+ {% if "curator" in study_json %}
+         <tr><td><strong>Curator:</strong></td><td> {%format_curator study_json "curator.so:name" %}</td></tr>
+ {% endif %}
+ 
+ {% if "contact" in study_json %}
+         <tr><td><strong>Contact:</strong></td><td>{%format_contact study_json "contact.so:name" %} </td></tr>
+ {% endif %}
+ 
+ {% if "image_collection_notes" in study_json and study_json.image_collection_notes != None %}
+         <tr><td><strong>Images Collected:</strong></td><td>{% lookup_keys study_json "image_collection_notes" %}</td></tr>
+ {% endif %}
+ 
+ {% if "so:contentUrl" in study_json %}
+         <tr><td><strong>Download Frictionless Data Package:</strong>
+      </td><td>
+          <a href="{% lookup_keys study_json "so:contentUrl" %}">Frictionless data</a></td></tr>
+ {% endif %}
+ 
+ {% if "handbook" in study_json %}
+ <tr><td><strong>Handbook pdf:</strong></td><td> 
+         <a href="{% lookup_keys study_json "handbook.so:url" %}"> {% lookup_keys study_json "handbook.name" %} </a></td></tr>
+ {% endif %}
+</table>
+</section>
+
+
+
+{% endblock %}
+
+{% block additional_scripts %}
+ 
+<!--NEW STUFF-->
+<script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+        var myModal = new bootstrap.Modal(document.getElementById('modal_treatment'), {});
+    });
+</script>    
+
+ <script type="text/javascript">
+    $(document).ready(function () {
+        $('#plots').html('<img src="{% static 'images/ajax-loader.gif' %}"/>');
+        $('#result').html('');
+        // injected from view the data and type
+        start_map({{ data|safe }}, '{{ type|safe }}');
+    });
+
+    var location_layer_marker = new L.MarkerClusterGroup({});
+    var location_layer_circle = new L.MarkerClusterGroup({});
+
+    function start_map(ft_json, type_param) {
+        $('#simpleAdvanceWrapper').hide();
+        $('#status').html('');
+        $('#form').html('');
+        $('#tableWrapper').html('<table id="resultTable"></table>');
+        
+        markersGroup2 = new L.MarkerClusterGroup({});
+        
+        map = L.map('map', {zoomControl: false}).setView([52.621615, 10.219470], 5);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+            maxZoom: 25
+        }).addTo(map);
+
+        L.control.zoom({position: 'topright'}).addTo(map);
+        L.control.scale().addTo(map);
+
+        startFieldTrialGIS(ft_json['results'][0]['results'], type_param);
+        $('#map_buttons').show();
+        if (ft_json['results'][0]['results'][0]['data']['address'] !== undefined) {
+            var la = ft_json['results'][0]['results'][0]['data']['address']['address']['location']['centre']['latitude'];
+            var lo = ft_json['results'][0]['results'][0]['data']['address']['address']['location']['centre']['longitude'];
+            map.setView([la, lo], 16, {animate: true});
+        }
+        function onLocationFound(e) {
+
+            map.removeLayer(location_layer_marker);
+            map.removeLayer(location_layer_circle);
+
+            location_layer_marker = new L.MarkerClusterGroup({});
+            location_layer_circle = new L.MarkerClusterGroup({});
+
+            var radius = e.accuracy;
+
+            L.marker(e.latlng)
+                .bindPopup("You are within " + radius + " meters from this point").openPopup().addTo(location_layer_marker);
+
+            L.circle(e.latlng, radius).addTo(location_layer_circle);
+
+            // markersGroup_current_location.addLayer(L.marker(e.latlng).bindPopup("You are within " + radius + " meters from this point").openPopup());
+            // markersGroup_current_location.addLayer(L.circle(e.latlng, radius));
+            map.addLayer(location_layer_marker);
+            map.addLayer(location_layer_circle);
+        }
+
+        map.on('locationfound', onLocationFound);
+
+        function onLocationError(e) {
+            console.log(e.message);
+        }
+
+        map.on('locationerror', onLocationError);
+    }
+
+    let locateIntervalId;
+
+    function locate() {
+        // map.locate({setView: true, maxZoom: 16});
+        map.locate({setView: false});
+        // console.log("updated location");
+    }
+
+
+    function update_map_location() {
+        map.locate({setView: true, maxZoom: 16});
+        // map.stopLocate();
+        locateIntervalId = setInterval(locate, 1000);
+        $('#locationButton').html('<button type="button" class="btn btn-default" onclick="stop_update_map_location();">Stop Location</button>');
+    }
+
+    function stop_update_map_location() {
+        clearInterval(locateIntervalId);
+        $('#locationButton').html('<button type="button" class="btn btn-default" onclick="update_map_location();">My Location</button>');
+        map.removeLayer(location_layer_marker);
+        map.removeLayer(location_layer_circle);
+    }
+
+ </script>
+{% endblock %}
+
+<!--content-->
