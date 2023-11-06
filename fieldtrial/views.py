@@ -39,6 +39,7 @@ Field trial index page request, with all field trials
 '''
 def index(request):
     return render(request, 'fieldtrial.html', {'data': get_all_fieldtrials, 'type': 'AllFieldTrials'})
+    #return render(request, 'fieldtrial/fieldtrial.html', {'data': get_all_fieldtrials, 'type': 'AllFieldTrials'})
 
 '''
 One Field trial page request
@@ -94,9 +95,8 @@ def single_study(request, study_id):
     field_trial_link=full_path.replace('study/', '')
     field_trial_link=field_trial_link.replace(individual_id, ft_id)
     
+    #return render(request, 'fieldtrial/study.html', {'data': study, 'study_json': study_json, 'type': 'Grassroots:Study', 'path_plots':full_path_plots, 'ft_path':field_trial_link, 'N_treatments':range(N_t), 'counters':counters, 'flag':flag} )
     return render(request, 'study.html', {'data': study, 'study_json': study_json, 'type': 'Grassroots:Study', 'path_plots':full_path_plots, 'ft_path':field_trial_link, 'N_treatments':range(N_t), 'counters':counters, 'flag':flag} )
-    #return render(request, 'study.html', {'data': study, 'study_json': study_json, 'type': 'Grassroots:Study', 'BASE_DIR':settings.BASE_DIR})
-    #return render(request, 'study.html', {'data': study, 'type': 'Grassroots:Study'})
 
 '''
 One study's plots page request
