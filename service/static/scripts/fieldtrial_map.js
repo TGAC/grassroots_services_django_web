@@ -162,50 +162,52 @@ function startFieldTrialGIS(jsonArray, type_param) {
     if (type_param === 'Grassroots:Study') {
 	  create_study_modal_html(filtered_data_without_location.concat(filtered_data_with_location));
     }
+    if (type_param === 'AllFieldTrials' || type_param === 'Grassroots:FieldTrial') {
 
-    // fix behaviour of popover (Download column, Friccionless info) in main table  
-    $('#download_question').popover({
-    content: 'A Frictionless Data Package contains all of the data associated with a study including its parent field trial and programme. For more information and the tool to unpack these packages, go <a class="newstyle_link" href="https://grassroots.tools/frictionless-data/grassroots-fd-client.md" target="_blank">here</a>',
-    html: true,
-    placement: 'left',
-    trigger: 'manual',
-    animation: false,
-    container: 'body'
-    });
+     // fix behaviour of popover (Download column, Friccionless info) in main table  
+     $('#download_question').popover({
+     content: 'A Frictionless Data Package contains all of the data associated with a study including its parent field trial and programme. For more information and the tool to unpack these packages, go <a class="newstyle_link" href="https://grassroots.tools/frictionless-data/grassroots-fd-client.md" target="_blank">here</a>',
+     html: true,
+     placement: 'left',
+     trigger: 'manual',
+     animation: false,
+     container: 'body'
+     });
 
         var isPopoverVisible = false;  // state to track if the popover is currently visible or not
         $('#download_question').on('mouseenter', function() {
-    if (isPopoverVisible) {
+     if (isPopoverVisible) {
         console.log("Mouse entered and hiding the popover.");
         $(this).popover('hide');
         isPopoverVisible = false;
-    } else {
+     } else {
         console.log("Mouse entered and showing the popover.");
         $(this).popover('show');
         isPopoverVisible = true;
-    }
+     }
         });
 
         $(document).on('click', function(event) {
-    var $popoverElement = $('#download_question');
+     var $popoverElement = $('#download_question');
 
-    // If click is outside the popover and the interrogation sign, hide the popover
-    if (!$popoverElement.is(event.target) && $popoverElement.has(event.target).length === 0 && $('.popover').has(event.target).length === 0) {    
+     // If click is outside the popover and the interrogation sign, hide the popover
+     if (!$popoverElement.is(event.target) && $popoverElement.has(event.target).length === 0 && $('.popover').has(event.target).length === 0) {    
         if (isPopoverVisible) {
             $popoverElement.popover('hide');
             isPopoverVisible = false;
         }
-    }
+     }
         });
 
         // Added scroll event listener
         $(window).on('scroll', function() {
-    if (isPopoverVisible) {
+     if (isPopoverVisible) {
         $('#download_question').popover('hide');
         isPopoverVisible = false;
-    }
+     }
         });
-
+    
+    }
 /*
 //-------- NEW CODE FOR BOOSTRAP 5 -------- //
     var popoverElement = document.querySelector('#download_question');
