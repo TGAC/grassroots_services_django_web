@@ -51,6 +51,7 @@ def single_fieldtrial(request, fieldtrial_id):
 One study page request
 '''
 def single_study(request, study_id):
+    base_url="https://grassroots.tools"
     study = get_study(study_id)
     # data and type goes to the template study.html
     
@@ -90,13 +91,15 @@ def single_study(request, study_id):
 
     ### replace 'study' for 'plots' to create the link to the plots in given study ###
     full_path_plots=full_path.replace('study', 'plots')
+    full_path_plots=full_path_plots.replace("http://127.0.0.1:8000", base_url)
     
     ### link for field trial name replace indiviual id for id of the field trial ###
     field_trial_link=full_path.replace('study/', '')
     field_trial_link=field_trial_link.replace(individual_id, ft_id)
+    field_trial_link=field_trial_link.replace("http://127.0.0.1:8000", base_url)
     
-    #return render(request, 'fieldtrial/study.html', {'data': study, 'study_json': study_json, 'type': 'Grassroots:Study', 'path_plots':full_path_plots, 'ft_path':field_trial_link, 'N_treatments':range(N_t), 'counters':counters, 'flag':flag} )
-    return render(request, 'study.html', {'data': study, 'study_json': study_json, 'type': 'Grassroots:Study', 'path_plots':full_path_plots, 'ft_path':field_trial_link, 'N_treatments':range(N_t), 'counters':counters, 'flag':flag} )
+    return render(request, 'fieldtrial/study.html', {'data': study, 'study_json': study_json, 'type': 'Grassroots:Study', 'path_plots':full_path_plots, 'ft_path':field_trial_link, 'N_treatments':range(N_t), 'counters':counters, 'flag':flag} )
+    #return render(request, 'study.html', {'data': study, 'study_json': study_json, 'type': 'Grassroots:Study', 'path_plots':full_path_plots, 'ft_path':field_trial_link, 'N_treatments':range(N_t), 'counters':counters, 'flag':flag} )
 
 '''
 One study's plots page request

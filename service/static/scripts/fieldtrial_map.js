@@ -88,13 +88,14 @@ function startFieldTrialGIS(jsonArray, type_param) {
     if (type_param === 'Grassroots:Study') {
         let experimental_area_json = jsonArray[0]['data'];
         // two column study details table
-        jQuery('#tableWrapper').html('<br/><br/>' + create_study_info_html(experimental_area_json));
-        $('.table').DataTable({
-            "ordering": false,
-            "paging": false,
-            "searching": false,
-            "info": false
-        });
+        //  remove reference in order to use the new table in study.html template. NOV 2023 
+        //jQuery('#tableWrapper').html('<br/><br/>' + create_study_info_html(experimental_area_json));
+        //$('.table').DataTable({
+        //    "ordering": false,
+        //    "paging": false,
+        //    "searching": false,
+        //    "info": false
+        //});
 
         s_formatted_treatments = generate_treatments_html(experimental_area_json);
         if (experimental_area_json['plots'] !== undefined && experimental_area_json['plots'] !== null) {
