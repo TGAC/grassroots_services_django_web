@@ -165,3 +165,6 @@ def format_address(dictionary, keys, default=None):
 
     return (mark_safe(address)) 
 
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)

@@ -217,7 +217,7 @@
          <tr><td><strong>Team:</strong></td><td>{% lookup_keys study_json "parent_field_trial.team" %}</td></tr>
  {% endif %}
  
- {% if "envo:00002000" in study_json %}
+ {% if "envo:00002000" in study_json and study_json|get_item:"envo:00002000" != None %}
  <tr><td><strong> Slope:</strong></td><td>{% lookup_keys study_json "envo:00002000" %}</td></tr>
  {% endif %}
  
