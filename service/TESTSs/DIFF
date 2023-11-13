@@ -1,0 +1,232 @@
+1000,1022c1000,1002
+<     //for (r = 0; r < plot['rows'].length; r++) {
+<     //    accession += " " + plot['rows'][r]['material']['accession'];  //Check for discarded ones!
+<     //}
+< 
+< 	for (r = 0; r < plot['rows'].length; r++)  //  
+<   	{
+< 	  if (plot ['rows'][r]['discard'])
+<   	  {
+< 	    // it's a discard plot
+<     		accession += 'discard';
+<   	   }
+< 	  else if (plot ['rows'][r]['blank'])
+<   	  {
+<     		// it's a blank plot
+<    	  }
+<    	  else if (plot['rows'][r]['material'])
+<   	  {
+<     		accession += " " + plot['rows'][r]['material']['accession'];
+<   	  }
+< 		//console.log("1 Accession", accession);  //DAN 
+< 	}
+< 
+< 
+---
+>     for (r = 0; r < plot['rows'].length; r++) {
+>         accession += " " + plot['rows'][r]['material']['accession'];
+>     }
+1025d1004
+< 
+1064c1043
+<         console.log ("---Treatment_factors: " + plotId);
+---
+>         console.log ("-Treatment_factors: " + plotId);
+1072,1087c1051,1053
+<                 //let this_accession = SafePrint(plot['rows'][r]['material']['accession']); Check for discarded ones!
+< 		 if (plot ['rows'][r]['discard'])
+<   	    	 { 
+< 			  // it's a discard plot
+<                 	 searchStr = 'discard';
+<   	   	 }
+< 		 else if (plot ['rows'][r]['blank'])
+<   	  	  {
+< 	    		// it's a blank plot
+<    		  }
+< 	  	 else if (plot['rows'][r]['material'])
+<   	         {
+<                 	let this_accession = SafePrint(plot['rows'][r]['material']['accession']);
+<                 	get_GRU_by_accession(this_accession, plotId, r);
+<                 	searchStr = this_accession;
+<   	         }
+---
+>                 let this_accession = SafePrint(plot['rows'][r]['material']['accession']);
+>                 get_GRU_by_accession(this_accession, plotId, r);
+>                 searchStr = this_accession;
+1092d1057
+<    //console.log("MODAL LOOP all plots ", plot_json.length);   
+1097,1113c1062,1063
+< 
+< 	    for (jr = 0; jr < rows.length; jr++) {
+<                 	//var accession = rows[jr]['material']['accession'];  // check for discarded ones.
+< 			 if (rows[jr]['discard'])
+< 		  	  {
+< 			    // it's a discard plot
+<                 	   var accession = 'discard';
+< 		  	  }
+< 			  else if ( rows[jr]['blank'])
+<   	  		  {
+< 		    		// it's a blank plot
+<    	  		  }
+< 		   	  else if (rows[jr]['material'])
+<   	  		  {
+<                 	   var accession = rows[jr]['material']['accession'];
+<   	  		  }
+< 
+---
+>             for (jr = 0; jr < rows.length; jr++) {
+>                 var accession = rows[jr]['material']['accession'];
+1153,1154c1103
+<     
+<    if (plot['rows'][0]['study_index'] !== undefined) {
+---
+>     if (plot['rows'][0]['study_index'] !== undefined) {
+1158,1159c1107
+<     //rowsInfoarray.push('<table class="table racks" id="plots_table_rows"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th><th>Links</th><th>Treatments</th></tr></thead><tbody id="rowsInfo">');
+<     rowsInfoarray.push('<table class="table racks" id="plots_table_rows"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Links</th><th>Treatments</th></tr></thead><tbody id="rowsInfo">'); //TEST REMOVING GENE BANK
+---
+>     rowsInfoarray.push('<table class="table racks" id="plots_table_rows"><thead><tr><th>Replicate</th><th>Rack</th><th>Accession</th><th>Pedigree</th><th>Gene Bank</th><th>Links</th><th>Treatments</th></tr></thead><tbody id="rowsInfo">');
+1269,1271d1216
+< 
+< 
+< 
+1282d1226
+<     //console.log("main rows loop size ", plot['rows'].length ); //DAN ***** 1
+1287,1305c1231,1232
+<         //var accession = SafePrint(plot['rows'][r]['material']['accession']);//   DAN
+<         //var pedigree = SafePrint(plot['rows'][r]['material']['pedigree']); //
+< 	if (plot ['rows'][r]['discard'])
+<   	  {
+< 	    // it's a discard plot
+< 		var accession = 'discard';//   DAN
+<                 //var pedigree = 'discard';
+<         	var color = colorJSON[2]; // Color for discarde?
+< 
+<   	   }
+< 	  else if (plot ['rows'][r]['blank'])
+<   	  {
+<     		// it's a blank plot
+<    	  }
+<    	  else if (plot['rows'][r]['material'])
+<   	  {
+<                var accession = SafePrint(plot['rows'][r]['material']['accession']);//   DAN
+<                 var pedigree = SafePrint(plot['rows'][r]['material']['pedigree']);
+<   	  }
+---
+>         var accession = SafePrint(plot['rows'][r]['material']['accession']);
+>         var pedigree = SafePrint(plot['rows'][r]['material']['pedigree']);
+1312,1326c1239
+<         //rowsInfoarray.push('<td><a class="newstyle_link" target="_blank" href="' + SafePrint(plot['rows'][r]['material']['gene_bank']['so:url']) + '">' + SafePrint(plot['rows'][r]['material']['gene_bank']['so:name']) + '</a></td>');//   CHECK FOR DISCARDED    GENE BANK
+< 	if (plot ['rows'][r]['discard'])
+<   	  {
+< 	    // it's a discard plot
+<   	   }
+< 	  else if (plot ['rows'][r]['blank'])
+<   	  {
+<     		// it's a blank plot
+<    	  }
+<    	  else if (plot['rows'][r]['material'])
+<   	  {
+<       // NO GENE BANK  ??     rowsInfoarray.push('<td><a class="newstyle_link" target="_blank" href="' + SafePrint(plot['rows'][r]['material']['gene_bank']['so:url']) + '">' + SafePrint(plot['rows'][r]['material']['gene_bank']['so:name']) + '</a></td>');
+<   	  }
+< 
+< 
+---
+>         rowsInfoarray.push('<td><a class="newstyle_link" target="_blank" href="' + SafePrint(plot['rows'][r]['material']['gene_bank']['so:url']) + '">' + SafePrint(plot['rows'][r]['material']['gene_bank']['so:name']) + '</a></td>');
+1340,1341d1252
+<    	
+< 	    //console.log("observation LOOP ", plot['rows'][r]['observations'].length ); //DAN **** observations in each row
+1344,1345d1254
+<                 var phenotype_name = observation['phenotype']['variable'];// new structure. 
+< 	// console.log("CURRENT phenotype ", phenotype_name ); //   new variable from updated structure
+1353,1361c1262,1263
+< 
+< 
+<    	//console.log("what the function has to look : ", PHENOTYPES['GrnYld85_Fh_tha']['definition']['trait'] ); // DAN TEST
+<    	//console.log("TEST1 LOOKUP : ", LOOKUP(phenotype_name, 'trait','so:description') ); 
+< 
+<               //if (observation['phenotype']['trait']['so:sameAs'].startsWith('CO')) {
+<                 if (LOOKUP( phenotype_name,  'trait', 'so:sameAs').startsWith('CO')) {
+<                     //phenotypearray.push('<td class="tooltip-test"  title="' + observation['phenotype']['trait']['so:description'] + '"><a class="newstyle_link" target="_blank" href="' + crop_onotology_url + observation['phenotype']['trait']['so:sameAs'] + '">' + observation['phenotype']['trait']['so:name'] + '</a></td>');
+<                     phenotypearray.push('<td class="tooltip-test"  title="' + LOOKUP(phenotype_name, 'trait','so:description') + '"><a class="newstyle_link" target="_blank" href="' + crop_onotology_url + LOOKUP(phenotype_name, 'trait','so:sameAs') + '">' + LOOKUP(phenotype_name, 'trait','so:name') + '</a></td>');
+---
+>                 if (observation['phenotype']['trait']['so:sameAs'].startsWith('CO')) {
+>                     phenotypearray.push('<td class="tooltip-test"  title="' + observation['phenotype']['trait']['so:description'] + '"><a class="newstyle_link" target="_blank" href="' + crop_onotology_url + observation['phenotype']['trait']['so:sameAs'] + '">' + observation['phenotype']['trait']['so:name'] + '</a></td>');
+1364,1365c1266
+<                 //phenotypearray.push('<td class="tooltip-test"  title="' + observation['phenotype']['trait']['so:description'] + '">' + observation['phenotype']['trait']['so:name'] + '</td>');
+<                     phenotypearray.push('<td class="tooltip-test"  title="' + LOOKUP(phenotype_name, 'trait','so:description')  + '">' + LOOKUP(phenotype_name, 'trait','so:name')  + '</td>');
+---
+>                     phenotypearray.push('<td class="tooltip-test"  title="' + observation['phenotype']['trait']['so:description'] + '">' + observation['phenotype']['trait']['so:name'] + '</td>');
+1367,1370c1268,1269
+<               //if (observation['phenotype']['measurement']['so:sameAs'].startsWith('CO')) {
+<                 if (LOOKUP( phenotype_name,  'measurement', 'so:sameAs').startsWith('CO')) {
+<                 // phenotypearray.push('<td data-toggle="tooltip" title="' + observation['phenotype']['measurement']['so:description'] + '"><a class="newstyle_link" target="_blank" href="' + crop_onotology_url + observation['phenotype']['measurement']['so:sameAs'] + '">' + observation['phenotype']['measurement']['so:name'] + '</td>');
+<                     phenotypearray.push('<td data-toggle="tooltip" title="' + LOOKUP( phenotype_name,  'measurement', 'so:description') + '"><a class="newstyle_link" target="_blank" href="' + crop_onotology_url + LOOKUP( phenotype_name,  'measurement', 'so:sameAs')  + '">' + LOOKUP( phenotype_name,  'measurement', 'so:name') + '</td>');
+---
+>                 if (observation['phenotype']['measurement']['so:sameAs'].startsWith('CO')) {
+>                     phenotypearray.push('<td data-toggle="tooltip" title="' + observation['phenotype']['measurement']['so:description'] + '"><a class="newstyle_link" target="_blank" href="' + crop_onotology_url + observation['phenotype']['measurement']['so:sameAs'] + '">' + observation['phenotype']['measurement']['so:name'] + '</td>');
+1373,1374c1272
+<                  //phenotypearray.push('<td data-toggle="tooltip" title="' + observation['phenotype']['measurement']['so:description'] + '">' + observation['phenotype']['measurement']['so:name'] + '</td>');
+<                  phenotypearray.push('<td data-toggle="tooltip" title="' + LOOKUP(phenotype_name,  'measurement', 'so:description') + '">' + LOOKUP(phenotype_name,  'measurement', 'so:name') + '</td>');
+---
+>                     phenotypearray.push('<td data-toggle="tooltip" title="' + observation['phenotype']['measurement']['so:description'] + '">' + observation['phenotype']['measurement']['so:name'] + '</td>');
+1376,1379c1274,1275
+<               //if (observation['phenotype']['unit']['so:sameAs'].startsWith('CO')) {
+<                 if (LOOKUP( phenotype_name,  'unit', 'so:sameAs')) {
+<                //  phenotypearray.push('<td data-toggle="tooltip"><a class="newstyle_link" target="_blank" href="' + crop_onotology_url + observation['phenotype']['unit']['so:sameAs'] + '">' + observation['phenotype']['unit']['so:name'] + '</td>');
+<                     phenotypearray.push('<td data-toggle="tooltip"><a class="newstyle_link" target="_blank" href="' + crop_onotology_url + LOOKUP(phenotype_name,  'unit', 'so:sameAs') + '">' + LOOKUP(phenotype_name,  'unit', 'so:name')  + '</td>');
+---
+>                 if (observation['phenotype']['unit']['so:sameAs'].startsWith('CO')) {
+>                     phenotypearray.push('<td data-toggle="tooltip"><a class="newstyle_link" target="_blank" href="' + crop_onotology_url + observation['phenotype']['unit']['so:sameAs'] + '">' + observation['phenotype']['unit']['so:name'] + '</td>');
+1382,1383c1278
+<                   //phenotypearray.push('<td>' + observation['phenotype']['unit']['so:name'] + '</td>');
+<                     phenotypearray.push('<td>' +  LOOKUP(phenotype_name,  'unit', 'so:name')  + '</td>');
+---
+>                     phenotypearray.push('<td>' + observation['phenotype']['unit']['so:name'] + '</td>');
+1434,1435c1329,1330
+<         pheno_table.column(1).visible(true);
+<         pheno_table.column(4).visible(true); //GENE BANK
+---
+>         pheno_table.column(1).visible(false);
+>         pheno_table.column(4).visible(false);
+1658d1552
+< let PHENOTYPES = [];
+1667c1561
+<     //console.log(JSON.stringify(experimental_area_json)); / very long, it crashes browser debugger**!!
+---
+>     console.log(JSON.stringify(experimental_area_json));
+1681,1690d1574
+<     
+<     //console.log('*****--------'); //DAN
+<     //console.log(jsonArray[0]['data']['plot_width']); 
+<     //console.log("phenotype NAME: ", jsonArray[0]['data']['plots'][0]['rows'][0]['observations'][0]['phenotype']['variable']); 
+<      
+<  // **	console.log("phenotype: ", jsonArray[0]['data']['plots'][0]['rows'][0]['observations'][0]['phenotype']); DAN
+<  // **   console.log("PHENOTYPES: ", jsonArray[0]['data']['phenotypes']['GrnYld85_Fh_tha']['definition']['trait'] ); 
+<    
+<    // console.log("full study which contains --> [plot]",jsonArray[0]['data']); //test DANIEL
+< 
+1730,1737d1613
+<    //   console.log("First plots[0][rows][0][discard] :", plots[0]['rows'][0]['discard'] );   
+<    //   console.log("First plots[0][rows][0][study_index] :", plots[0]['rows'][0]['study_index'] );   TESTS
+<    //console.log("new shorter phenotype: ",  plot_json[0]['rows'][0]['observations'][0]['phenotype']);//DAN
+<    //console.log("**  PHENOTYPES: ", experimental_area_json['phenotypes']['GrnYld85_Fh_tha']['definition']['trait'] ); 
+<    PHENOTYPES =  experimental_area_json['phenotypes']; 
+< 
+<   //   console.log("LENGHT, inside GeneratePlotFor...", plots.length) ; //DAN
+< 
+1745,1748d1620
+<         //for (j = 0; j < 3; j++) {
+< 
+< 	    //console.log("Empty html array main j loop", htmlarray); 
+< 	    //console.log("MAIN LOOP through plots j:",j);   
+1851,1859d1722
+< // TEST DANIEL
+< function LOOKUP(name, key1, key2) {
+< 
+< 	var result = PHENOTYPES[name]['definition'][key1][key2]
+< 
+< 
+<     return result;
+< 
+< }
