@@ -159,6 +159,8 @@ def single_plot(request, plot_id):
     
     return render(request, 'plots.html', {'data': plot, 'plot_id': plot_id, 'study_name': study_name, 
         'plot_div': plot_div, 'dictTraits':dictTraits})
+    #return render(request, 'fieldtrial/plot.html', {'data': plot, 'plot_id': plot_id, 'study_name': study_name, 
+    #    'plot_div': plot_div, 'dictTraits':dictTraits})
 
 '''
 Search field trial page request
