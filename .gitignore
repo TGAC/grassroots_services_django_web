@@ -1,5 +1,5 @@
-./filedownload/Files/
-./filedownload/__pycache__/
+filedownload/Files/
+filedownload/__pycache__/
 *.pyc
 .vscode/
 VENV/
