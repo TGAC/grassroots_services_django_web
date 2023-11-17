@@ -945,17 +945,19 @@ function displayFTLocations(array, type_param) {
         // shape data with popup info
         if (type_param === 'Grassroots:Study') {
             if (array[i]['shape_data'] !== null && array[i]['shape_data'] !== undefined && array[i]['shape_data'] !== '') {
-                // let geo_json = JSON.parse(array[i]['shape_data']);
+                //geo_json contains the GPS data. It is used by Leaflet to draw the shape
+                // onEachFeature block is part of Leaflet 
                 let geo_json = array[i]['shape_data'];
                 var shape_layer = L.geoJson(geo_json);
                 markersGroup2.addLayer(shape_layer);
                 var layerGroup = L.geoJson(geo_json, {
                     onEachFeature: function (feature, layer) {
-                        var plotId = feature.properties['plot_id'];
-                        var popupContent = 'Study: ' + SafePrint(geo_json['name']) + '<br/>Plot ID: ' + SafePrint(feature.properties['plot_id']);
+                        // Consider plot_id and Plot ID, as some studies have plot_id and some Plot_ID!!
+                        var plotId = feature.properties['plot_id'] || feature.properties['Plot ID'];
+                        var popupContent = 'Study: ' + SafePrint(geo_json['name']) + '<br/>Plot ID: ' + SafePrint(feature.properties['plot_id'] || feature.properties['Plot ID']);
                         if (type_param_global === 'Grassroots:Study' && plotsModalInfo[plotId] !== undefined) {
                            //var popupContent = plotsModalInfo[plotId];
-			   var popupContent = plotsInfoGPS[plotId]; //Correction for incomplete table over maps
+			                var popupContent = plotsInfoGPS[plotId]; //Correction for incomplete table over maps
                         }
                         layer.bindPopup(popupContent, {maxWidth: 800, maxHeight: 400});
                         // layer.bindPopup('<p>Plot No.:</p>');
