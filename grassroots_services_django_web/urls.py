@@ -20,5 +20,6 @@ urlpatterns = [
     path('service/', include('service.urls')),
     path('fieldtrial/', include('fieldtrial.urls')),
     path('download/', include('filedownload.urls', namespace='downloads')),
+     path('photo_receiver/', include('photo_receiver.urls')),
     # path('admin/', admin.site.urls),
 ]

@@ -33,7 +33,6 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
-    # manually added two apps
     'service.apps.ServiceConfig',
     'fieldtrial.apps.ServiceConfig',
     'filedownload',
@@ -43,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'photo_receiver',
 ]
 
 MIDDLEWARE = [
