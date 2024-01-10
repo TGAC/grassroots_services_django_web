@@ -27,4 +27,18 @@ class PhotoRetrieveView(APIView):
             return FileResponse(open(photo_path, 'rb'), content_type='image/jpeg')
         else:
             # Photo not found
-            raise Http404("Photo not found")    
+            raise Http404("Photo not found")
+
+class LimitsFileRetrieve(APIView):
+    def get(self, request, subfolder):
+        # Construct the path to the limits.json file
+        base_path = '/opt/apache/htdocs/field_trial_data/APItest/'
+        limits_file_path = os.path.join(base_path, subfolder, 'limits.json')
+
+        # Check if the limits.json file exists
+        if os.path.exists(limits_file_path):
+            # Serve the limits.json file
+            return FileResponse(open(limits_file_path, 'rb'), content_type='application/json')
+        else:
+            # File not found
+            raise Http404("limits.json not found")
