@@ -3,9 +3,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import PhotoSerializer
 from django.http import HttpResponse, Http404
-import os
+import os, json
 from django.conf import settings
 from django.http import FileResponse
+from django.http import JsonResponse
 
 class PhotoUploadView(APIView):
     def post(self, request, format=None):
@@ -42,3 +43,29 @@ class LimitsFileRetrieve(APIView):
         else:
             # File not found
             raise Http404("limits.json not found")
+        
+class LimitsFileUpdate(APIView):
+    def post(self, request, subfolder):
+        base_path = '/opt/apache/htdocs/field_trial_data/APItest/'
+        limits_file_path = os.path.join(base_path, subfolder, 'limits.json')
+
+        try:
+            # Parse the incoming JSON data
+            data = request.data.get('Plant height')
+            min_value = data.get('min')
+            max_value = data.get('max')
+
+            # Update the limits.json file
+            if os.path.exists(limits_file_path):
+                with open(limits_file_path, 'r+') as file:
+                    limits = json.load(file)
+                    limits['Plant height']['min'] = min_value
+                    limits['Plant height']['max'] = max_value
+                    file.seek(0)
+                    json.dump(limits, file, indent=4)
+                    file.truncate()
+                return JsonResponse({'message': 'Limits updated successfully'}, status=status.HTTP_200_OK)
+            else:
+                return JsonResponse({'error': 'File not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
