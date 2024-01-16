@@ -34,6 +34,12 @@ class LimitsFileRetrieve(APIView):
     def get(self, request, subfolder):
         # Construct the path to the limits.json file
         base_path = '/opt/apache/htdocs/field_trial_data/APItest/'
+        subfolder_path = os.path.join(base_path, subfolder)
+
+        # Check if the subfolder exists, if not create it
+        if not os.path.exists(subfolder_path):
+            os.makedirs(subfolder_path)
+
         limits_file_path = os.path.join(base_path, subfolder, 'limits.json')
 
         # Check if the limits.json file exists
