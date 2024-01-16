@@ -53,7 +53,13 @@ class LimitsFileRetrieve(APIView):
 class LimitsFileUpdate(APIView):
     def post(self, request, subfolder):
         base_path = '/opt/apache/htdocs/field_trial_data/APItest/'
-        limits_file_path = os.path.join(base_path, subfolder, 'limits.json')
+        subfolder_path = os.path.join(base_path, subfolder)
+
+        # Ensure the subfolder exists, create it if not
+        if not os.path.exists(subfolder_path):
+            os.makedirs(subfolder_path)
+
+        limits_file_path = os.path.join(subfolder_path, 'limits.json')
 
         try:
             # Parse the incoming JSON data
@@ -61,17 +67,19 @@ class LimitsFileUpdate(APIView):
             min_value = data.get('min')
             max_value = data.get('max')
 
-            # Update the limits.json file
-            if os.path.exists(limits_file_path):
-                with open(limits_file_path, 'r+') as file:
+            # Initialize or update the limits.json file
+            if not os.path.exists(limits_file_path):
+                limits = {'Plant height': {'min': min_value, 'max': max_value}}
+            else:
+                with open(limits_file_path, 'r') as file:
                     limits = json.load(file)
                     limits['Plant height']['min'] = min_value
                     limits['Plant height']['max'] = max_value
-                    file.seek(0)
-                    json.dump(limits, file, indent=4)
-                    file.truncate()
-                return JsonResponse({'message': 'Limits updated successfully'}, status=status.HTTP_200_OK)
-            else:
-                return JsonResponse({'error': 'File not found'}, status=status.HTTP_404_NOT_FOUND)
+
+            # Write the updated or new limits to the file
+            with open(limits_file_path, 'w') as file:
+                json.dump(limits, file, indent=4)
+
+            return JsonResponse({'message': 'Limits updated successfully'}, status=status.HTTP_200_OK)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
