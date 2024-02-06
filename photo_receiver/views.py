@@ -12,7 +12,8 @@ BASE_PATH = '/opt/apache/htdocs/field_trial_data/APItest/'
 
 class LatestPhoto(APIView):
     def get(self, request, subfolder, plot_number):        
-        plot_path = os.path.join(BASE_PATH, subfolder, f'photo_plot_{plot_number}_*.jpg')
+        ##plot_path = os.path.join(BASE_PATH, subfolder, f'photo_plot_{plot_number}_*.jpg')
+        plot_path = os.path.join(BASE_PATH, subfolder, 'photo_plot_{}_*.jpg'.format(plot_number))
 
         # Find all photos for the plot
         photos = glob.glob(plot_path)
