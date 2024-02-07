@@ -221,6 +221,10 @@ def create_CSV(plot_data, phenotypes, treatment_factors, plot_id):
                     corrected = current_name + " corrected"
                     ##new_headers[index] = corrected # it will create empty columns!
                     new_headers.append(corrected)
+
+                if 'notes' in observation:
+                #    #print("observation has note------> ", phenoname, new_headers[-1])
+                    new_headers.append("Notes of "+new_headers[-1])
                     
 
                                                 
