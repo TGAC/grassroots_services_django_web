@@ -25,6 +25,8 @@ def getRowCsv(row_json):
     # Get rest of phenotype raw values    
     phenotypeNames = []  
     raw_value = []
+    notes       = []
+    notes_value = []
     if  ( 'observations' in row_json['rows'][0] ):
         observations = row_json['rows'][0]['observations']
         for i in range(len(observations)):
@@ -34,6 +36,7 @@ def getRowCsv(row_json):
             elif ( 'raw_value' in observations[i] ):            
                 raw_value.append(observations[i]['raw_value'])
                 phenotypeNames.append(observations[i]['phenotype']['variable'])  # TEST correction            
+            
             if ( 'date' in observations[i] ):
                 only_date = observations[i]['date'].split('T')[0]
                 phenotype_date = phenotypeNames[i] + " " + only_date
@@ -42,6 +45,11 @@ def getRowCsv(row_json):
                         phenotype_date = phenotypeNames[i] + " " + only_date + " " + end_date                                                
                 phenotypeNames[i] = phenotype_date # Replace name                
             
+            if 'notes' in observations[i]:
+                    #print("observations[i] ", observations[i]['phenotype']['variable'], phenotypeNames[-1])            
+                    notes.append("Notes of "+phenotypeNames[-1])
+                    notes_value.append(observations[i]['notes'])  
+
             sample = observations[i]['index']
             #Check if sample exists and add it to the name as sample_1
            # for that we need to run a loop if current observation has another observation
@@ -113,9 +121,11 @@ def getRowCsv(row_json):
 
     phenotypeNames.extend(headers)
     phenotypeNames.extend(extra_headers)
+    phenotypeNames.extend(notes)
 
     raw_value.extend(mandatory)
     raw_value.extend(extra)
+    raw_value.extend(notes_value)
 
     dict_row = dict(zip(phenotypeNames, raw_value))
     return dict_row
