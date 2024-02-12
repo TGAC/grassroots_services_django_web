@@ -1004,12 +1004,14 @@ function produce_one_parameter_form(parameter, repeatable, group_id, refreshed) 
     var required = '';
     var required_param_name = '';
 
-    if (parameter['required'] != undefined) {
-        if (parameter['required']) {
-            required = 'required';
-            required_param_name = '*';
-        }
+    //  check for exceptions to handle "PE Name" and "PE Email"
+    var isException = (param === "PE Name" || param === "PE Email");
+
+    if (parameter['required'] && !isException) {
+       required = 'required';
+       required_param_name = '*';
     }
+
 
 
     var counter = '';
