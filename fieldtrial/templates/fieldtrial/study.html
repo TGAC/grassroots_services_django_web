@@ -266,7 +266,7 @@
  {% if "contributors" in study_json %}
     <tr>
         <td><strong>Contributors:</strong></td>
-        <td>{% format_contributors study_json "contributors" %}</td>
+        <td>{% format_contributors_with_modals study_json.contributors %}</td>
     </tr>
 {% endif %}
  
