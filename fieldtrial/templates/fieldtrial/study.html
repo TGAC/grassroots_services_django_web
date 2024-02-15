@@ -262,6 +262,13 @@
  {% if "contact" in study_json %}
          <tr><td><strong>Contact:</strong></td><td>{%format_contact study_json "contact.so:name" %} </td></tr>
  {% endif %}
+
+ {% if "contributors" in study_json %}
+    <tr>
+        <td><strong>Contributors:</strong></td>
+        <td>{% format_contributors study_json "contributors" %}</td>
+    </tr>
+{% endif %}
  
  {% if "image_collection_notes" in study_json and study_json.image_collection_notes != None %}
          <tr><td><strong>Images Collected:</strong></td><td>{% lookup_keys study_json "image_collection_notes" %}</td></tr>

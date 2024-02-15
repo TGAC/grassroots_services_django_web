@@ -118,6 +118,26 @@ def format_contact(dictionary, keys, default=None):
 
     return (contact_name) 
 
+@register.simple_tag
+def format_contributors(dictionary, list_key, default=None):
+    contributors_list = dictionary.get(list_key, default)
+    formatted_contributors = []
+
+    if contributors_list and isinstance(contributors_list, list):
+        for contributor in contributors_list:
+            name_key = "so:name"
+            email_key = "so:email"
+            name = contributor.get(name_key, default)
+            email = contributor.get(email_key, default)
+
+            if email and email != default:
+                formatted_name = '<a href="mailto:{email}">{name}</a>'.format(email=email, name=name)
+                formatted_contributors.append(formatted_name)
+            else:
+                formatted_contributors.append(name)
+
+    # Mark the entire concatenated string as safe
+    return mark_safe(', '.join(formatted_contributors))
 
 
 @register.simple_tag
