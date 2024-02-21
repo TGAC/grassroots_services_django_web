@@ -24,3 +24,4 @@ six==1.16.0
 sqlparse==0.3.0
 tenacity==8.0.1
 urllib3==1.26.10
+django-cors-headers==3.5.0

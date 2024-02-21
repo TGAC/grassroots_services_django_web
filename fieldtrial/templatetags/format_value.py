@@ -1,6 +1,8 @@
 from django import template
 from django.utils.safestring import mark_safe
 
+from django.utils.html import format_html
+
 from functools import reduce
 
 register = template.Library()
@@ -118,6 +120,71 @@ def format_contact(dictionary, keys, default=None):
 
     return (contact_name) 
 
+@register.simple_tag
+def format_contributors(dictionary, list_key, default=None):
+    contributors_list = dictionary.get(list_key, default)
+    formatted_contributors = []
+
+    if contributors_list and isinstance(contributors_list, list):
+        for contributor in contributors_list:
+            name_key = "so:name"
+            email_key = "so:email"
+            name = contributor.get(name_key, default)
+            email = contributor.get(email_key, default)
+
+            if email and email != default:
+                formatted_name = '<a href="mailto:{email}">{name}</a>'.format(email=email, name=name)
+                formatted_contributors.append(formatted_name)
+            else:
+                formatted_contributors.append(name)
+
+    # Mark the entire concatenated string as safe
+    return mark_safe(', '.join(formatted_contributors))
+
+@register.simple_tag
+def format_contributors_with_modals(contributors_list):
+    html_output = []
+    for index, contributor in enumerate(contributors_list):
+        modal_id = f"contributorModal{index}"
+        name = contributor.get("so:name", "N/A")
+        email = contributor.get("so:email", "N/A")
+        role = contributor.get("so:roleName", "N/A")
+        orcid = contributor.get("orcid", "N/A")
+
+        # Create the trigger link for the modal
+        trigger_link = format_html('<a href="#" data-bs-toggle="modal" data-bs-target="#{}">{}</a>', modal_id, name)
+
+        # Create the modal
+        modal = format_html('''
+            <div class="modal fade" id="{}" tabindex="-1" aria-labelledby="{}Label" aria-hidden="true">
+                <div class="modal-dialog modal-sm"> 
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="{}Label">{}</h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" style="max-height: 25vh; overflow-y: auto;">
+                        <table class="table table-bordered"> <!-- Add table with borders -->
+                        <tbody>
+                        <tr><td>Email</td><td>{}</td></tr>
+                        <tr><td>Role</td><td>{}</td></tr>
+                        <tr><td>ORCID</td><td>{}</td></tr>
+                        </tbody>
+                        </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        ''', modal_id, modal_id, modal_id, name, email, role, orcid)
+
+        # Append both the link and modal to the output
+        html_output.append(trigger_link)
+        html_output.append(modal)
+
+    # Join all parts into a single string and mark it as safe for HTML rendering
+    return mark_safe(''.join(html_output))
 
 
 @register.simple_tag

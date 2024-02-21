@@ -20,7 +20,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 
-SECRET_KEY = '^ww22@n+jl(jz!hm%qm_u-k_#^jy2z(!9q$13cngt!@yr_t&b2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -44,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'photo_receiver',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -54,6 +54,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'grassroots_services_django_web.urls'
@@ -147,7 +149,13 @@ QUEEN_SERVER_URL = "http://10.0.152.54/grassroots/queen_bee_backend"
 DATA_UPLOAD_MAX_MEMORY_SIZE =  52428800
 FILE_UPLOAD_MAX_MEMORY_SIZE =  17340032
 
+CORS_ALLOWED_ORIGINS = [
+	"http://127.0.0.1:8000"
+]
 
+# Media files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 try:
     from .custom_settings import *
