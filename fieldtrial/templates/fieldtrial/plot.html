@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block all_styles_and_scripts %}
+{{ block.super }} 
+    <style type="text/css">
+        .modal-body {
+            height: 250px;
+            overflow-y: auto;
+        }
+    
+        @media (min-height: 500px) {
+            .modal-body {
+                height: 400px;
+            }
+        }
+    
+        @media (min-height: 800px) {
+            .modal-body {
+                height: 600px;
+            }
+        }
+    </style>
+
+{% endblock %}
+
+{% block content %}
+<div style="height: 20px;"></div>
+ <section id="services" style="padding: 100px 0px 1px 0px ! important;">
+    <div class="container">
+        <h2 id="title">Field Trial Details</h2>
+
+        <p id="description"><br/>Study: <a href="/fieldtrial/study/{{ plot_id|safe }}" target="_blank">{{ study_name|safe }}</a></p>
+        <p><a href="{% url 'downloads:download' filename=plot_id %} ">Download csv file of plot data</a>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="#heatmap">Jump to Interactive heatmap visualisation.</a></p>
+        <form id="form" role="form">
+            <div class="list_service_table">
+                <table id="listTable"></table>
+            </div>
+        </form>
+        <div id="status"></div>
+        <div id="output_format_div" style="display:none; float:right;">
+            <p>Download job format
+                <select id="output_format" onchange="changeDownloadFormat();">
+
+                </select>
+            </p>
+        </div>
+        <div style="clear:both;"></div>
+
+        <div id="result"></div>
+        <div class="row" style="border-style: solid;border-width:1px;">
+            <div class="col">
+
+                <div class="wrapper1" style="overflow: scroll;height: 20px; ">
+                    <div id="upperslider" style="width:100%;"></div>
+                </div>
+                <div id="plots" style="overflow: scroll;"></div>
+
+	    </div>
+	</div>
+            
+        <div class="row" style="border-style: solid;border-width:1px;">
+	    <div class="col">
+		    
+                <div id="control" style="display: none; margin-left: 20px; padding:5px;">
+                    <br>
+                    Search:</br>
+                    <input type="text" id="searchPlotsInput" onkeyup="filter_plot();" value=""/></br><br/>
+                    <!--                        Phenotype:</br>-->
+                    <!--                        Height: <input type="text" id="height" value="117.25" disabled="disabled"/></br>-->
+                    <!--                        Yield: <input type="text" id="yield" value="8.91292789637138" disabled="disabled"/></br><br/>-->
+                    <!--                        GRU Accession: <input type="text" id="gruAccession" value="PW141-41-2-20-Q5B-NDVI-W"-->
+                    <!--                                              disabled="disabled"/></br>-->
+                    <!--                    <button onclick="filter_plot();">Filter</button>-->
+                    <div id="filter_result"></div>
+
+                    <!--                    </br></br></br></br>-->
+                    <!--                        <button>Get Data</button>-->
+                    </p>
+                </div>
+            
+	    </div>
+        </div>
+
+        <!-- Modal -->
+<div class="modal" tabindex="-1" role="dialog" id="plotModal" style="z-index: 999999;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" style="z-index: 9999999;">
+            <div class="modal-header">
+                <h5 class="modal-title">Plot details</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Modal body content here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+ </section>
+ 
+ <section id="heatmap">
+    <h4 id="title">Interactive heatmap</h4>
+    <form action = "">
+    <p> Select phenotype:
+    <select name="singlePhenotype">
+        <option selected="selected" disabled="disabled">Select phenotype</option>
+        {% for key, value in dictTraits.items %}
+            <option value="{{ key }}">{{ value }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" value="Submit">
+    </p>
+    </form>
+
+ {% autoescape off %}
+ {{ plot_div }}
+ {% endautoescape %}
+
+
+ </section>
+
+{% endblock %}
+
+{% block additional_scripts %}
+ 
+  <script type="text/javascript">
+    $(document).ready(function () {
+        $('#plots').html('<img src="{% static 'images/ajax-loader.gif' %}"/>');
+        LoadTable({{ data|safe }});
+    });
+  </script>
+
+{% endblock %}
+
+<!--content-->

@@ -33,7 +33,6 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
-    # manually added two apps
     'service.apps.ServiceConfig',
     'fieldtrial.apps.ServiceConfig',
     'filedownload',
@@ -43,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'photo_receiver',
 ]
 
 MIDDLEWARE = [
@@ -61,6 +62,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         # 'DIRS': [os.path.join(BASE_DIR, 'grassroots_services_django_web', 'apps', 'service', 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # location of templates (ROOT LEVE)
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -129,6 +131,11 @@ STATIC_ROOT = "/opt/apache/htdocs/static/"
 
 # The web address to access the static files
 STATIC_URL = '/static/'
+
+# general location to search for static files 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'grassroots_services_django_web/static') 
+]
 
 SERVER_URL = "https://grassroots.tools/public_backend"
 PRIVATE_SERVER_URL = "https://grassroots.tools/private_backend"

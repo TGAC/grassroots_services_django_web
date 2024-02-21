@@ -141,7 +141,8 @@ def format_crop(dictionary, keys, default=None):
 @register.simple_tag
 def format_address(dictionary, keys, default=None):
     name =  reduce(lambda d, key: d.get(key, default) if isinstance(d, dict) else default, keys.split("."), dictionary)
-
+    
+    print("check address: ", name)
     postalCode_key      = "address.address.Address.postalCode"
     addressLocality_key = "address.address.Address.addressLocality"
     addressCountry_key  = "address.address.Address.addressCountry"
@@ -152,15 +153,18 @@ def format_address(dictionary, keys, default=None):
 
     address = name 
 
-    if locality != None and locality != name:
-         address = address +'<br>'+ locality
+    #if locality != None and locality != name:
+    #     address = address +'<br>'+ locality
 
-    if country != None and country != name:
-         address = address +'<br>'+ country
+    #if country != None and country != name:
+    #     address = address +'<br>'+ country
 
-    if postal_code != None:
-         address = address +'<br>'+ postal_code
+    #if postal_code != None:
+    #     address = address +'<br>'+ postal_code
 
 
     return (mark_safe(address)) 
 
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)

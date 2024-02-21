@@ -2869,6 +2869,14 @@ function format_grassroots_search_result(this_result) {
         }
         grassroots_search_html.push('<i>' + json['author'] + '</i><br/>');
         grassroots_search_html.push('' + SafePrint(json['so:description']) + '</br>');
+    } else if (json['@type'] === 'Grassroots:MARTiSample') {
+        if (json['so:url'] !== undefined && json['so:url'] !== null) {
+            let publication_link = json['so:url'];
+            grassroots_search_html.push('<br/><a style="color:#18bc9c ! important;" target="_blank" href="' + publication_link + '">' + img_html + ' ' + title + '</a><br/>');
+        } else {
+            grassroots_search_html.push('<i>' + img_html + ' ' + title + '</i><br/>');
+        }
+        grassroots_search_html.push('' + SafePrint(json['so:description']) + '</br>');
     } else {
         grassroots_search_html.push('<i>' + img_html + ' ' + title + '</i><br/>');
     }
