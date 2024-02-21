@@ -1,8 +1,6 @@
 from django import template
 from django.utils.safestring import mark_safe
 
-from django.utils.html import format_html
-
 from functools import reduce
 
 register = template.Library()
