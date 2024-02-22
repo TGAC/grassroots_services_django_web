@@ -2809,6 +2809,9 @@ function format_grassroots_search_result(this_result) {
     var json = this_result['data'];
     grassroots_search_html.push('<div>');
 
+
+    console.log (">>>> result: " + JSON.stringify(json));
+
     if (json['@type'] == 'Grassroots:Study') {
         var study_id = json['id'];
         var study_name = json['so:name'];
@@ -2866,6 +2869,15 @@ function format_grassroots_search_result(this_result) {
         if (json['so:url'] !== undefined && json['so:url'] !== null) {
             let publication_link = json['so:url'];
             grassroots_search_html.push('<br/><a style="color:#18bc9c ! important;" target="_blank" href="' + publication_link + '">' + img_html + ' ' + title + '</a><br/>');
+        } else {
+            grassroots_search_html.push('<i>' + img_html + ' ' + title + '</i><br/>');
+        }
+        grassroots_search_html.push('<i>' + json['author'] + '</i><br/>');
+        grassroots_search_html.push('' + SafePrint(json['so:description']) + '</br>');
+    } else if (json['@type'] === 'Grassroots:MARTiSample') {
+        if (json['so:url'] !== undefined && json['so:url'] !== null) {
+            let marti_link = json['so:url'];
+            grassroots_search_html.push('<br/><a style="color:#18bc9c ! important;" target="_blank" href="' + marti_link + '">' + img_html + ' ' + title + '</a><br/>');
         } else {
             grassroots_search_html.push('<i>' + img_html + ' ' + title + '</i><br/>');
         }
