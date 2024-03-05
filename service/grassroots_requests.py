@@ -10,28 +10,30 @@ queen_server_url = settings.QUEEN_SERVER_URL
 Get all services
 returns JSON from backend and send to the model
 '''
-def get_all_services(str):
+def get_all_services(str, request):
+    req_headers = request.headers
     list_services_req = {"operations": {"operation": "get_all_services"}}
     if str == 'public':
-        res = requests.post(server_url, data=json.dumps(list_services_req))
+        res = requests.post(server_url, headers=req_headers, data=json.dumps(list_services_req))
     elif str == 'private':
-        res = requests.post(private_server_url, data=json.dumps(list_services_req))
+        res = requests.post(private_server_url, headers=req_headers, data=json.dumps(list_services_req))
     elif str == 'queen':
-        res = requests.post(queen_server_url, data=json.dumps(list_services_req))
+        res = requests.post(queen_server_url, headers=req_headers, data=json.dumps(list_services_req))
     return json.dumps(res.json())
 
 '''
 Get one service with an alternative name
 returns JSON from backend and send to the model
 '''
-def get_service(service_alt_name, str):
+def get_service(service_alt_name, str, request):
+    req_headers = request.headers
     get_service_req = {"services": [{"so:alternateName": service_alt_name}], "operations": {"operation": "get_named_service"}}
     if str == 'public':
-        res = requests.post(server_url, data=json.dumps(get_service_req))
+        res = requests.post(server_url, headers=req_headers, data=json.dumps(get_service_req))
     elif str == 'private':
-        res = requests.post(private_server_url, data=json.dumps(get_service_req))
+        res = requests.post(private_server_url, headers=req_headers, data=json.dumps(get_service_req))
     elif str == 'queen':
-        res = requests.post(queen_server_url, data=json.dumps(get_service_req))
+        res = requests.post(queen_server_url, headers=req_headers, data=json.dumps(get_service_req))
     return json.dumps(res.json())
 
 '''
