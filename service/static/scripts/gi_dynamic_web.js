@@ -131,6 +131,9 @@ function get_all_services_as_table() {
         headers: {
             'X-CSRFToken': csrftoken
         },
+        xhrFields: {
+      		withCredentials: true
+   			},
         data: services,
         dataType: "json",
         success: function (json) {
@@ -416,6 +419,9 @@ function populateService(service_altname) {
             headers: {
                 'X-CSRFToken': csrftoken
             },
+            xhrFields: {
+      				withCredentials: true
+   					},
             data: post_data,
             dataType: "json",
             success: function (json) {
@@ -444,6 +450,9 @@ function populateServiceWithPayload(payload) {
         headers: {
             'X-CSRFToken': csrftoken
         },
+        xhrFields: {
+      		withCredentials: true
+   			},        
         data: '' + data + '',
         // data:'{"services": [{"so:name":"' + service_altname + '"}], "operations": {"operation": "get_named_service"}}',
         dataType: "json",
@@ -489,6 +498,9 @@ function populateSearchWithQ(q) {
         headers: {
             'X-CSRFToken': csrftoken
         },
+        xhrFields: {
+      		withCredentials: true
+   			},        
         data: '{"services":[{"start_service":true,"so:alternateName":"search","parameter_set":{"level":"simple","parameters":[{"param":"SS Keyword Search","current_value":"' + q + '"},{"param":"SS Facet","current_value":"<ANY>"},{"param":"SS Results Page Number","current_value":0},{"param":"SS Results Page Size","current_value":500}]}}]}',
         type: "POST",
         dataType: "json",
@@ -1350,6 +1362,9 @@ function refresh_service(input) {
         },
         data: JSON.stringify(submission),
         dataType: "json",
+        xhrFields: {
+      		withCredentials: true
+   			},        
         success: function (json) {
             // do update values instead
             console.info(JSON.stringify(json));
@@ -1482,6 +1497,9 @@ function do_ajax_search(type) {
                 headers: {
                     'X-CSRFToken': csrftoken
                 },
+                        xhrFields: {
+      		withCredentials: true
+   			},
                 data: JSON.stringify(submit_json),
                 dataType: "json",
                 success: function (json) {
@@ -2180,6 +2198,9 @@ function submit_form() {
             headers: {
                 'X-CSRFToken': csrftoken
             },
+                    xhrFields: {
+      		withCredentials: true
+   			},
             data: JSON.stringify(submission),
             dataType: "json",
             success: function (json) {
@@ -2374,6 +2395,9 @@ function get_api_result(service, previousID) {
         // type: "GET",
         dataType: "json",
         cache: true,
+                xhrFields: {
+      		withCredentials: true
+   			},
         success: function (json) {
             var status_text_key = json['results'][0]['status_text'];
             if (status_text_key == 'Partially succeeded' || status_text_key == 'Succeeded') {
@@ -3159,6 +3183,9 @@ function checkResult(each_result) {
                 },
                 data: '{"operations": {"operation": "get_service_results"}, "services": ["' + uuid + '"]}',
                 dataType: "json",
+                        xhrFields: {
+      		withCredentials: true
+   			},
                 success: function (json) {
                     console.info(JSON.stringify(json));
                     status_text_key = json[0]['status_text'];
@@ -3521,6 +3548,9 @@ function downloadJobFromServer(id) {
         headers: {
             'X-CSRFToken': csrftoken
         },
+                xhrFields: {
+      		withCredentials: true
+   			},
         data: JSON.stringify(previousjob_request_json),
         dataType: "json",
         success: function (json) {
@@ -3556,6 +3586,9 @@ function run_linked_service(id) {
         headers: {
             'X-CSRFToken': csrftoken
         },
+                xhrFields: {
+      		withCredentials: true
+   			},
         data: JSON.stringify({"services": [linked_service_request_json]}),
         dataType: "json",
         success: function (json) {
@@ -3587,6 +3620,9 @@ function run_linked_service_with_redirect(id) {
         headers: {
             'X-CSRFToken': csrftoken
         },
+                xhrFields: {
+      		withCredentials: true
+   			},
         data: JSON.stringify({"services": [linked_service_request_json]}),
         dataType: "json",
         success: function (json) {

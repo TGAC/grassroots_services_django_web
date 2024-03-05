@@ -38,13 +38,13 @@ def get_service(service_alt_name, str):
 Send request to apache backend
 returns JSON from backend
 '''
-def interact_backend(data, str):
+def interact_backend(data, req_headers, str):
     if str == 'public':
-        res = requests.post(server_url, data=data)
+        res = requests.post(server_url, headers=req_headers, data=data)
     elif str == 'private':
-        res = requests.post(private_server_url, data=data)
+        res = requests.post(private_server_url, headers=req_headers, data=data)
     elif str == 'queen':
-        res = requests.post(queen_server_url, data=data)
+        res = requests.post(queen_server_url, headers=req_headers, data=data)
     return json.dumps(res.json())
 
 

@@ -106,7 +106,8 @@ Post request from front-end to the public backend
 '''
 def interact_with_apache(request):
     data = request.body
-    response_json = interact_backend(data, 'public')
+    req_headers = request.headers
+    response_json = interact_backend(data, req_headers, 'public')
     return HttpResponse(response_json)
 
 '''
@@ -114,7 +115,8 @@ Post request from front-end to the private backend
 '''
 def private_interact_with_apache(request):
     data = request.body
-    response_json = interact_backend(data, 'private')
+    req_headers = request.headers
+    response_json = interact_backend(data, req_headers, 'private')
     return HttpResponse(response_json)
 
 '''
@@ -122,7 +124,8 @@ Post request from front-end to the queen backend
 '''
 def queen_interact_with_apache(request):
     data = request.body
-    response_json = interact_backend(data, 'queen')
+    req_headers = request.headers
+    response_json = interact_backend(data, req_headers, 'queen')
     return HttpResponse(response_json)
 
 
