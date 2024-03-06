@@ -148,6 +148,21 @@ function get_all_services_as_table() {
             // }
             // list_html.push('</ul>');
             // $('#form').html(list_html.join(' '));
+
+						/*
+						 * If as part of the response we have a logged-in user
+						 * display their details
+						 */
+						let logged_in_user = json ['user']);
+						if (logged_in_user !== null) {
+							let logged_in_user_email = logged_in_user['so:email'];
+							if (logged_in_user_email !== null) {
+								$('#user').html (		"Logged in as " + logged_in_user_email);					
+							}
+						
+						}		/* if (logged_in_user !== null) */
+						
+
             var service_list_json = [];
             service_list_json = json['services'];
             // if (server_url !== "/private_backend") {
