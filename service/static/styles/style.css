@@ -358,3 +358,10 @@ table.plots td {
 .tooltip-inner {
  word-break: break-all;
 }
+
+
+#user {
+  margin-top: 100px;
+  text-align: right;
+  margin-right: 1.0em;
+}
