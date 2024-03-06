@@ -116,6 +116,40 @@ var search_treatments_json = {
     }
 };
 
+
+/**
+ * Display the logged-in user details if available.
+ *
+ * @param {JSON} response_json - The response from the Grassroots backend server
+ */
+function display_user (response_json) {
+	/*
+	 * If as part of the response we have a logged-in user
+	 * display their details
+	 */
+	let logged_in_user = json ['user'];
+
+	if (logged_in_user !== null) {
+		let logged_in_user_email = logged_in_user['so:email'];
+
+		console.info("user: " + JSON.stringify(logged_in_user));
+
+		if (logged_in_user_email !== null) {
+			$('#user').html ("Logged in as " + logged_in_user_email);					
+		}
+	} else {
+		console.info("no logged-in user");
+	}
+
+	if (logged_in_user !== null) {
+
+	}		/* if (logged_in_user !== null) */
+
+
+}
+
+
+
 /**
  * Get all services from backend and list them as a table
  *
@@ -149,28 +183,8 @@ function get_all_services_as_table() {
             // list_html.push('</ul>');
             // $('#form').html(list_html.join(' '));
 
-						/*
-						 * If as part of the response we have a logged-in user
-						 * display their details
-						 */
-						let logged_in_user = json ['user'];
+						display_user (json);
 
-						if (logged_in_user !== null) {
-							let logged_in_user_email = logged_in_user['so:email'];
-
-	            console.info("user: " + JSON.stringify(logged_in_user));
-
-							if (logged_in_user_email !== null) {
-								$('#user').html ("Logged in as " + logged_in_user_email);					
-							}
-	          } else {
-	            console.info("no logged-in user");
-						}
-						
-						if (logged_in_user !== null) {
-						
-						}		/* if (logged_in_user !== null) */
-						
 
             var service_list_json = [];
             service_list_json = json['services'];
@@ -365,6 +379,8 @@ function display_all_services_as_table(json) {
     });
 
     $('#back_link').css('visibility', 'hidden');
+    
+		display_user (json);
 }
 
 /**
