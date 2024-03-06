@@ -124,24 +124,26 @@ var search_treatments_json = {
  */
 function display_user (response_json) {
 	/*
-	 * If as part of the response we have a logged-in user
-	 * display their details
-	 */
+	* If as part of the response we have a logged-in user
+	* display their details
+	*/
 	let logged_in_user = response_json ['user'];
 
-	if (logged_in_user !== null) {
-		let logged_in_user_email = logged_in_user['so:email'];
+	if (logged_in_user) {
+		let logged_in_user_email = logged_in_user ['so:email'];
 
-		console.info("user: " + JSON.stringify(logged_in_user));
+		console.info("user: " + JSON.stringify (logged_in_user));
 
-		if (logged_in_user_email !== null) {
-			$('#user').html ("Logged in as " + logged_in_user_email);					
+		if (logged_in_user_email) {
+			$('#user').html ("Logged in as " + logged_in_user_email);              
 		}
+		
 	} else {
-		console.info("no logged-in user");
+		console.info("no logged-in user: " + JSON.stringify (response_json));
 	}
 
 }
+
 
 
 

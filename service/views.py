@@ -29,21 +29,21 @@ def queen_index(request):
 Get all public services as a json array
 '''
 def index_ajax(request):
-    service_list_json = get_all_services('public')
+    service_list_json = get_all_services('public', request)
     return HttpResponse(service_list_json)
 
 '''
 Get all private services as a json array
 '''
 def private_index_ajax(request):
-    service_list_json = get_all_services('private')
+    service_list_json = get_all_services('private', request)
     return HttpResponse(service_list_json)
 
 '''
 Get all queen services as a json array
 '''
 def queen_index_ajax(request):
-    service_list_json = get_all_services('queen')
+    service_list_json = get_all_services('queen', request)
     return HttpResponse(service_list_json)
 
 '''
