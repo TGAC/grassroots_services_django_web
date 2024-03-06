@@ -135,7 +135,7 @@ function display_user (response_json) {
 		console.info("user: " + JSON.stringify (logged_in_user));
 
 		if (logged_in_user_email) {
-			$('#user').html ("<img src=\"https://grassroots.tools/grassroots/images/aiss/user\" /> " + logged_in_user_email);              
+			$('#user').html ("<img src=\"https://grassroots.tools/grassroots/images/aiss/user\" width=24 height=24 alt=\"The logged-in user\" /> " + logged_in_user_email);              
 		}
 		
 	} else {
