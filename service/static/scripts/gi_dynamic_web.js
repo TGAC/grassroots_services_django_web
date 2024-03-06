@@ -127,7 +127,7 @@ function display_user (response_json) {
 	 * If as part of the response we have a logged-in user
 	 * display their details
 	 */
-	let logged_in_user = json ['user'];
+	let logged_in_user = response_json ['user'];
 
 	if (logged_in_user !== null) {
 		let logged_in_user_email = logged_in_user['so:email'];
@@ -140,11 +140,6 @@ function display_user (response_json) {
 	} else {
 		console.info("no logged-in user");
 	}
-
-	if (logged_in_user !== null) {
-
-	}		/* if (logged_in_user !== null) */
-
 
 }
 
