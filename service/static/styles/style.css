@@ -358,3 +358,43 @@ table.plots td {
 .tooltip-inner {
  word-break: break-all;
 }
+
+
+#user {
+  margin-top: 80px;
+  text-align: right;
+  margin-right: 1.0em;
+}
+
+#services {
+	padding: 10px 0px 100px 0px ! important;
+}
+
+
+.row {
+	display: flex;
+}
+
+.right {
+	text-align: right;
+}
+
+.column {
+	flex: 50%;
+}
+
+
+.large_column {
+	flex: 75%;
+}
+
+
+.small_column {
+	flex: 25%;
+}
+
+
+
+a.hit {
+	color:#18bc9c ! important
+}
