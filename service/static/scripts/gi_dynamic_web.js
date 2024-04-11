@@ -2643,23 +2643,30 @@ function display_result(json) {
             }
 
 
-            if (facets.length > 0) {
-                for (i = 0; i < facets.length; i++) {
-                    var this_facet = facets[i];
-                    var this_facet_name = this_facet['so:name'];
-                    // do pagination
-                    $(function () {
-                        $('#' + this_facet_name.replace(/\s+/g, "_") + '_list').DataTable({
-                            "searching": false,
-                            "ordering": false,
-                            "lengthChange": false,
-                            "aaSorting": []
-                        })
-                    });
+           if (facets.length > 0) { // new check for updated DATATABLES and jquery
+                for (let i = 0; i < facets.length; i++) {
+                let this_facet = facets[i];
+                let this_facet_name = this_facet['so:name'];
+                let safeId = '#' + this_facet_name.replace(/\s+/g, "_") + '_list';
 
+                    // Checking and destroying existing DataTables
+                if ($.fn.DataTable.isDataTable(safeId)) {
+                $(safeId).DataTable().destroy();
+                console.log("Destroyed existing DataTable for:", safeId);
                 }
 
-            }
+                // Initializing DataTables with a slight delay to ensure DOM is ready
+                setTimeout(() => {
+                $(safeId).DataTable({
+                    "searching": false,
+                    "ordering": false,
+                    "lengthChange": false,
+                    "aaSorting": []
+                });
+                console.log("Initialized DataTable for:", safeId);
+                }, 100); // Adjust timing if necessary
+                }
+            } 
 
         } else {
             $('#status').html(status_text_key);
