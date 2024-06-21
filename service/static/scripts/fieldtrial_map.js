@@ -106,7 +106,7 @@ function startFieldTrialGIS(jsonArray, type_param) {
                     if (plot['rows'][0]['study_index'] !== undefined) {
                         let plotId = plot['rows'][0]['study_index'];
                         plotsModalInfo[plotId] = formatPlotModal(plot);
-                        plotsInfoGPS[plotId]   = formatGPSPlot(plot);   // NEW variable for tables over maps
+                        plotsInfoGPS[plotId]   = formatGPSPlot(plot, experimental_area_json['study_design']);   // NEW variable for tables over maps
 			
                         // show other plots info, but performance issue
                         // let searchStr = '';
@@ -1291,7 +1291,7 @@ function plotModal(plotId) {
 /*
  * @param {JSON} plot - Plot JSON.  // NEW function variations of original formatPlotModal
  */
-function formatGPSPlot(plot) {
+function formatGPSPlot(plot, study_design) {
 
     let htmlarray = [];
     let phenotypearray = [];
@@ -1325,8 +1325,9 @@ function formatGPSPlot(plot) {
     htmlarray.push('Row: ' + plot['row_index'] + '<br/>');
     htmlarray.push('Column: ' + plot['column_index'] + '<br/>');
     htmlarray.push('Length: ' + SafePrint_with_value(plot['length'], default_length) + 'm<br/>');
-    htmlarray.push('Width: ' + SafePrint_with_value(plot['width'], default_width) + 'm<br/>');
-    htmlarray.push('Study Design: ' + SafePrint_with_value(plot['study_design'], default_design) + '<br/>');
+    htmlarray.push('Width: ' + SafePrint_with_value(plot['width'], default_width) + 'm<br/>'); 
+    //htmlarray.push('Study Design: ' + SafePrint_with_value(plot['study_design'], default_design) + '<br/>');
+    htmlarray.push('Study Design: ' + SafePrint_with_value(study_design, default_design) + '<br/>');
     htmlarray.push('Sowing Date: ' + SafePrint_with_value(plot['sowing_date'], default_sowing_date) + '<br/>');
     htmlarray.push('Harvest Date: ' + SafePrint_with_value(plot['harvest_date'], default_harvest_date) + '<br/>');
     htmlarray.push('Sowing Order: ' + SafePrint(plot['sowing_order']) + '<br/>');
