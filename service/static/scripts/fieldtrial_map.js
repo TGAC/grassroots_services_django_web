@@ -33,6 +33,21 @@ var type_param_global = '';
 var datemin = 0;
 var datemax = 0;
 
+var currentImageIndex = 0;
+var combinedImages = [];
+
+function changeImage(direction) {
+    currentImageIndex += direction;
+    if (currentImageIndex >= combinedImages.length) {
+        currentImageIndex = 0;
+    } else if (currentImageIndex < 0) {
+        currentImageIndex = combinedImages.length - 1;
+    }
+    document.getElementById('carouselImage').src = combinedImages[currentImageIndex].thumbnail;
+    document.getElementById('carouselImage').parentNode.href = combinedImages[currentImageIndex].contentUrl;
+}
+
+
 /**
  * Start field trial map and table
  *
@@ -1334,22 +1349,48 @@ function formatGPSPlot(plot, study_design) {
     htmlarray.push('Walking Order: ' + SafePrint(plot['walking_order']) + '<br/>');
     // htmlarray.push('Treatment: ' + SafePrint(plot['treatment']) + '<br/>');
     htmlarray.push('Comment: ' + SafePrint(plot['comment']) + '<br/>');
-
-    // if (plot['so:url'] != undefined) {
-    //     var link = plot['so:url'];
-    //     htmlarray.push('Link: <a href="' + link + '" target="_blank">' + link + '</a><br/>');
-    // }
     htmlarray.push('</div>');
-    htmlarray.push('<div class="col-4">');
-    if (plot['so:image'] != undefined) {
-        if (plot['so:image']['contentUrl'] != undefined && plot['so:image']['thumbnail']) {
-            let contentUrl = plot['so:image']['contentUrl'];
-            let thumbnail = plot['so:image']['thumbnail'];
-            htmlarray.push('<a <a href="' + contentUrl + '" target="_blank"><img height="300" src=" ' + thumbnail + '"/></a>');
+
+    
+    // Initialize image array
+    combinedImages = [];
+    if (plot['so:image'] && plot['so:image']['thumbnail']) {
+        if (Array.isArray(plot['so:image']['thumbnail']) && Array.isArray(plot['so:image']['contentUrl'])) {
+            plot['so:image']['thumbnail'].forEach((thumb, index) => {
+                combinedImages.push({
+                    thumbnail: thumb,
+                    contentUrl: plot['so:image']['contentUrl'][index] || thumb // Fallback to thumbnail if contentUrl isn't defined
+                });
+            });
+        } else {
+            combinedImages.push({
+                thumbnail: plot['so:image']['thumbnail'],
+                contentUrl: plot['so:image']['contentUrl'] || plot['so:image']['thumbnail']
+            });
         }
     }
-    htmlarray.push('</div>');
-    htmlarray.push('</div>');
+    
+    // Append other images from the global images array
+    images.forEach(img => {
+        combinedImages.push({
+            thumbnail: img, // Assuming img is the URL to the thumbnail
+            contentUrl: img  // If there is a different URL for a higher resolution image, it should be handled here
+        });
+    });
+    
+    if (combinedImages.length > 0) {
+        htmlarray.push('<div class="col-8">');
+        htmlarray.push('<div class="image-carousel">');
+        htmlarray.push('<button onclick="changeImage(-1)">&#10094;</button>'); // Left arrow
+        htmlarray.push('<a href="' + combinedImages[0].contentUrl + '" target="_blank"><img id="carouselImage" src="' + combinedImages[0].thumbnail + '" height="300" onerror="this.onerror=null; this.src=\'fallback.jpg\';"/></a>');
+        htmlarray.push('<button onclick="changeImage(1)">&#10095;</button>'); // Right arrow
+        htmlarray.push('</div>'); // Close carousel div
+        htmlarray.push('</div>'); // Close image column div
+    }
+
+
+    htmlarray.push('</div>'); // Close row div
+
     htmlarray.push(s_formatted_treatments);
     htmlarray.push('<hr/>');
     htmlarray.push('<h5>Rows:</h5>');

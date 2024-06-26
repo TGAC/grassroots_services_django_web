@@ -97,8 +97,15 @@ def single_study(request, study_id):
     field_trial_link=full_path.replace('study/', '')
     field_trial_link=field_trial_link.replace(individual_id, ft_id)
     field_trial_link=field_trial_link.replace("http://127.0.0.1:8000", base_url)
-    
-    return render(request, 'fieldtrial/study.html', {'data': study, 'study_json': study_json, 'type': 'Grassroots:Study', 'path_plots':full_path_plots, 'ft_path':field_trial_link, 'N_treatments':range(N_t), 'counters':counters, 'flag':flag} )
+
+    ## TEST
+    imageUrls = [
+        'https://grassroots.tools/beta/field_trial_data/APItest/64f1e4e77c486e019b4e3017/photo_plot_1_2024_02_09.jpg',
+        'https://grassroots.tools/beta/field_trial_data/APItest/64f1e4e77c486e019b4e3017/photo_plot_1_2024_02_13.jpg',
+        'https://grassroots.tools/beta/field_trial_data/APItest/64f1e4e77c486e019b4e3017/photo_plot_2_2024_02_09.jpg',
+    ]
+    ##imageUrls = []
+    return render(request, 'fieldtrial/study.html', {'data': study, 'study_json': study_json, 'type': 'Grassroots:Study', 'path_plots':full_path_plots, 'ft_path':field_trial_link, 'N_treatments':range(N_t), 'counters':counters, 'flag':flag, 'imageUrls':imageUrls } )
     #return render(request, 'study.html', {'data': study, 'study_json': study_json, 'type': 'Grassroots:Study', 'path_plots':full_path_plots, 'ft_path':field_trial_link, 'N_treatments':range(N_t), 'counters':counters, 'flag':flag} )
 
 '''
