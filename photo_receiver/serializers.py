@@ -7,16 +7,21 @@ import os
 class PhotoSerializer(serializers.Serializer):
     image = serializers.ImageField(use_url=True)
     subfolder = serializers.CharField(max_length=100)
+    plot_number = serializers.IntegerField()  # Add plot_number to the serializer
+
 
     def save(self):
         image = self.validated_data['image']
         subfolder = self.validated_data['subfolder']
+        plot_number = self.validated_data['plot_number']  # Retrieve plot_number
 
         # Base path where images will be stored
         base_path = '/opt/apache/htdocs/field_trial_data/APItest/'
+        #base_path = '/home/daniel/Applications/apache/htdocs/TEST/'
 
         # Construct the full path with subfolder
-        full_path = os.path.join(base_path, subfolder)
+        #full_path = os.path.join(base_path, subfolder)
+        full_path = os.path.join(base_path, subfolder, f'plot_{plot_number}')
 
         # Check if the subfolder exists, if not create it
         if not os.path.exists(full_path):
