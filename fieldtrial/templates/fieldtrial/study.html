@@ -7,6 +7,13 @@
 {% block all_styles_and_scripts %}
 {{ block.super }} 
 <!-- ********************************************************-->
+<script type="text/javascript">
+    var images = [
+        {% for url in imageUrls %}
+            "{{ url }}",
+        {% endfor %}
+    ];
+</script>
     <!-- Leaflet NEWEST VERSION -->
     <link rel="stylesheet" href="{% static 'fieldtrial/SCRIPTS/leaflet/leaflet.css' %}"/>
     <script src="{% static 'fieldtrial/SCRIPTS/leaflet/leaflet.js' %}"></script> 
