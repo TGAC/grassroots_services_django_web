@@ -62,9 +62,9 @@ class LatestPhoto(APIView):
         # Find the most recent photo
         latest_photo = max(photos, key=os.path.getctime)
         latest_photo_filename = os.path.basename(latest_photo)
-        photo_url = request.build_absolute_uri(os.path.join(settings.MEDIA_URL, subfolder, latest_photo_filename))
+        photo_url = request.build_absolute_uri(os.path.join(settings.MEDIA_URL, subfolder, plot_folder, latest_photo_filename))
          # Manually construct the URL
-        photo_url = 'https://grassroots.tools/beta' + os.path.join(settings.MEDIA_URL, subfolder, latest_photo_filename)
+        photo_url = 'https://grassroots.tools/beta' + os.path.join(settings.MEDIA_URL, subfolder, plot_folder, latest_photo_filename)
 
         print(photo_url)
         # Serve the photo
