@@ -10,6 +10,41 @@ from django.http import JsonResponse
 import glob
 BASE_PATH = '/opt/apache/htdocs/field_trial_data/APItest/'
 
+import requests
+from django.http import JsonResponse
+
+def oauth_callback(request):
+    auth_code = request.GET.get('code', None)
+    if auth_code:
+        print(f"Authorization Code: {auth_code}")
+        
+        # Now exchange the code for an access token
+        token_url = 'https://auth.globus.org/v2/oauth2/token'
+        client_id = 'f3cb960a-601c-43e0-b045-81a266fd2193'
+        client_secret = 'f3cb960a-601c-43e0-b045-81a266fd2193'
+        redirect_uri = 'https://grassroots.tools/beta/photo_receiver/private/redirect_uri'
+
+        data = {
+            'grant_type': 'authorization_code',
+            'code': auth_code,
+            'redirect_uri': redirect_uri,
+            'client_id': client_id,
+            'client_secret': client_secret,
+        }
+
+        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+
+        ########## response = requests.post(token_url, headers=headers, data=data)
+        if response.status_code == 200:
+            token_data = response.json()
+            # Do something with the token_data, e.g., store it, use it to make further requests, etc.
+            return JsonResponse({'message': 'Token received', 'token_data': token_data})
+        else:
+            return JsonResponse({'error': 'Failed to exchange authorization code for token'}, status=response.status_code)
+
+    else:
+        return HttpResponse("No authorization code provided.", status=400)
+
 class LatestPhoto(APIView):
     def get(self, request, subfolder, plot_number):        
         ##plot_path = os.path.join(BASE_PATH, subfolder, f'photo_plot_{plot_number}_*.jpg')
