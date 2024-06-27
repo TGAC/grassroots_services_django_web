@@ -9,6 +9,7 @@ from django.http import FileResponse
 from django.http import JsonResponse
 import glob
 BASE_PATH = '/opt/apache/htdocs/field_trial_data/APItest/'
+#BASE_PATH = '/home/daniel/Applications/apache/htdocs/TEST/' # local path
 
 import requests
 from django.http import JsonResponse
@@ -48,7 +49,10 @@ def oauth_callback(request):
 class LatestPhoto(APIView):
     def get(self, request, subfolder, plot_number):        
         ##plot_path = os.path.join(BASE_PATH, subfolder, f'photo_plot_{plot_number}_*.jpg')
-        plot_path = os.path.join(BASE_PATH, subfolder, 'photo_plot_{}_*.jpg'.format(plot_number))
+        #plot_path = os.path.join(BASE_PATH, subfolder, 'photo_plot_{}_*.jpg'.format(plot_number))
+        # Construct the path including the new intermediate subfolder
+        plot_folder = 'plot_{}'.format(plot_number)
+        plot_path = os.path.join(BASE_PATH, subfolder, plot_folder, 'photo_plot_{}_*.jpg'.format(plot_number))
 
         # Find all photos for the plot
         photos = glob.glob(plot_path)
