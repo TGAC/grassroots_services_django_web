@@ -37,14 +37,16 @@ var currentImageIndex = 0;
 var combinedImages = [];
 
 function changeImage(direction) {
-    currentImageIndex += direction;
-    if (currentImageIndex >= combinedImages.length) {
-        currentImageIndex = 0;
-    } else if (currentImageIndex < 0) {
-        currentImageIndex = combinedImages.length - 1;
+    const images = document.querySelectorAll('.carouselImage');
+    let currentIndex = Array.from(images).findIndex(img => img.style.display === 'block');
+    images[currentIndex].style.display = 'none';
+    currentIndex += direction;
+    if (currentIndex >= images.length) {
+        currentIndex = 0;
+    } else if (currentIndex < 0) {
+        currentIndex = images.length - 1;
     }
-    document.getElementById('carouselImage').src = combinedImages[currentImageIndex].thumbnail;
-    document.getElementById('carouselImage').parentNode.href = combinedImages[currentImageIndex].contentUrl;
+    images[currentIndex].style.display = 'block';
 }
 
 
@@ -1370,24 +1372,28 @@ function formatGPSPlot(plot, study_design) {
         }
     }
     
-    // Append other images from the global images array
-    images.forEach(img => {
+    // Filter and append other images from the global images array
+    let plotSpecificImages = images.filter(img => img.includes(`/plot_${plot_actual_id}/`));
+    //console.log("Plot specific images: " + plotSpecificImages);
+    plotSpecificImages.forEach(img => {
         combinedImages.push({
-            thumbnail: img, // Assuming img is the URL to the thumbnail
-            contentUrl: img  // If there is a different URL for a higher resolution image, it should be handled here
+            thumbnail: img,
+            contentUrl: img  // Assuming img URL is appropriate for both thumbnail and high-res
         });
     });
-    
+    //console.log("Combined images" + combinedImages);
     if (combinedImages.length > 0) {
         htmlarray.push('<div class="col-8">');
         htmlarray.push('<div class="image-carousel">');
         htmlarray.push('<button onclick="changeImage(-1)">&#10094;</button>'); // Left arrow
-        htmlarray.push('<a href="' + combinedImages[0].contentUrl + '" target="_blank"><img id="carouselImage" src="' + combinedImages[0].thumbnail + '" height="300" onerror="this.onerror=null; this.src=\'fallback.jpg\';"/></a>');
+        
+        combinedImages.forEach((image, index) => {
+            htmlarray.push(`<a href="${image.contentUrl}" target="_blank"><img class="carouselImage" src="${image.thumbnail}" style="display: ${index === 0 ? 'block' : 'none'};" height="300" onerror="this.onerror=null; this.src='fallback.jpg';"/></a>`);
+        });
         htmlarray.push('<button onclick="changeImage(1)">&#10095;</button>'); // Right arrow
         htmlarray.push('</div>'); // Close carousel div
         htmlarray.push('</div>'); // Close image column div
     }
-
 
     htmlarray.push('</div>'); // Close row div
 
