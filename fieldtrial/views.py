@@ -133,6 +133,24 @@ def single_study(request, study_id):
                                                      'counters':counters, 
                                                      'flag':flag, 
                                                      'imageUrls':imageUrls } )
+def list_image_files(base_url, directory_path):
+    """
+    Generate web-accessible URLs for image files in a specified directory.
+    """
+    image_files = []
+    supported_extensions = ['.jpg', '.jpeg', '.png']
+    try:
+        # List all files in the directory
+        for item in os.listdir(directory_path):
+            # Check if the file is an image
+            if any(item.endswith(ext) for ext in supported_extensions):
+                # Construct web-accessible URL
+                image_url = f"{base_url}/{item}"
+                image_files.append(image_url)
+    except FileNotFoundError:
+        print("Directory not found:", directory_path)
+
+    return image_files
 
     
 '''
