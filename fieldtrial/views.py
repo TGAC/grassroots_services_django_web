@@ -99,8 +99,13 @@ def single_study(request, study_id):
     field_trial_link=field_trial_link.replace("http://127.0.0.1:8000", base_url)
 
     ## FIND IMAGES FOR CAROUSEL 
-    local_base_path = "/home/daniel/Applications/apache/htdocs/TEST"
-    web_base_url = "http://127.0.0.1:2000/TEST"  # Web-accessible base URL
+    ##local_base_path = "/home/daniel/Applications/apache/htdocs/TEST"
+    local_base_path = "/opt/apache/htdocs/field_trial_data/APItest"
+    #web_base_url = "http://127.0.0.1:2000/TEST"  # Web-accessible base URL
+    ## https://grassroots.tools/beta/field_trial_data/APItest/
+    ## USE ALIAS IN APACHE TO POINT TO /opt/apache/htdocs/field_trial_data/APItest
+    web_base_url="https://grassroots.tools/beta/media"
+    
     imageUrls = []
 
     for plot in plot_array:
@@ -122,8 +127,8 @@ def single_study(request, study_id):
     #    'https://grassroots.tools/beta/field_trial_data/APItest/64f1e4e77c486e019b4e3017/photo_plot_2_2024_02_09.jpg',
     #]
     ##imageUrls = []
-    #return render(request, 'study.html', {'data': study, 'study_json': study_json, 'type': 'Grassroots:Study', 'path_plots':full_path_plots, 'ft_path':field_trial_link, 'N_treatments':range(N_t), 'counters':counters, 'flag':flag} )
 
+    #return render(request, 'study.html', {'data': study, 'study_json': study_json, 'type': 'Grassroots:Study', 'path_plots':full_path_plots, 'ft_path':field_trial_link, 'N_treatments':range(N_t), 'counters':counters, 'flag':flag} )
     return render(request, 'fieldtrial/study.html', {'data': study, 
                                                      'study_json': study_json, 
                                                      'type': 'Grassroots:Study', 
