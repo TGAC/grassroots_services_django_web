@@ -84,6 +84,29 @@
         margin: 0 auto;
         text-align: left; 
     }
+
+    .carousel-button {
+        cursor: pointer;
+        background-color: transparent;
+        border: none;
+        font-size: 24px;
+        padding: 10px;
+        z-index: 10; /* Ensures the button is above the image */
+    }
+    
+    .image-carousel {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative; /* Required for absolute positioning of children */
+    }
+    
+    .image-carousel .carouselImage {
+        width: 300px;  /* Fixed width, adjust as necessary */
+        height: auto;  /* Maintain aspect ratio */
+        display: block;
+    }
+    
     
  </style>
 

@@ -100,8 +100,8 @@ def single_study(request, study_id):
 
     ## FIND IMAGES FOR CAROUSEL 
     ##local_base_path = "/home/daniel/Applications/apache/htdocs/TEST"
-    local_base_path = "/opt/apache/htdocs/field_trial_data/APItest"
-    #web_base_url = "http://127.0.0.1:2000/TEST"  # Web-accessible base URL
+    local_base_path = "/opt/apache/htdocs/field_trial_data/APItest"  # location in BETA SERVER
+    ##web_base_url = "http://127.0.0.1:2000/TEST"  # Web-accessible base URL
     ## https://grassroots.tools/beta/field_trial_data/APItest/
     ## USE ALIAS IN APACHE TO POINT TO /opt/apache/htdocs/field_trial_data/APItest
     web_base_url="https://grassroots.tools/beta/media"
