@@ -1373,24 +1373,25 @@ function formatGPSPlot(plot, study_design) {
     }
     
     // Filter and append other images from the global images array
-    let plotSpecificImages = images.filter(img => img.includes(`/plot_${plot_actual_id}/`));
-    //console.log("Plot specific images: " + plotSpecificImages);
+    let plotSpecificImages = images.filter(img => {
+        return img.includes(`/plot_${plot_actual_id}/`) && !img.includes('thumb');
+    });
+    console.log("Plot specific images: " + plotSpecificImages);
     plotSpecificImages.forEach(img => {
         combinedImages.push({
             thumbnail: img,
             contentUrl: img  // Assuming img URL is appropriate for both thumbnail and high-res
         });
     });
-    //console.log("Combined images" + combinedImages);
-    if (combinedImages.length > 0) {
-        htmlarray.push('<div class="col-8">');
+    console.log("Combined images" + combinedImages);
+    if(combinedImages.length > 0) {
+        htmlarray.push('<div class="col-8" style="position: relative; overflow: hidden;">');
         htmlarray.push('<div class="image-carousel">');
-        htmlarray.push('<button onclick="changeImage(-1)">&#10094;</button>'); // Left arrow
-        
+        htmlarray.push('<button class="carousel-button" style="position: absolute; left: 0;" onclick="changeImage(-1)">&#10094;</button>'); // Left arrow
         combinedImages.forEach((image, index) => {
-            htmlarray.push(`<a href="${image.contentUrl}" target="_blank"><img class="carouselImage" src="${image.thumbnail}" style="display: ${index === 0 ? 'block' : 'none'};" height="300" onerror="this.onerror=null; this.src='fallback.jpg';"/></a>`);
+            htmlarray.push(`<a href="${image.contentUrl}" target="_blank"><img class="carouselImage" src="${image.thumbnail}" style="max-width: 100%; display: ${index === 0 ? 'block' : 'none'};" height="300" onerror="this.onerror=null; this.src='fallback.jpg';"/></a>`);
         });
-        htmlarray.push('<button onclick="changeImage(1)">&#10095;</button>'); // Right arrow
+        htmlarray.push('<button class="carousel-button" style="position: absolute; right: 0;" onclick="changeImage(1)">&#10095;</button>'); // Right arrow
         htmlarray.push('</div>'); // Close carousel div
         htmlarray.push('</div>'); // Close image column div
     }
