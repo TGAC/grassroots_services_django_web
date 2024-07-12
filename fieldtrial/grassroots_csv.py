@@ -234,6 +234,7 @@ def create_CSV(plot_data, phenotypes, treatment_factors, plot_id):
     name = plot_id + '.csv' 
     path = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', 'filedownload/Files'))
     filename = os.path.join(path, name)
+    data_cleaned_path = os.path.join(path, 'data_cleaned.csv')
     print(filename)
 
     # Actual order of columns given by these headers 
@@ -294,13 +295,13 @@ def create_CSV(plot_data, phenotypes, treatment_factors, plot_id):
         print(removed_columns_message)
         #print(f"The following columns have been removed due to being empty: {', '.join(removed_columns)}")
 
-        with open('data_cleaned.csv', 'w', encoding='UTF8', newline='') as f:
+        with open(data_cleaned_path, 'w', encoding='UTF8', newline='') as f:
             writer = csv.DictWriter(f, fieldnames=[col for col in headers if col in exception or col not in empty_columns])
             writer.writeheader()
             writer.writerows(new_rows)
     else:
     # no empty columns, so write the original data to the cleaned file
-        with open('data_cleaned.csv', 'w', encoding='UTF8', newline='') as f:
+        with open(data_cleaned_path, 'w', encoding='UTF8', newline='') as f:
             writer = csv.DictWriter(f, fieldnames=headers)
             writer.writeheader()
             writer.writerows(new_rows)
@@ -308,4 +309,4 @@ def create_CSV(plot_data, phenotypes, treatment_factors, plot_id):
         
     # replace the original file with the cleaned data
     os.remove(filename)
-    os.rename('data_cleaned.csv', filename)
+    os.rename(data_cleaned_path, filename)
