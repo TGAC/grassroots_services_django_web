@@ -1460,34 +1460,7 @@ function formatPlotModal(plot) {
 
     let formatted_plot = format_plot_rows(plot, false);
 
-    rowsInfoarray = rowsInfoarray.concat(formatted_plot['rowsInfo']);
-     //phenotypearray = phenotypearray.concat(formatted_plot['phenotypes']); //momentarily     TEST replace with new function
-
-    //
-    // let searchStr = '';
-    //         for (r = 0; r < plot['rows'].length; r++) {
-    //             let this_accession = SafePrint(plot['rows'][r]['material']['accession']);
-    //             searchStr = this_accession;
-    //         }
-    //
-    // for (j = 0; j < plot_json.length; j++) {
-    //     const loop_plotId = plot_json[j]['_id']['$oid'];
-    //     if (loop_plotId !== plotId) {
-    //         var rows = plot_json[j]['rows'];
-    //         for (jr = 0; jr < rows.length; jr++) {
-    //             var accession = rows[jr]['material']['accession'];
-    //             if (accession != undefined) {
-    //                 if (searchStr === accession && searchStr !== '') {
-    //                     let formatted_plot = format_plot_rows(plot_json[j], true);
-    //                     rowsInfoarray = rowsInfoarray.concat(formatted_plot['rowsInfo']);
-    //                     phenotypearray = phenotypearray.concat(formatted_plot['phenotypes']);
-    //                     break;
-    //                 }
-    //             }
-    //         }
-    //     }
-    //
-    // }
+    rowsInfoarray = rowsInfoarray.concat(formatted_plot['rowsInfo']);     
 
     rowsInfoarray.push('</tbody></table>');
     phenotypearray.push('</tbody></table>');
@@ -1505,22 +1478,57 @@ function formatPlotModal(plot) {
     htmlarray.push('Walking Order: ' + SafePrint(plot['walking_order']) + '<br/>');
     // htmlarray.push('Treatment: ' + SafePrint(plot['treatment']) + '<br/>');
     htmlarray.push('Comment: ' + SafePrint(plot['comment']) + '<br/>');
-
-    // if (plot['so:url'] != undefined) {
-    //     var link = plot['so:url'];
-    //     htmlarray.push('Link: <a href="' + link + '" target="_blank">' + link + '</a><br/>');
-    // }
     htmlarray.push('</div>');
-    htmlarray.push('<div class="col-4">');
-    if (plot['so:image'] != undefined) {
-        if (plot['so:image']['contentUrl'] != undefined && plot['so:image']['thumbnail']) {
-            let contentUrl = plot['so:image']['contentUrl'];
-            let thumbnail = plot['so:image']['thumbnail'];
-            htmlarray.push('<a <a href="' + contentUrl + '" target="_blank"><img height="300" src=" ' + thumbnail + '"/></a>');
+
+
+    // Initialize image array
+    combinedImages = [];
+    if (plot['so:image'] && plot['so:image']['thumbnail']) {
+        if (Array.isArray(plot['so:image']['thumbnail']) && Array.isArray(plot['so:image']['contentUrl'])) {
+            plot['so:image']['thumbnail'].forEach((thumb, index) => {
+                combinedImages.push({
+                    thumbnail: thumb,
+                    contentUrl: plot['so:image']['contentUrl'][index] || thumb // Fallback to thumbnail if contentUrl isn't defined
+                });
+            });
+        } else {
+            combinedImages.push({
+                thumbnail: plot['so:image']['thumbnail'],
+                contentUrl: plot['so:image']['contentUrl'] || plot['so:image']['thumbnail']
+            });
         }
     }
-    htmlarray.push('</div>');
-    htmlarray.push('</div>');
+
+    // Filter and append other images from the global images array
+    let plotSpecificImages = images.filter(img => {
+        return img.includes(`/plot_${plot_actual_id}/`) && !img.includes('thumb');
+    });
+    console.log("Plot specific images: " + plotSpecificImages);
+    plotSpecificImages.forEach(img => {
+        combinedImages.push({
+            thumbnail: img,
+            contentUrl: img  // Assuming img URL is appropriate for both thumbnail and high-res
+        });
+    });
+    console.log("Combined images" + combinedImages);
+    if(combinedImages.length > 0) {
+        htmlarray.push('<div class="col-8" style="position: relative; overflow: hidden;">');
+        htmlarray.push('<div class="image-carousel">');
+        htmlarray.push('<button class="carousel-button" style="position: absolute; left: 0;" onclick="changeImage(-1)">&#10094;</button>'); // Left arrow
+        combinedImages.forEach((image, index) => {
+            htmlarray.push(`<a href="${image.contentUrl}" target="_blank"><img class="carouselImage" src="${image.thumbnail}" style="max-width: 100%; display: ${index === 0 ? 'block' : 'none'};" height="300" onerror="this.onerror=null; this.src='fallback.jpg';"/></a>`);
+        });
+        htmlarray.push('<button class="carousel-button" style="position: absolute; right: 0;" onclick="changeImage(1)">&#10095;</button>'); // Right arrow
+        htmlarray.push('</div>'); // Close carousel div
+        htmlarray.push('</div>'); // Close image column div
+    }
+
+
+
+    htmlarray.push('</div>'); // Close row div
+    
+
+
     htmlarray.push(s_formatted_treatments);
     htmlarray.push('<hr/>');
     htmlarray.push('<h5>Rows:</h5>');
