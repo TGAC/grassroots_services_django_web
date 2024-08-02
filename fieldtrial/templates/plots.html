@@ -18,8 +18,47 @@
             height: 600px;
         }
     }
+    .carousel-button {
+        cursor: pointer;
+        background-color: transparent;
+        border: none;
+        font-size: 24px;
+        padding: 10px;
+        top: 50%; /* Center vertically */
+        transform: translateY(-50%); /* Center vertically */
+        position: absolute;
+    }
+    
+    .carousel-button.left {
+        left: 50px; /* Adjust as necessary */
+    }
+    
+    .carousel-button.right {
+        right: 50px; /* Adjust as necessary */
+    }
+    
+    .image-carousel {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative; /* Required for absolute positioning of children */
+    }
+    
+    .image-carousel .carouselImage {
+        width: 300px;  /* Fixed width, adjust as necessary */
+        height: auto;  /* Maintain aspect ratio */
+        display: block;
+    }
+    
 </style>
 
+<script type="text/javascript">
+    var images = [
+        {% for url in imageUrls %}
+            "{{ url }}",
+        {% endfor %}
+    ];
+</script>
 <section id="services" style="padding: 100px 0px 100px 0px ! important;">
     <div class="container">
         <!--style="width: 1170px ! important; margin-right: auto ! important; margin-left: auto ! important;">-->
