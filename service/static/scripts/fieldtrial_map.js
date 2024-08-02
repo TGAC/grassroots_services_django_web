@@ -2163,14 +2163,14 @@ function format_pheno(plotCurrent, replicateIds, replicates, noReplicates){
 
   var phenotypeRaw   = {};
 	
+  if (plotCurrent['rows'][0].hasOwnProperty('observations')) { 
+    for (o = 0; o < plotCurrent['rows'][0]['observations'].length; o++) {
 
-  for (o = 0; o < plotCurrent['rows'][0]['observations'].length; o++) {
-
-	let observation    = plotCurrent['rows'][0]['observations'][o];
+	    let observation    = plotCurrent['rows'][0]['observations'][o];
         let phenotype_name = observation['phenotype']['variable']; 
 
         phenotypeRaw[phenotype_name] = observation['raw_value'];      // Array of raw values of current plot
-
+    }
   }
 
   var current_index    = plotCurrent['rows'][0]['replicate'];
@@ -2194,12 +2194,14 @@ function format_pheno(plotCurrent, replicateIds, replicates, noReplicates){
      colors.push(color);	  
 	  
      let replicateRaw = {};
-     for (o = 0; o < plot[0]['observations'].length; o++) {
+     if (plot[0].hasOwnProperty('observations')) {
+       for (o = 0; o < plot[0]['observations'].length; o++) {
 
-	let observation    = plot[0]['observations'][o];
+	    let observation    = plot[0]['observations'][o];
         let phenotype_name = observation['phenotype']['variable']; 
 
          replicateRaw[phenotype_name] = observation['raw_value'];
+       }
      }
      RawVals.push(replicateRaw);	
   }
@@ -2207,7 +2209,7 @@ function format_pheno(plotCurrent, replicateIds, replicates, noReplicates){
 
 
    var crop_onotology_url = "https://cropontology.org/term/";	
-
+  if (plotCurrent['rows'][0].hasOwnProperty('observations')) {
    for (o = 0; o < plotCurrent['rows'][0]['observations'].length; o++) {
         var observation    = plotCurrent['rows'][0]['observations'][o];
         var phenotype_name = observation['phenotype']['variable'];
@@ -2275,7 +2277,7 @@ function format_pheno(plotCurrent, replicateIds, replicates, noReplicates){
                 phenotypearray.push('</tr>');
     
    }
-
+  }
 
   formatted_plot['phenotypes'] = phenotypearray;
 
