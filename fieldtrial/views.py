@@ -99,9 +99,9 @@ def single_study(request, study_id):
     field_trial_link=field_trial_link.replace("http://127.0.0.1:8000", base_url)
 
     ## FIND IMAGES FOR CAROUSEL 
-    ##local_base_path = "/home/daniel/Applications/apache/htdocs/TEST"
+    #############local_base_path = "/home/daniel/Applications/apache/htdocs/TEST"
     local_base_path = "/opt/apache/htdocs/field_trial_data/APItest"  # location in BETA SERVER
-    ##web_base_url = "http://127.0.0.1:2000/TEST"  # Web-accessible base URL
+    ###web_base_url = "http://127.0.0.1:2000/TEST"  # Web-accessible base URL
     ## https://grassroots.tools/beta/field_trial_data/APItest/
     ## USE ALIAS IN APACHE TO POINT TO /opt/apache/htdocs/field_trial_data/APItest
     web_base_url="https://grassroots.tools/beta/media"
@@ -214,8 +214,27 @@ def single_plot(request, plot_id):
     plot_div = plotly_plot(row_raw, accession, traitName, units, plotIDs, treatment)
     #image    = seaborn_plot(static,   traitName,  units)
     
-    return render(request, 'plots.html', {'data': plot, 'plot_id': plot_id, 'study_name': study_name, 
-        'plot_div': plot_div, 'dictTraits':dictTraits})
+    data = plot
+    imageUrls = []
+    ## FIND IMAGES FOR CAROUSEL 
+    #####local_base_path = "/home/daniel/Applications/apache/htdocs/TEST"
+    local_base_path = "/opt/apache/htdocs/field_trial_data/APItest"  # location in BETA SERVER
+    #########web_base_url = "http://127.0.0.1:2000/TEST"  # Web-accessible base URL
+    ## https://grassroots.tools/beta/field_trial_data/APItest/
+    ## USE ALIAS IN APACHE TO POINT TO /opt/apache/htdocs/field_trial_data/APItest
+    web_base_url="https://grassroots.tools/beta/media"
+    for plot in plot_array:
+        if plot.get('rows') and plot['rows'][0].get('study_index'):
+            study_index = plot['rows'][0]['study_index']  # Extract study_index from the first row
+            #print(study_index)
+            plot_dir = f"{local_base_path}/{plot_id}/plot_{study_index}"
+            web_plot_dir = f"{web_base_url}/{plot_id}/plot_{study_index}"            
+            plot_images = list_image_files(web_plot_dir, plot_dir)
+            imageUrls.extend(plot_images)
+    #print("Image URLs: ", imageUrls)
+
+    return render(request, 'plots.html', {'data': data, 'plot_id': plot_id, 'study_name': study_name, 
+        'plot_div': plot_div, 'dictTraits':dictTraits, 'imageUrls':imageUrls})
     #return render(request, 'fieldtrial/plot.html', {'data': plot, 'plot_id': plot_id, 'study_name': study_name, 
     #    'plot_div': plot_div, 'dictTraits':dictTraits})
 
