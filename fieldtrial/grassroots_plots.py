@@ -59,7 +59,7 @@ def searchPhenotypeUnit(listPheno, value):
 '''
 test rendering plotly interactive heatmap
 '''
-def plotly_plot(numpy_matrix, accession, title, unit, IDs, treatments):
+def plotly_plot(numpy_matrix, accession, title, unit, IDs, treatments, dates):
 
     ##numpy_matrix = np.flipud(numpy_matrix)      # To Match order shown originally in JS code
     #plotID      = np.flipud(IDs)        
@@ -116,20 +116,38 @@ def plotly_plot(numpy_matrix, accession, title, unit, IDs, treatments):
             labels=dict(x="columns", y="rows", color=units),
             color_continuous_scale=px.colors.sequential.Greens, height=800 )
 
-    #print(treatments)
     if len(treatments)>0:
         treatments = treatments.reshape(Y,X)
         treatments = np.flipud(treatments)
 
-        fig.update_traces(
-        customdata = np.moveaxis([accession, s_matrix, plotID, treatments], 0,-1),
-        #hovertemplate="Accession: %{customdata[0]}<br>raw value: %{customdata[1]:.2f}  <extra></extra>")
-        hovertemplate="Accession: %{customdata[0]}<br>Raw value: %{customdata[1]}<br>Plot ID: %{customdata[2]} (column: %{x}, row: %{y})<br>Treatment: %{customdata[3]} <extra></extra>")
+        if len(dates)>0:  # Only include dates if they are not an empty list
+            dates = dates.reshape(Y, X)
+            dates = np.flipud(dates)
+            fig.update_traces(
+                customdata=np.moveaxis([accession, s_matrix, plotID, treatments, dates], 0, -1),
+                hovertemplate="Accession: %{customdata[0]}<br>Raw value: %{customdata[1]}<br>Plot ID: %{customdata[2]} (column: %{x}, row: %{y})<br>Treatment: %{customdata[3]}<br>Date: %{customdata[4]}<extra></extra>"
+            )
+        else:
+            fig.update_traces(
+                customdata=np.moveaxis([accession, s_matrix, plotID, treatments], 0, -1),
+                hovertemplate="Accession: %{customdata[0]}<br>Raw value: %{customdata[1]}<br>Plot ID: %{customdata[2]} (column: %{x}, row: %{y})<br>Treatment: %{customdata[3]}<extra></extra>"
+            )
+
 
     else:
-        fig.update_traces(
-        customdata = np.moveaxis([accession, s_matrix, plotID], 0,-1),
-        hovertemplate="Accession: %{customdata[0]}<br>Raw value: %{customdata[1]}<br>Plot ID: %{customdata[2]} (column: %{x}, row:%{y})<extra></extra>")
+        if len(dates)>0:  # Only include dates if they are not an empty list
+            dates = dates.reshape(Y, X)
+            dates = np.flipud(dates)
+            fig.update_traces(
+                customdata=np.moveaxis([accession, s_matrix, plotID, dates], 0, -1),
+                hovertemplate="Accession: %{customdata[0]}<br>Raw value: %{customdata[1]}<br>Plot ID: %{customdata[2]} (column: %{x}, row:%{y})<br>Date: %{customdata[3]}<extra></extra>"
+            )
+        else:
+            fig.update_traces(
+                customdata=np.moveaxis([accession, s_matrix, plotID], 0, -1),
+                hovertemplate="Accession: %{customdata[0]}<br>Raw value: %{customdata[1]}<br>Plot ID: %{customdata[2]} (column: %{x}, row:%{y})<extra></extra>"
+            )
+
 
     fig.update_layout(font=dict(family="Courier New, monospace",size=12,color="Black"),title={
         'text': title,
@@ -149,6 +167,35 @@ def plotly_plot(numpy_matrix, accession, title, unit, IDs, treatments):
 
     
     return plot_div
+
+#########################################################################################################
+def observation_dates(arraysJson, rows, columns, current_name):
+    dt = np.dtype(('U', 80))  # Adjust dtype if date strings are longer
+    matrix = np.zeros((rows, columns), dtype=dt)
+    matrix[:] = "N/A"
+
+    for r in range(len(arraysJson)):
+        i = int(arraysJson[r]['row_index'])
+        j = int(arraysJson[r]['column_index'])
+        i = i - 1
+        j = j - 1
+
+        if 'observations' in arraysJson[r]['rows'][0]:
+            # Filter observations by the selected phenotype
+            relevant_observations = [
+                obs for obs in arraysJson[r]['rows'][0]['observations'] if obs['phenotype']['variable'] == current_name
+            ]
+
+            if relevant_observations:
+                # Sort observations by date and select the latest one
+                relevant_observations.sort(key=lambda x: x.get('date', ''), reverse=True)
+                latest_observation = relevant_observations[0]
+                observation_date = latest_observation.get('date', 'N/A').split('T')[0]  # Keep only the date part
+                matrix[i][j] = observation_date
+
+    matrix = matrix.flatten()
+    return matrix
+
 
 ############################################################################################
 '''
