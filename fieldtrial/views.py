@@ -26,6 +26,7 @@ from .grassroots_plots import plotly_plot
 from .grassroots_plots import seaborn_plot
 from .grassroots_plots import treatments
 from .grassroots_plots import dict_phenotypes
+from .grassroots_plots import observation_dates
 
 from .grassroots_csv import create_CSV
 
@@ -210,9 +211,15 @@ def single_plot(request, plot_id):
     if ( len(treatment_factors)>0):
           treatment = treatments(plot_array, row, column)
 
+     # Generate the observation dates matrix
+    dates = observation_dates(plot_array, row, column, selected_phenotype)
+    #print ("dates__________", dates)
+    # Check if all dates are "N/A"
+    if np.all(dates == "N/A"):
+        dates = []  # Empty list if all dates are "N/A"
+
     create_CSV(plot_array, phenotypes, treatment_factors, plot_id)
-    plot_div = plotly_plot(row_raw, accession, traitName, units, plotIDs, treatment)
-    #image    = seaborn_plot(static,   traitName,  units)
+    plot_div = plotly_plot(row_raw, accession, traitName, units, plotIDs, treatment, dates)
     
     data = plot
     imageUrls = []
