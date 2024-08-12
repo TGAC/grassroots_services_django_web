@@ -1565,6 +1565,7 @@ function formatPlotModal(plot) {
  *
  * @param {JSON} plot - Plot JSON.
  * @param {Boolean} replicate_bool - Boolean if it is a replicate.
+ * used to create the modal window in the study page for each plot over the map
  */
 function format_plot_rows(plot, replicate_bool) {
     let plotId = plot['_id']['$oid'];
@@ -1638,8 +1639,9 @@ function format_plot_rows(plot, replicate_bool) {
                 phenotypearray.push('<tr>');
                 phenotypearray.push('<td style="background-color:' + color + '">' + SafePrint(replicate_index) + replicate + '</td>');
                 
-		phenotypearray.push('<td>' + SafePrint(plot['rows'][r]['rack_index']) + '</td>');
-                phenotypearray.push('<td>' + SafePrint(observation['date']) + '</td>');
+		        phenotypearray.push('<td>' + SafePrint(plot['rows'][r]['rack_index']) + '</td>');
+                let observationDate = observation['date'] ? new Date(observation['date']).toISOString().split('T')[0] : 'N/A';          
+                phenotypearray.push('<td>' + observationDate + '</td>');
                 phenotypearray.push('<td>' + SafePrint(observation['raw_value']) + '</td>');
                 phenotypearray.push('<td>' + SafePrint(observation['corrected_value']) + '</td>');
 
@@ -2152,6 +2154,7 @@ function lookup(name, key1, key2) {
  * @param  replicate      Rows of the exact replicates
  */
 
+// For modal tables of individual observations in the plots.html template.
 function format_pheno(plotCurrent, replicateIds, replicates, noReplicates){
    //console.log("--TEST ID ", plotCurrent['rows'][0]['study_index'] );
    // console.log("observation size current plot",  plotCurrent['rows'][0]['observations'].length );//    ******** ADD CHECK DISCARDED!
