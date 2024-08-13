@@ -409,18 +409,27 @@ def numpy_data(json, pheno, current_name, total_rows, total_columns):
                     plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
      
                elif ( 'observations' in json[j]['rows'][0] ):
-                    if( search_phenotype(json[j]['rows'][0]['observations'], current_name) ):
-                        indexCurrentPhenotype = search_phenotype_index (json[j]['rows'][0]['observations'], current_name)                        
-                        if 'raw_value' in json[j]['rows'][0]['observations'][indexCurrentPhenotype]:
-                            row_raw  = np.append(row_raw, json[j]['rows'][0]['observations'][indexCurrentPhenotype]['raw_value'])
-                        if 'corrected_value' in json[j]['rows'][0]['observations'][indexCurrentPhenotype]:
-                            row_raw  = np.append(row_raw, json[j]['rows'][0]['observations'][indexCurrentPhenotype]['corrected_value'])
-                        row_acc  = np.append(row_acc, json[j]['rows'][0]['material']['accession']) 
-                        plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
+                    if search_phenotype(json[j]['rows'][0]['observations'], current_name):
+                        # Instead of getting the first match, we now sort the relevant observations by date
+                        relevant_observations = [
+                            obs for obs in json[j]['rows'][0]['observations'] if lookup_keys(obs, 'phenotype.variable') == current_name
+                        ]
+                        relevant_observations.sort(key=lambda x: x.get('date', ''), reverse=True)
+                        latest_observation = relevant_observations[0]
+                        #print("latest_observations -> ", latest_observation)
+
+                        if 'raw_value' in latest_observation:
+                            row_raw = np.append(row_raw, latest_observation['raw_value'])
+                        if 'corrected_value' in latest_observation:
+                            row_raw = np.append(row_raw, latest_observation['corrected_value'])
+
+                        row_acc = np.append(row_acc, json[j]['rows'][0]['material']['accession'])
+                        plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'])
                     else:
-                        row_raw  = np.append(row_raw, np.inf )  # use infinity for N/A data
-                        row_acc  = np.append(row_acc, json[j]['rows'][0]['material']['accession'])  
-                        plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
+                        row_raw = np.append(row_raw, np.inf)  # use infinity for N/A data
+                        row_acc = np.append(row_acc, json[j]['rows'][0]['material']['accession'])
+                        plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'])
+
                else:
                   if('rows' in json[j]):      # when plots have rows but no observations!!
                         row_raw = np.append(row_raw, np.inf ) #   use infinity for N/A data
@@ -445,18 +454,26 @@ def numpy_data(json, pheno, current_name, total_rows, total_columns):
                     plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
 
             elif ( 'observations' in json[j]['rows'][0] ):
-                    if( search_phenotype(json[j]['rows'][0]['observations'], current_name) ):
-                        indexCurrentPhenotype = search_phenotype_index (json[j]['rows'][0]['observations'], current_name)
-                        if 'raw_value' in json[j]['rows'][0]['observations'][indexCurrentPhenotype]:
-                            row_raw  = np.append(row_raw, json[j]['rows'][0]['observations'][indexCurrentPhenotype]['raw_value'])
-                        if 'corrected_value' in json[j]['rows'][0]['observations'][indexCurrentPhenotype]:
-                            row_raw  = np.append(row_raw, json[j]['rows'][0]['observations'][indexCurrentPhenotype]['corrected_value'])
-                        row_acc  = np.append(row_acc, json[j]['rows'][0]['material']['accession']) 
-                        plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
+                    if search_phenotype(json[j]['rows'][0]['observations'], current_name):
+                        # Instead of getting the first match, we now sort the relevant observations by date
+                        relevant_observations = [
+                            obs for obs in json[j]['rows'][0]['observations'] if lookup_keys(obs, 'phenotype.variable') == current_name
+                        ]
+                        relevant_observations.sort(key=lambda x: x.get('date', ''), reverse=True)
+                        latest_observation = relevant_observations[0]
+                        print("latest_observations -> ", latest_observation)
+
+                        if 'raw_value' in latest_observation:
+                            row_raw = np.append(row_raw, latest_observation['raw_value'])
+                        if 'corrected_value' in latest_observation:
+                            row_raw = np.append(row_raw, latest_observation['corrected_value'])
+
+                        row_acc = np.append(row_acc, json[j]['rows'][0]['material']['accession'])
+                        plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'])
                     else:
-                        row_raw  = np.append(row_raw, np.inf )
-                        row_acc  = np.append(row_acc, json[j]['rows'][0]['material']['accession'])  
-                        plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
+                        row_raw = np.append(row_raw, np.inf)  # use infinity for N/A data
+                        row_acc = np.append(row_acc, json[j]['rows'][0]['material']['accession'])
+                        plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'])
             else:
                   if('rows' in json[j]):      # when plots have rows but no observations!!
                         row_raw = np.append(row_raw, np.inf ) #   use infinity for N/A data
