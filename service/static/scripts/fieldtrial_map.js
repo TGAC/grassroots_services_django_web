@@ -1640,31 +1640,36 @@ function format_plot_rows(plot, replicate_bool) {
                 phenotypearray.push('<td style="background-color:' + color + '">' + SafePrint(replicate_index) + replicate + '</td>');
                 
 		        phenotypearray.push('<td>' + SafePrint(plot['rows'][r]['rack_index']) + '</td>');
-                let observationDate = observation['date'] ? new Date(observation['date']).toISOString().split('T')[0] : 'N/A';          
-                phenotypearray.push('<td>' + observationDate + '</td>');
-                phenotypearray.push('<td>' + SafePrint(observation['raw_value']) + '</td>');
-                phenotypearray.push('<td>' + SafePrint(observation['corrected_value']) + '</td>');
+                // Ensure correct pairing of date, raw value, and corrected value
+            let observationDate = observation['date'] ? observation['date'].split('T')[0] : 'N/A';
+            let rawValue = round2Fixed(SafePrint(observation['raw_value']));
+            let correctedValue = SafePrint(observation['corrected_value']);
 
-                if (lookup( phenotype_name,  'trait', 'so:sameAs').startsWith('CO')) {
+            // Add the date, raw value, and corrected value to the table
+            phenotypearray.push('<td>' + observationDate + '</td>');
+            phenotypearray.push('<td>' + rawValue + '</td>');
+            phenotypearray.push('<td>' + correctedValue + '</td>');
+
+            if (lookup( phenotype_name,  'trait', 'so:sameAs').startsWith('CO')) {
                     phenotypearray.push('<td class="tooltip-test"  title="' + lookup(phenotype_name, 'trait','so:description') + '"><a class="newstyle_link" target="_blank" href="' + crop_onotology_url + lookup(phenotype_name, 'trait','so:sameAs') + '">' + lookup(phenotype_name, 'trait','so:name') + '</a></td>');
 
-                } else {
+            } else {
                     phenotypearray.push('<td class="tooltip-test"  title="' + lookup(phenotype_name, 'trait','so:description')  + '">' + lookup(phenotype_name, 'trait','so:name')  + '</td>');
-                }
+            }
                 
-		if (lookup( phenotype_name,  'measurement', 'so:sameAs').startsWith('CO')) {
+		    if (lookup( phenotype_name,  'measurement', 'so:sameAs').startsWith('CO')) {
                     phenotypearray.push('<td data-toggle="tooltip" title="' + lookup( phenotype_name,  'measurement', 'so:description') + '"><a class="newstyle_link" target="_blank" href="' + crop_onotology_url + lookup( phenotype_name,  'measurement', 'so:sameAs')  + '">' + lookup( phenotype_name,  'measurement', 'so:name') + '</td>');
 
-                } else {
+            } else {
                     phenotypearray.push('<td data-toggle="tooltip" title="' + lookup(phenotype_name,  'measurement', 'so:description') + '">' + lookup(phenotype_name,  'measurement', 'so:name') + '</td>');
                 }
                 
-		if (lookup( phenotype_name,  'unit', 'so:sameAs')) {
+		    if (lookup( phenotype_name,  'unit', 'so:sameAs')) {
                     phenotypearray.push('<td data-toggle="tooltip"><a class="newstyle_link" target="_blank" href="' + crop_onotology_url + lookup(phenotype_name,  'unit', 'so:sameAs') + '">' + lookup(phenotype_name,  'unit', 'so:name')  + '</td>');
 
-                } else {
+            } else {
                     phenotypearray.push('<td>' +  lookup(phenotype_name,  'unit', 'so:name')  + '</td>');
-                }
+            }
 
                 phenotypearray.push('<td>' + SafePrint(observation['index']) + '</td>');
 
@@ -2215,23 +2220,25 @@ function format_pheno(plotCurrent, replicateIds, replicates, noReplicates){
   if (plotCurrent['rows'][0].hasOwnProperty('observations')) {
    for (o = 0; o < plotCurrent['rows'][0]['observations'].length; o++) {
         var observation    = plotCurrent['rows'][0]['observations'][o];
-        var phenotype_name = observation['phenotype']['variable'];
-	//raw = RawVals[0]; 
+        var phenotype_name = observation['phenotype']['variable'];	
     
+        // Start a new row in the table
         phenotypearray.push('<tr>');
         phenotypearray.push('<td style="background-color:' + color + '">' + SafePrint(current_index) + ' Plot ' + plot_actual_id + '(Current) </td>');
         phenotypearray.push('<td>' + SafePrint(plotCurrent['rows'][0]['rack_index']) + '</td>');
 	    
-        // Ensure correct pairing of date and raw value
-        let observationDate = observation['date'] ? observation['date'].split('T')[0] : 'N/A';
-        let rawValue = round2Fixed(SafePrint(observation['raw_value']));
-        phenotypearray.push('<td>' + observationDate + '</td>');
-        
-        phenotypearray.push('<td>' + rawValue + '</td>');
-	    phenotypearray.push('<td>' + SafePrint(observation['corrected_value']) + '</td>'); // Restore corrected value.
+       // Ensure correct pairing of date, raw value, and corrected value
+       let observationDate = observation['date'] ? observation['date'].split('T')[0] : 'N/A';
+       let rawValue = round2Fixed(SafePrint(observation['raw_value']));
+       let correctedValue = SafePrint(observation['corrected_value']);
+
+       // Add the date, raw value, and corrected value to the table
+       phenotypearray.push('<td>' + observationDate + '</td>');
+       phenotypearray.push('<td>' + rawValue + '</td>');
+       phenotypearray.push('<td>' + correctedValue + '</td>');
 	
-	// ******* Two extra columns of raw values of exact replicate plots. ********** 
-	if(noReplicates==false){
+	    // ******* Two extra columns of raw values of exact replicate plots. ********** 
+	    if(noReplicates==false){
                 phenotypearray.push('<td> No replicates </td>');
                 phenotypearray.push('<td> No replicates </td>');
                 console.log("No Replicates", noReplicates);
