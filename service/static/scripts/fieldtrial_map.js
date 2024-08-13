@@ -2221,10 +2221,13 @@ function format_pheno(plotCurrent, replicateIds, replicates, noReplicates){
         phenotypearray.push('<tr>');
         phenotypearray.push('<td style="background-color:' + color + '">' + SafePrint(current_index) + ' Plot ' + plot_actual_id + '(Current) </td>');
         phenotypearray.push('<td>' + SafePrint(plotCurrent['rows'][0]['rack_index']) + '</td>');
-	    let observationDate = observation['date'] ? new Date(observation['date']).toISOString().split('T')[0] : 'N/A';          
+	    
+        // Ensure correct pairing of date and raw value
+        let observationDate = observation['date'] ? observation['date'].split('T')[0] : 'N/A';
+        let rawValue = round2Fixed(SafePrint(observation['raw_value']));
         phenotypearray.push('<td>' + observationDate + '</td>');
-
-	    phenotypearray.push('<td>' + round2Fixed(SafePrint(observation['raw_value']))  + '</td>');
+        
+        phenotypearray.push('<td>' + rawValue + '</td>');
 	    phenotypearray.push('<td>' + SafePrint(observation['corrected_value']) + '</td>'); // Restore corrected value.
 	
 	// ******* Two extra columns of raw values of exact replicate plots. ********** 
