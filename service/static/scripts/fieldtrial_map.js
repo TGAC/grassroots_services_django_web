@@ -58,7 +58,7 @@ function formatDateFromFilename(filename) {
         const day = matches[3];
         const date = new Date(`${year}-${month}-${day}`);
         console.log("______Date: " + date);
-        return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }); // Formatting to "Month Day, Year"
+        return date.toLocaleDateString('en-UK', { day: 'numeric', month: 'long', year: 'numeric' }); // Formatting to "Day Month Year"
     }
     return ''; // Return empty string if no date found
 }
