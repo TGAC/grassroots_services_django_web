@@ -461,7 +461,7 @@ def numpy_data(json, pheno, current_name, total_rows, total_columns):
                         ]
                         relevant_observations.sort(key=lambda x: x.get('date', ''), reverse=True)
                         latest_observation = relevant_observations[0]
-                        print("latest_observations -> ", latest_observation)
+                        #print("latest_observations -> ", latest_observation)
 
                         if 'raw_value' in latest_observation:
                             row_raw = np.append(row_raw, latest_observation['raw_value'])
