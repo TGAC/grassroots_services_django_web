@@ -37,18 +37,36 @@ var currentImageIndex = 0;
 var combinedImages = [];
 
 function changeImage(direction) {
-    const images = document.querySelectorAll('.carouselImage');
-    let currentIndex = Array.from(images).findIndex(img => img.style.display === 'block');
-    images[currentIndex].style.display = 'none';
+    const containers = document.querySelectorAll('.image-container');
+    let currentIndex = Array.from(containers).findIndex(container => container.style.display === 'block');
+    containers[currentIndex].style.display = 'none';
     currentIndex += direction;
-    if (currentIndex >= images.length) {
+    if (currentIndex >= containers.length) {
         currentIndex = 0;
     } else if (currentIndex < 0) {
-        currentIndex = images.length - 1;
+        currentIndex = containers.length - 1;
     }
-    images[currentIndex].style.display = 'block';
+    containers[currentIndex].style.display = 'block';
 }
 
+function formatDateFromFilename(filename) {
+    const regex = /(\d{4})_(\d{2})_(\d{2})/; // Regex to find date pattern YYYY_MM_DD
+    const matches = filename.match(regex);
+    if (matches) {
+        const year = matches[1];
+        const month = matches[2];
+        const day = matches[3];
+        const date = new Date(`${year}-${month}-${day}`);
+        console.log("______Date: " + date);
+        return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }); // Formatting to "Month Day, Year"
+    }
+    return ''; // Return empty string if no date found
+}
+
+combinedImages.forEach((image, index) => {
+    const dateTitle = formatDateFromFilename(image.thumbnail); // Extract date from thumbnail filename
+    htmlarray.push(`<a href="${image.contentUrl}" target="_blank"><img class="carouselImage" src="${image.thumbnail}" style="max-width: 100%; display: ${index === 0 ? 'block' : 'none'};" height="300" onerror="this.onerror=null; this.src='fallback.jpg';"/><span class="image-title">${dateTitle}</span></a>`);
+});
 
 /**
  * Start field trial map and table
@@ -1389,7 +1407,11 @@ function formatGPSPlot(plot, study_design) {
         htmlarray.push('<div class="image-carousel">');
         htmlarray.push('<button class="carousel-button" style="position: absolute; left: 0;" onclick="changeImage(-1)">&#10094;</button>'); // Left arrow
         combinedImages.forEach((image, index) => {
-            htmlarray.push(`<a href="${image.contentUrl}" target="_blank"><img class="carouselImage" src="${image.thumbnail}" style="max-width: 100%; display: ${index === 0 ? 'block' : 'none'};" height="300" onerror="this.onerror=null; this.src='fallback.jpg';"/></a>`);
+            const dateTitle = formatDateFromFilename(image.thumbnail);
+            htmlarray.push(`<div class="image-container" style="display: ${index === 0 ? 'block' : 'none'};">`);
+            htmlarray.push(`<div class="image-title">${dateTitle}</div>`); // Date above the image
+            htmlarray.push(`<a href="${image.contentUrl}" target="_blank"><img class="carouselImage" src="${image.thumbnail}" height="300" onerror="this.onerror=null; this.src='fallback.jpg';"/></a>`);
+            htmlarray.push(`</div>`); // Close image-container div
         });
         htmlarray.push('<button class="carousel-button" style="position: absolute; right: 0;" onclick="changeImage(1)">&#10095;</button>'); // Right arrow
         htmlarray.push('</div>'); // Close carousel div
@@ -1516,7 +1538,11 @@ function formatPlotModal(plot) {
         htmlarray.push('<div class="image-carousel">');
         htmlarray.push('<button class="carousel-button" style="position: absolute; left: 0;" onclick="changeImage(-1)">&#10094;</button>'); // Left arrow
         combinedImages.forEach((image, index) => {
-            htmlarray.push(`<a href="${image.contentUrl}" target="_blank"><img class="carouselImage" src="${image.thumbnail}" style="max-width: 100%; display: ${index === 0 ? 'block' : 'none'};" height="300" onerror="this.onerror=null; this.src='fallback.jpg';"/></a>`);
+            const dateTitle = formatDateFromFilename(image.thumbnail);
+            htmlarray.push(`<div class="image-container" style="display: ${index === 0 ? 'block' : 'none'};">`);
+            htmlarray.push(`<div class="image-title">${dateTitle}</div>`); // Date above the image
+            htmlarray.push(`<a href="${image.contentUrl}" target="_blank"><img class="carouselImage" src="${image.thumbnail}" height="300" onerror="this.onerror=null; this.src='fallback.jpg';"/></a>`);
+            htmlarray.push(`</div>`); // Close image-container div
         });
         htmlarray.push('<button class="carousel-button" style="position: absolute; right: 0;" onclick="changeImage(1)">&#10095;</button>'); // Right arrow
         htmlarray.push('</div>'); // Close carousel div
