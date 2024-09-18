@@ -78,7 +78,7 @@ class LimitsFileRetrieve(APIView):
             raise Http404("limits.json not found")
         
 class LimitsFileUpdate(APIView):
-    def post(self, request, subfolder):        
+    def post(self, request, subfolder):
         subfolder_path = os.path.join(BASE_PATH, subfolder)
 
         # Ensure the subfolder exists, create it if not
@@ -88,24 +88,31 @@ class LimitsFileUpdate(APIView):
         limits_file_path = os.path.join(subfolder_path, 'limits.json')
 
         try:
-            # Parse the incoming JSON data
-            data = request.data.get('Plant height')
+            # Assuming the data contains the trait key dynamically, like {'PH_M_cm': {'min': value, 'max': value}}
+            trait_key = list(request.data.keys())[0]  # Get the first (and only) key, assuming one trait per request
+            data = request.data.get(trait_key)
             min_value = data.get('min')
             max_value = data.get('max')
 
             # Initialize or update the limits.json file
             if not os.path.exists(limits_file_path):
-                limits = {'Plant height': {'min': min_value, 'max': max_value}}
+                limits = {trait_key: {'min': min_value, 'max': max_value}}
             else:
                 with open(limits_file_path, 'r') as file:
                     limits = json.load(file)
-                    limits['Plant height']['min'] = min_value
-                    limits['Plant height']['max'] = max_value
+
+                # Update the specific trait's limits
+                if trait_key in limits:
+                    limits[trait_key]['min'] = min_value
+                    limits[trait_key]['max'] = max_value
+                else:
+                    limits[trait_key] = {'min': min_value, 'max': max_value}
 
             # Write the updated or new limits to the file
             with open(limits_file_path, 'w') as file:
                 json.dump(limits, file, indent=4)
 
-            return JsonResponse({'message': 'Limits updated successfully'}, status=status.HTTP_200_OK)
+            return JsonResponse({'message': f'Limits for {trait_key} updated successfully'}, status=status.HTTP_200_OK)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
