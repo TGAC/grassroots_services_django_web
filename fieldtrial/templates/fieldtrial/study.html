@@ -328,6 +328,21 @@
  <tr><td><strong>Handbook pdf:</strong></td><td> 
          <a href="{% lookup_keys study_json "handbook.so:url" %}"> {% lookup_keys study_json "handbook.name" %} </a></td></tr>
  {% endif %}
+
+
+{% if "marti_samples" in study_json %}
+	<tr><td><strong>MARTi Samples:</strong></td>
+	<td> 
+	{% for sample in study_json.marti_samples %}
+		<ul>
+	  <li><a href="{% lookup_keys sample "so:url" %}"> {% lookup_keys sample "so:name" %} </a></li>	
+	  </ul>  
+	{% endfor %}
+	</td>	
+{% else %}
+	<tr><td><strong>No MARTi Samples:</strong></td> <td></td>
+{% endif %}
+
 </table>
 </section>
 
