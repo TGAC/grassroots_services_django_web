@@ -25,4 +25,4 @@ sqlparse==0.3.0
 tenacity==8.0.1
 urllib3==1.26.10
 django-cors-headers==3.5.0
-djangorestframework==3.14.0
+djangorestframework==3.15.2
