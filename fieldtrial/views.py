@@ -105,7 +105,7 @@ def single_study(request, study_id):
     ###web_base_url = "http://127.0.0.1:2000/TEST"  # Web-accessible base URL
     ## https://grassroots.tools/beta/field_trial_data/APItest/
     ## USE ALIAS IN APACHE TO POINT TO /opt/apache/htdocs/field_trial_data/APItest
-    web_base_url="https://grassroots.tools/beta/media"
+    web_base_url="https://grassroots.tools/newbeta/media"
     
     imageUrls = []
 
@@ -229,7 +229,7 @@ def single_plot(request, plot_id):
     #########web_base_url = "http://127.0.0.1:2000/TEST"  # Web-accessible base URL
     ## https://grassroots.tools/beta/field_trial_data/APItest/
     ## USE ALIAS IN APACHE TO POINT TO /opt/apache/htdocs/field_trial_data/APItest
-    web_base_url="https://grassroots.tools/beta/media"
+    web_base_url="https://grassroots.tools/newbeta/media"
     for plot in plot_array:
         if plot.get('rows') and plot['rows'][0].get('study_index'):
             study_index = plot['rows'][0]['study_index']  # Extract study_index from the first row
@@ -240,10 +240,10 @@ def single_plot(request, plot_id):
             imageUrls.extend(plot_images)
     #print("Image URLs: ", imageUrls)
 
-    return render(request, 'plots.html', {'data': data, 'plot_id': plot_id, 'study_name': study_name, 
+    #return render(request, 'plots.html', {'data': data, 'plot_id': plot_id, 'study_name': study_name, 
+    #    'plot_div': plot_div, 'dictTraits':dictTraits, 'imageUrls':imageUrls})
+    return render(request, 'fieldtrial/plots.html', {'data': data, 'plot_id': plot_id, 'study_name': study_name, 
         'plot_div': plot_div, 'dictTraits':dictTraits, 'imageUrls':imageUrls})
-    #return render(request, 'fieldtrial/plot.html', {'data': plot, 'plot_id': plot_id, 'study_name': study_name, 
-    #    'plot_div': plot_div, 'dictTraits':dictTraits})
 
 '''
 Search field trial page request
