@@ -34,11 +34,11 @@ var search_measured_variables_json = {
     "so:description": "Search field trial measured phenotype variables",
     "so:alternateName": "field_trial-search_measured_variables",
     "provider": {
-        "@type": "so:Organization",
-        "so:name": "EI Grassroots server",
-        "so:description": "The Earlham Institute Grassroots server",
-        "so:url": "https://grassroots.tools/",
-        "so:logo": "https://www.earlham.ac.uk/sites/default/files/favicon_1_0.jpg"
+			"@type": "so:Organization",
+		  "so:name": "Earlham Institute",
+		  "so:description": "Earlham Institute's Grassroots server",
+			"so:url": "https://grassroots.tools/",
+		  "so:logo": "https://grassroots.tools/images/ei_logo.png"
     },
     "category": {
         "application_category": {
@@ -79,11 +79,11 @@ var search_treatments_json = {
     "so:description": "Search field trial treatments",
     "so:alternateName": "field_trial-search_treatments",
     "provider": {
-        "@type": "so:Organization",
-        "so:name": "EI Grassroots server",
-        "so:description": "The Earlham Institute Grassroots server",
-        "so:url": "https://grassroots.tools/",
-        "so:logo": "https://www.earlham.ac.uk/sites/default/files/favicon_1_0.jpg"
+			"@type": "so:Organization",
+		  "so:name": "Earlham Institute",
+		  "so:description": "Earlham Institute's Grassroots server",
+			"so:url": "https://grassroots.tools/",
+		  "so:logo": "https://grassroots.tools/images/ei_logo.png"
     },
     "category": {
         "application_category": {
