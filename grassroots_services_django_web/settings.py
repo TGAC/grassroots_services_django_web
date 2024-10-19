@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
   'localhost',
@@ -150,7 +150,9 @@ DATA_UPLOAD_MAX_MEMORY_SIZE =  52428800
 FILE_UPLOAD_MAX_MEMORY_SIZE =  17340032
 
 CORS_ALLOWED_ORIGINS = [
-	"http://127.0.0.1:8000"
+	"http://127.0.0.1:8000",
+	"http://127.0.0.1:2000",
+	"http://localhost:2000"
 ]
 
 # Media files
