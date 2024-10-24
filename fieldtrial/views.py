@@ -30,6 +30,8 @@ from .grassroots_plots import observation_dates
 
 from .grassroots_csv import create_CSV
 
+local_base_path = settings.MEDIA_ROOT
+
 '''
 Field trial index page request, pre-load the template
 '''
@@ -101,7 +103,7 @@ def single_study(request, study_id):
 
     ## FIND IMAGES FOR CAROUSEL 
     #############local_base_path = "/home/daniel/Applications/apache/htdocs/TEST"
-    local_base_path = "/opt/apache/htdocs/field_trial_data/APItest"  # location in BETA SERVER
+    ###local_base_path = "/opt/apache/htdocs/field_trial_data/APItest"  # location in BETA SERVER
     ###web_base_url = "http://127.0.0.1:2000/TEST"  # Web-accessible base URL
     ## https://grassroots.tools/beta/field_trial_data/APItest/
     ## USE ALIAS IN APACHE TO POINT TO /opt/apache/htdocs/field_trial_data/APItest
@@ -113,7 +115,7 @@ def single_study(request, study_id):
         if plot.get('rows') and plot['rows'][0].get('study_index'):
             study_index = plot['rows'][0]['study_index']  # Extract study_index from the first row
             #print(study_index)
-            plot_dir = f"{local_base_path}/{study_id}/plot_{study_index}"
+            plot_dir = f"{local_base_path}{study_id}/plot_{study_index}"
             web_plot_dir = f"{web_base_url}/{study_id}/plot_{study_index}"            
             plot_images = list_image_files(web_plot_dir, plot_dir)
             imageUrls.extend(plot_images)
@@ -225,7 +227,7 @@ def single_plot(request, plot_id):
     imageUrls = []
     ## FIND IMAGES FOR CAROUSEL 
     #####local_base_path = "/home/daniel/Applications/apache/htdocs/TEST"
-    local_base_path = "/opt/apache/htdocs/field_trial_data/APItest"  # location in BETA SERVER
+    ###local_base_path = "/opt/apache/htdocs/field_trial_data/APItest"  # location in BETA SERVER
     #########web_base_url = "http://127.0.0.1:2000/TEST"  # Web-accessible base URL
     ## https://grassroots.tools/beta/field_trial_data/APItest/
     ## USE ALIAS IN APACHE TO POINT TO /opt/apache/htdocs/field_trial_data/APItest
@@ -234,7 +236,7 @@ def single_plot(request, plot_id):
         if plot.get('rows') and plot['rows'][0].get('study_index'):
             study_index = plot['rows'][0]['study_index']  # Extract study_index from the first row
             #print(study_index)
-            plot_dir = f"{local_base_path}/{plot_id}/plot_{study_index}"
+            plot_dir = f"{local_base_path}{plot_id}/plot_{study_index}"
             web_plot_dir = f"{web_base_url}/{plot_id}/plot_{study_index}"            
             plot_images = list_image_files(web_plot_dir, plot_dir)
             imageUrls.extend(plot_images)

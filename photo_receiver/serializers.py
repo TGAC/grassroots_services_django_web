@@ -3,6 +3,8 @@ from PIL import Image
 from io import BytesIO
 from django.core.files.base import ContentFile
 import os
+from django.conf import settings
+BASE_PATH = settings.MEDIA_ROOT
 
 class PhotoSerializer(serializers.Serializer):
     image = serializers.ImageField(use_url=True)
@@ -16,12 +18,11 @@ class PhotoSerializer(serializers.Serializer):
         plot_number = self.validated_data['plot_number']  # Retrieve plot_number
 
         # Base path where images will be stored
-        base_path = '/opt/apache/htdocs/field_trial_data/APItest/'
-        #base_path = '/home/daniel/Applications/apache/htdocs/TEST/'
+        #BASE_PATH = '/home/Applications/apache/htdocs/field_trial_data/APItest/'
 
         # Construct the full path with subfolder
         #full_path = os.path.join(base_path, subfolder)
-        full_path = os.path.join(base_path, subfolder, f'plot_{plot_number}')
+        full_path = os.path.join(BASE_PATH, subfolder, f'plot_{plot_number}')
 
         # Check if the subfolder exists, if not create it
         if not os.path.exists(full_path):

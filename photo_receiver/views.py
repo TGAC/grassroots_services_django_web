@@ -8,7 +8,8 @@ from django.conf import settings
 from django.http import FileResponse
 from django.http import JsonResponse
 import glob
-BASE_PATH = '/opt/apache/htdocs/field_trial_data/APItest/'
+#BASE_PATH = '/home/Applications/apache/htdocs/field_trial_data/APItest/'
+BASE_PATH = settings.MEDIA_ROOT
 #BASE_PATH = '/home/daniel/Applications/apache/htdocs/TEST/' # local path
 
 class LatestPhoto(APIView):
@@ -29,7 +30,7 @@ class LatestPhoto(APIView):
         latest_photo_filename = os.path.basename(latest_photo)
         photo_url = request.build_absolute_uri(os.path.join(settings.MEDIA_URL, subfolder, plot_folder, latest_photo_filename))
          # Manually construct the URL
-        photo_url = 'https://grassroots.tools/beta' + os.path.join(settings.MEDIA_URL, subfolder, plot_folder, latest_photo_filename)
+        photo_url = 'https://grassroots.tools/newbeta' + os.path.join(settings.MEDIA_URL, subfolder, plot_folder, latest_photo_filename)
 
         print(photo_url)
         # Serve the photo
