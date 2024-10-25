@@ -4,6 +4,8 @@
 
 {% block all_styles_and_scripts %}
 {{ block.super }} 
+<!-- New script to handle images used  by fieldtrial_map.js in formatPlotModal function-->
+<script src="{% static 'fieldtrial/SCRIPTS/carousel.js' %}"></script> 
    <style type="text/css">
     .modal-body {
         height: 250px;

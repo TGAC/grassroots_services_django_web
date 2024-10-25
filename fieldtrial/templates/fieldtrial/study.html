@@ -6,14 +6,6 @@
 
 {% block all_styles_and_scripts %}
 {{ block.super }} 
-<!-- ********************************************************-->
-<script type="text/javascript">
-    var images = [
-        {% for url in imageUrls %}
-            "{{ url }}",
-        {% endfor %}
-    ];
-</script>
    <!-- New script to handle images used  by fieldtrial_map.js in formatPlotModal function-->
    <script src="{% static 'fieldtrial/SCRIPTS/carousel.js' %}"></script> 
 
@@ -175,11 +167,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body" id="modal-body">
-
-                        <!-- Carousel Container for Images -->
-                        <div id="carouselContainer"></div>
-
+                    <div class="modal-body" id="modal-body"> 
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -357,7 +345,14 @@
 {% endblock %}
 
 {% block additional_scripts %}
- 
+ <!-- ********************************************************-->
+<script type="text/javascript">
+    var images = [
+        {% for url in imageUrls %}
+            "{{ url }}",
+        {% endfor %}
+    ];
+</script>
 <!--NEW STUFF-->
 <script>
     document.addEventListener("DOMContentLoaded", function(event) {

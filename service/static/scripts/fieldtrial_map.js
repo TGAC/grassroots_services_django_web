@@ -1326,7 +1326,7 @@ function formatGPSPlot(plot, study_design) {
 
     let formatted_plot = format_plot_rows(plot, false);
     
-    console.log("Check 2: Add phenotypes");
+    console.log(" GPS Check 2: Add phenotypes");
     rowsInfoarray  = rowsInfoarray.concat(formatted_plot['rowsInfo']);
     phenotypearray = phenotypearray.concat(formatted_plot['phenotypes']); // restore for this case
 
@@ -1481,8 +1481,54 @@ function formatPlotModal(plot) {
     htmlarray.push('Comment: ' + SafePrint(plot['comment']) + '<br/>');
     htmlarray.push('</div>');
 
+    //console.log(" CHECK 3 FORMAT PLOT MODAL");
+        // Initialize image array
+    combinedImages = [];
+    if (plot['so:image'] && plot['so:image']['thumbnail']) {
+        if (Array.isArray(plot['so:image']['thumbnail']) && Array.isArray(plot['so:image']['contentUrl'])) {
+            plot['so:image']['thumbnail'].forEach((thumb, index) => {
+                combinedImages.push({
+                    thumbnail: thumb,
+                    contentUrl: plot['so:image']['contentUrl'][index] || thumb // Fallback to thumbnail if contentUrl isn't defined
+                });
+            });
+        } else {
+            combinedImages.push({
+                thumbnail: plot['so:image']['thumbnail'],
+                contentUrl: plot['so:image']['contentUrl'] || plot['so:image']['thumbnail']
+            });
+        }
+    }
+    
+    // Filter and append other images from the global images array
+    let plotSpecificImages = images.filter(img => {
+        return img.includes(`/plot_${plot_actual_id}/`) && !img.includes('thumb');
+    });
+    console.log("Plot specific images: " + plotSpecificImages);
+    plotSpecificImages.forEach(img => {
+        combinedImages.push({
+            thumbnail: img,
+            contentUrl: img  // Assuming img URL is appropriate for both thumbnail and high-res
+        });
+    });
+    console.log("Combined images" + combinedImages);
+    if(combinedImages.length > 0) {
+        htmlarray.push('<div class="col-8" style="position: relative; overflow: hidden;">');
+        htmlarray.push('<div class="image-carousel">');
+        htmlarray.push('<button class="carousel-button" style="position: absolute; left: 0;" onclick="changeImage(-1)">&#10094;</button>'); // Left arrow
+        combinedImages.forEach((image, index) => {
+            const dateTitle = formatDateFromFilename(image.thumbnail);
+            htmlarray.push(`<div class="image-container" style="display: ${index === 0 ? 'block' : 'none'};">`);
+            htmlarray.push(`<div class="image-title">${dateTitle}</div>`); // Date above the image
+            htmlarray.push(`<a href="${image.contentUrl}" target="_blank"><img class="carouselImage" src="${image.thumbnail}" height="300" onerror="this.onerror=null; this.src='fallback.jpg';"/></a>`);
+            htmlarray.push(`</div>`); // Close image-container div
+        });
+        htmlarray.push('<button class="carousel-button" style="position: absolute; right: 0;" onclick="changeImage(1)">&#10095;</button>'); // Right arrow
+        htmlarray.push('</div>'); // Close carousel div
+        htmlarray.push('</div>'); // Close image column div
+    }
 
-    htmlarray.push('<div id="carouselContainer"></div>'); // Container for carousel injection
+    htmlarray.push('</div>'); // Close row div
 
 
     htmlarray.push(s_formatted_treatments);

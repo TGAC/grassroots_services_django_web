@@ -29,35 +29,3 @@ function changeImage(direction) {
     }
     containers[currentIndex].style.display = 'block';
 }
-
-// Sets up the image carousel based on the `images` variable passed from the main script
-function setupImageCarousel(images, plotId) {
-    combinedImages = [];
-
-    // Separate images and thumbnails
-    images.forEach(url => {
-        if (url.includes(`/plot_${plotId}/thumb`)) {
-            const contentUrl = url.replace('/thumb_', '/');
-            combinedImages.push({ thumbnail: url, contentUrl });
-        }
-    });
-
-    // Create carousel HTML
-    const htmlArray = [];
-    htmlArray.push('<div class="image-carousel">');
-    htmlArray.push('<button class="carousel-button" style="position: absolute; left: 0;" onclick="changeImage(-1)">&#10094;</button>'); // Left arrow
-
-    combinedImages.forEach((image, index) => {
-        const dateTitle = formatDateFromFilename(image.thumbnail);
-        htmlArray.push(`<div class="image-container" style="display: ${index === 0 ? 'block' : 'none'};">`);
-        htmlArray.push(`<div class="image-title">${dateTitle}</div>`);
-        htmlArray.push(`<a href="${image.contentUrl}" target="_blank"><img class="carouselImage" src="${image.thumbnail}" height="300" onerror="this.onerror=null; this.src='fallback.jpg';"/></a>`);
-        htmlArray.push('</div>');
-    });
-
-    htmlArray.push('<button class="carousel-button" style="position: absolute; right: 0;" onclick="changeImage(1)">&#10095;</button>'); // Right arrow
-    htmlArray.push('</div>');
-
-    // Add carousel to the DOM (assume you have a div with id 'carouselContainer' to inject this HTML)
-    document.getElementById('carouselContainer').innerHTML = htmlArray.join('');
-}
