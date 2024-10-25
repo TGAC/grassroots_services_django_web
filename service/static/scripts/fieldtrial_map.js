@@ -34,39 +34,18 @@ var datemin = 0;
 var datemax = 0;
 
 var currentImageIndex = 0;
-var combinedImages = [];
+//var combinedImages = [];
 
-function changeImage(direction) {
-    const containers = document.querySelectorAll('.image-container');
-    let currentIndex = Array.from(containers).findIndex(container => container.style.display === 'block');
-    containers[currentIndex].style.display = 'none';
-    currentIndex += direction;
-    if (currentIndex >= containers.length) {
-        currentIndex = 0;
-    } else if (currentIndex < 0) {
-        currentIndex = containers.length - 1;
-    }
-    containers[currentIndex].style.display = 'block';
-}
+//function changeImage(direction) {
 
-function formatDateFromFilename(filename) {
-    const regex = /(\d{4})_(\d{2})_(\d{2})/; // Regex to find date pattern YYYY_MM_DD
-    const matches = filename.match(regex);
-    if (matches) {
-        const year = matches[1];
-        const month = matches[2];
-        const day = matches[3];
-        const date = new Date(`${year}-${month}-${day}`);
-        console.log("______Date: " + date);
-        return date.toLocaleDateString('en-UK', { day: 'numeric', month: 'long', year: 'numeric' }); // Formatting to "Day Month Year"
-    }
-    return ''; // Return empty string if no date found
-}
 
-combinedImages.forEach((image, index) => {
-    const dateTitle = formatDateFromFilename(image.thumbnail); // Extract date from thumbnail filename
-    htmlarray.push(`<a href="${image.contentUrl}" target="_blank"><img class="carouselImage" src="${image.thumbnail}" style="max-width: 100%; display: ${index === 0 ? 'block' : 'none'};" height="300" onerror="this.onerror=null; this.src='fallback.jpg';"/><span class="image-title">${dateTitle}</span></a>`);
-});
+//function formatDateFromFilename(filename) {
+
+
+//combinedImages.forEach((image, index) => {
+//    const dateTitle = formatDateFromFilename(image.thumbnail); // Extract date from thumbnail filename
+//    htmlarray.push(`<a href="${image.contentUrl}" target="_blank"><img class="carouselImage" src="${image.thumbnail}" style="max-width: 100%; display: ${index === 0 ? 'block' : 'none'};" height="300" onerror="this.onerror=null; this.src='fallback.jpg';"/><span class="image-title">${dateTitle}</span></a>`);
+//});
 
 /**
  * Start field trial map and table
@@ -1503,56 +1482,7 @@ function formatPlotModal(plot) {
     htmlarray.push('</div>');
 
 
-    // Initialize image array
-    combinedImages = [];
-    if (plot['so:image'] && plot['so:image']['thumbnail']) {
-        if (Array.isArray(plot['so:image']['thumbnail']) && Array.isArray(plot['so:image']['contentUrl'])) {
-            plot['so:image']['thumbnail'].forEach((thumb, index) => {
-                combinedImages.push({
-                    thumbnail: thumb,
-                    contentUrl: plot['so:image']['contentUrl'][index] || thumb // Fallback to thumbnail if contentUrl isn't defined
-                });
-            });
-        } else {
-            combinedImages.push({
-                thumbnail: plot['so:image']['thumbnail'],
-                contentUrl: plot['so:image']['contentUrl'] || plot['so:image']['thumbnail']
-            });
-        }
-    }
-
-    // Filter and append other images from the global images array
-    let plotSpecificImages = images.filter(img => {
-        return img.includes(`/plot_${plot_actual_id}/`) && !img.includes('thumb');
-    });
-    console.log("Plot specific images: " + plotSpecificImages);
-    plotSpecificImages.forEach(img => {
-        combinedImages.push({
-            thumbnail: img,
-            contentUrl: img  // Assuming img URL is appropriate for both thumbnail and high-res
-        });
-    });
-    console.log("Combined images" + combinedImages);
-    if(combinedImages.length > 0) {
-        htmlarray.push('<div class="col-8" style="position: relative; overflow: hidden;">');
-        htmlarray.push('<div class="image-carousel">');
-        htmlarray.push('<button class="carousel-button" style="position: absolute; left: 0;" onclick="changeImage(-1)">&#10094;</button>'); // Left arrow
-        combinedImages.forEach((image, index) => {
-            const dateTitle = formatDateFromFilename(image.thumbnail);
-            htmlarray.push(`<div class="image-container" style="display: ${index === 0 ? 'block' : 'none'};">`);
-            htmlarray.push(`<div class="image-title">${dateTitle}</div>`); // Date above the image
-            htmlarray.push(`<a href="${image.contentUrl}" target="_blank"><img class="carouselImage" src="${image.thumbnail}" height="300" onerror="this.onerror=null; this.src='fallback.jpg';"/></a>`);
-            htmlarray.push(`</div>`); // Close image-container div
-        });
-        htmlarray.push('<button class="carousel-button" style="position: absolute; right: 0;" onclick="changeImage(1)">&#10095;</button>'); // Right arrow
-        htmlarray.push('</div>'); // Close carousel div
-        htmlarray.push('</div>'); // Close image column div
-    }
-
-
-
-    htmlarray.push('</div>'); // Close row div
-    
+    htmlarray.push('<div id="carouselContainer"></div>'); // Container for carousel injection
 
 
     htmlarray.push(s_formatted_treatments);

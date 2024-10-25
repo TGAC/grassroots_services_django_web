@@ -14,6 +14,9 @@
         {% endfor %}
     ];
 </script>
+   <!-- New script to handle images used  by fieldtrial_map.js in formatPlotModal function-->
+   <script src="{% static 'fieldtrial/SCRIPTS/carousel.js' %}"></script> 
+
     <!-- Leaflet NEWEST VERSION -->
     <link rel="stylesheet" href="{% static 'fieldtrial/SCRIPTS/leaflet/leaflet.css' %}"/>
     <script src="{% static 'fieldtrial/SCRIPTS/leaflet/leaflet.js' %}"></script> 
@@ -42,7 +45,7 @@
             height: 600px;
         }
     }
- <style type="text/css">
+ 
     #resultTable td, th {
         text-align: center;
     }
@@ -109,16 +112,16 @@
     
     .image-container {
         max-width: 100%;
-        text-align: center; // Centers the text and image
-        position: relative; // Needed for positioning elements inside it
+        text-align: center;
+        position: relative;
     }
     
     .image-title {
-        background-color: #fff; // White background for the text
-        color: #000; // Black text color
+        background-color: #fff;
+        color: #000;
         padding: 5px;
         display: block;
-        width: 100%; // Take full width of the container
+        width: 100%;
         text-align: center;
     }
     
@@ -173,6 +176,9 @@
                         </button>
                     </div>
                     <div class="modal-body" id="modal-body">
+
+                        <!-- Carousel Container for Images -->
+                        <div id="carouselContainer"></div>
 
                     </div>
                     <div class="modal-footer">
