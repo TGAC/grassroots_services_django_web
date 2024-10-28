@@ -36,20 +36,22 @@ local_base_path = settings.MEDIA_ROOT
 Field trial index page request, pre-load the template
 '''
 def index_loading(request):
-    return render(request, 'fieldtrial_loading.html', {})
+    #return render(request, 'fieldtrial_loading.html', {})
+    return render(request, 'fieldtrial/loading.html', {})
 
 '''
 Field trial index page request, with all field trials
 '''
 def index(request):
-    return render(request, 'fieldtrial.html', {'data': get_all_fieldtrials, 'type': 'AllFieldTrials'})
-    #return render(request, 'fieldtrial/fieldtrial.html', {'data': get_all_fieldtrials, 'type': 'AllFieldTrials'})
+    #return render(request, 'fieldtrial.html', {'data': get_all_fieldtrials, 'type': 'AllFieldTrials'})
+    return render(request, 'fieldtrial/fieldtrial.html', {'data': get_all_fieldtrials, 'type': 'AllFieldTrials'})
 
 '''
 One Field trial page request
 '''
 def single_fieldtrial(request, fieldtrial_id):
-    return render(request, 'fieldtrial.html', {'data': get_fieldtrial(fieldtrial_id), 'type': 'Grassroots:FieldTrial'})
+    #return render(request, 'fieldtrial.html', {'data': get_fieldtrial(fieldtrial_id), 'type': 'Grassroots:FieldTrial'})
+    return render(request, 'fieldtrial/fieldtrial.html', {'data': get_fieldtrial(fieldtrial_id), 'type': 'Grassroots:FieldTrial'})
 
 '''
 One study page request

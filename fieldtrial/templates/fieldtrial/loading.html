@@ -1,0 +1,142 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block all_styles_and_scripts %}
+{{ block.super }} 
+<script type="text/javascript"
+        src="{% static 'scripts/jquery/jqrangeslider/jQAllRangeSliders-withRuler-min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'scripts/jquery/jqrangeslider/css/iThing.css' %}"
+      type="text/css"/>
+
+    <!-- ********************************************************-->
+    <!-- Leaflet NEWEST VERSION -->
+    <link rel="stylesheet" href="{% static 'fieldtrial/SCRIPTS/leaflet/leaflet.css' %}"/>
+    <script src="{% static 'fieldtrial/SCRIPTS/leaflet/leaflet.js' %}"></script> 
+
+    <!-- Leaflet markercluster NEWEST VERSION -->
+    <link rel="stylesheet" href="{% static 'fieldtrial/SCRIPTS/leaflet.markercluster/MarkerCluster.css' %}"/>
+    <link rel="stylesheet" href="{% static 'fieldtrial/SCRIPTS/leaflet.markercluster/MarkerCluster.Default.css' %}"/>
+    <script src="{% static 'fieldtrial/SCRIPTS/leaflet.markercluster/leaflet.markercluster.js' %}"></script>
+<style type="text/css">
+    .modal-dialog {
+    max-width: 70%;
+    }
+    .modal-body {
+        height: 250px;
+        overflow-y: auto;
+    }
+
+    @media (min-height: 500px) {
+        .modal-body {
+            height: 400px;
+        }
+    }
+
+    @media (min-height: 800px) {
+        .modal-body {
+            height: 600px;
+        }
+    }
+
+    #resultTable td, th {
+        text-align: center;
+    }
+
+    @media (max-width: 767px) {
+        section h2 {
+            font-size: 1em;
+            margin: 0;
+        }
+
+        #map_buttons {
+            position: absolute;
+            top: 150px;
+            border: 1px solid;
+            display: none;
+        }
+    }
+
+    @media (min-width: 767px) {
+        #map_buttons {
+            position: absolute;
+            top: 200px;
+            display: none;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="height: 20px;"></div>
+<section id="services" style="padding: 100px 0px 100px 0px ! important;">
+    <div class="container">
+        <h2 id="title">Browse Field Trials</h2>
+
+
+        <p id="description"></p>
+        <form id="form" role="form">
+            <div class="list_service_table">
+                <table id="listTable"></table>
+            </div>
+        </form>
+        <div id="status"></div>
+        <div id="output_format_div" style="display:none; float:right;">
+            <p>Download job format
+                <select id="output_format" onchange="changeDownloadFormat();">
+
+                </select>
+            </p>
+        </div>
+        <div style="clear:both;"></div>
+
+        <div id="result"><img src="{% static 'images/ajax-loader.gif' %}"/></div>
+
+        <div id="map"></div>
+        <div id="map_buttons">
+            <div class="input-group">
+               <span class="input-group-btn" id="locationButton">
+                    <button type="button" class="btn btn-default" onclick="update_map_location();">My Location
+                    </button>
+               </span>
+            </div>
+        </div>
+        <div id="tableWrapper">
+            <table id="resultTable"></table>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal " tabindex="-1" role="dialog" id="plotModal" style="z-index: 999999;">
+            <div class="modal-dialog  modal-dialog-centered" role="document">
+                <div class="modal-content" style="z-index: 9999999;">
+                    <div class="modal-header">
+                        <h5 class="modal-title"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="modal-body">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+       
+    </div>
+</section>
+    
+    {% endblock %}
+
+    {% block additional_scripts %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#plots').html('<img src="{% static 'images/ajax-loader.gif' %}"/>');
+            window.location.href = root_dir + "fieldtrial/all";
+        });
+
+    </script>
+    {% endblock %}
