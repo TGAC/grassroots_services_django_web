@@ -8,6 +8,7 @@ import numpy as np
 from django import template
 from plotly.offline import plot
 from plotly.graph_objs import Scatter
+from urllib.parse import urljoin
 
 register = template.Library()
 
@@ -30,7 +31,10 @@ from .grassroots_plots import observation_dates
 
 from .grassroots_csv import create_CSV
 
-local_base_path = settings.MEDIA_ROOT
+# path to the local directory where the images are stored. Currently in the apache directory
+local_base_path = settings.MEDIA_ROOT  
+# url to access the images from the web. grassroots.tools/media or grassroots.tools/beta/media
+web_base_url = settings.PHOTO_URL_SERVER.rstrip('/') + '/' + settings.MEDIA_URL.lstrip('/') 
 
 '''
 Field trial index page request, pre-load the template
@@ -69,7 +73,6 @@ def single_study(request, study_id):
     if  'treatment_factors' in study_json:
         treatment_factors = result_json['results'][0]['results'][0]['data']['treatment_factors'] # for CSV
 
-    #print (settings.BASE_DIR)
     full_path=request.build_absolute_uri()
     
     ft_id         = study_json['parent_field_trial']['_id']['$oid']
@@ -104,12 +107,8 @@ def single_study(request, study_id):
     field_trial_link=field_trial_link.replace("http://127.0.0.1:8000", base_url)
 
     ## FIND IMAGES FOR CAROUSEL 
-    #############local_base_path = "/home/daniel/Applications/apache/htdocs/TEST"
-    ###local_base_path = "/opt/apache/htdocs/field_trial_data/APItest"  # location in BETA SERVER
-    ###web_base_url = "http://127.0.0.1:2000/TEST"  # Web-accessible base URL
-    ## https://grassroots.tools/beta/field_trial_data/APItest/
-    ## USE ALIAS IN APACHE TO POINT TO /opt/apache/htdocs/field_trial_data/APItest
-    web_base_url="https://grassroots.tools/newbeta/media"
+    ##local_base_path = "/home/daniel/Applications/apache/htdocs/TEST"
+    #web_base_url="https://grassroots.tools/newbeta/media"
     
     imageUrls = []
 
@@ -118,7 +117,7 @@ def single_study(request, study_id):
             study_index = plot['rows'][0]['study_index']  # Extract study_index from the first row
             #print(study_index)
             plot_dir = f"{local_base_path}{study_id}/plot_{study_index}"
-            web_plot_dir = f"{web_base_url}/{study_id}/plot_{study_index}"            
+            web_plot_dir = f"{web_base_url}{study_id}/plot_{study_index}"            
             plot_images = list_image_files(web_plot_dir, plot_dir)
             imageUrls.extend(plot_images)
     
@@ -229,17 +228,13 @@ def single_plot(request, plot_id):
     imageUrls = []
     ## FIND IMAGES FOR CAROUSEL 
     #####local_base_path = "/home/daniel/Applications/apache/htdocs/TEST"
-    ###local_base_path = "/opt/apache/htdocs/field_trial_data/APItest"  # location in BETA SERVER
-    #########web_base_url = "http://127.0.0.1:2000/TEST"  # Web-accessible base URL
-    ## https://grassroots.tools/beta/field_trial_data/APItest/
-    ## USE ALIAS IN APACHE TO POINT TO /opt/apache/htdocs/field_trial_data/APItest
-    web_base_url="https://grassroots.tools/newbeta/media"
+    ##web_base_url="https://grassroots.tools/newbeta/media"
     for plot in plot_array:
         if plot.get('rows') and plot['rows'][0].get('study_index'):
             study_index = plot['rows'][0]['study_index']  # Extract study_index from the first row
             #print(study_index)
             plot_dir = f"{local_base_path}{plot_id}/plot_{study_index}"
-            web_plot_dir = f"{web_base_url}/{plot_id}/plot_{study_index}"            
+            web_plot_dir = f"{web_base_url}{plot_id}/plot_{study_index}"            
             plot_images = list_image_files(web_plot_dir, plot_dir)
             imageUrls.extend(plot_images)
     #print("Image URLs: ", imageUrls)
