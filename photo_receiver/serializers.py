@@ -3,8 +3,16 @@ from PIL import Image
 from io import BytesIO
 from django.core.files.base import ContentFile
 import os
+import pwd
+import grp
+
 from django.conf import settings
 BASE_PATH = settings.MEDIA_ROOT
+
+def set_apache_grassroots_ownership(path):
+    apache_uid = pwd.getpwnam('apache').pw_uid
+    grassroots_gid = grp.getgrnam('grassroots').gr_gid
+    os.chown(path, apache_uid, grassroots_gid)
 
 class PhotoSerializer(serializers.Serializer):
     image = serializers.ImageField(use_url=True)
@@ -27,14 +35,17 @@ class PhotoSerializer(serializers.Serializer):
         # Check if the subfolder exists, if not create it
         if not os.path.exists(full_path):
             os.makedirs(full_path)
+            # Ensure ownership is applied to the new directory
+            ##set_apache_grassroots_ownership(full_path)
 
+       
         # Open the image using Pillow
         img = Image.open(image)
 
         # Calculate the thumbnail size (a quarter of the original size)
         original_size = img.size
         thumbnail_size = (original_size[0] // 4, original_size[1] // 4)
-        img.thumbnail(thumbnail_size, Image.ANTIALIAS)
+        img.thumbnail(thumbnail_size, Image.LANCZOS)
 
         # Save the thumbnail to a BytesIO object
         thumb_io = BytesIO()
