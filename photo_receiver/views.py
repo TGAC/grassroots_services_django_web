@@ -117,3 +117,21 @@ class LimitsFileUpdate(APIView):
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
+class AllowedStudiesView(APIView):
+    def get(self, request):
+        try:
+            # Path to the Studies_for_app.txt file
+            studies_file_path = os.path.join(settings.BASE_DIR, 'Studies_for_app.txt')
+            
+            # Check if the file exists
+            if not os.path.exists(studies_file_path):
+                return JsonResponse({'error': 'Studies_for_app.txt not found'}, status=404)
+
+            # Read the file and return the list of IDs
+            with open(studies_file_path, 'r') as file:
+                allowed_studies = [line.strip() for line in file if line.strip()]  # Remove empty lines
+            
+            return JsonResponse({'allowed_studies': allowed_studies}, status=200)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+
