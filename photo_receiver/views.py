@@ -139,10 +139,13 @@ class AllowedStudiesView(APIView):
             if not os.path.exists(studies_file_path):
                 return JsonResponse({'error': 'Studies_for_app.txt not found'}, status=404)
 
-            # Read the file and return the list of IDs
+            # Read the file and filter out lines starting with "//"
             with open(studies_file_path, 'r') as file:
-                allowed_studies = [line.strip() for line in file if line.strip()]  # Remove empty lines
-            
+                allowed_studies = [
+                    line.strip() for line in file 
+                    if line.strip() and not line.strip().startswith("//")
+                ]
+
             return JsonResponse({'allowed_studies': allowed_studies}, status=200)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
