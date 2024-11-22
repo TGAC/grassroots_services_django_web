@@ -7,6 +7,8 @@ import os, json
 from django.conf import settings
 from django.http import FileResponse
 from django.http import JsonResponse
+from pymongo import MongoClient
+from pymongo.errors import ConnectionFailure
 import glob
 import pwd
 import grp
@@ -150,3 +152,22 @@ class AllowedStudiesView(APIView):
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
 
+
+class OnlineCheckView(APIView):
+    def get(self, request):
+        response = {
+            'django': 'running',  # Explicit confirmation that Django is running
+            'mongo': 'unknown'
+        }
+
+        # Check MongoDB connection
+        try:
+            client = MongoClient('mongodb://localhost:27017/', serverSelectionTimeoutMS=1000)
+            client.server_info()  # Forces a call to test the connection
+            response['mongo'] = 'available'
+        except ConnectionFailure:
+            response['mongo'] = 'unreachable'
+        except Exception as e:
+            response['mongo'] = f'error: {str(e)}'
+
+        return JsonResponse(response)
