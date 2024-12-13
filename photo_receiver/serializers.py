@@ -42,6 +42,11 @@ class PhotoSerializer(serializers.Serializer):
         # Open the image using Pillow
         img = Image.open(image)
 
+        # Convert to RGB if the image has an alpha channel (RGBA)
+        if img.mode == 'RGBA':
+            img = img.convert('RGB')
+
+
         # Calculate the thumbnail size (a quarter of the original size)
         original_size = img.size
         thumbnail_size = (original_size[0] // 4, original_size[1] // 4)
