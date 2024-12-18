@@ -5,6 +5,8 @@ from django.core.files.base import ContentFile
 import os
 import pwd
 import grp
+from django.conf import settings
+from django.templatetags.static import static
 
 from django.conf import settings
 BASE_PATH = settings.MEDIA_ROOT
@@ -55,21 +57,30 @@ class PhotoSerializer(serializers.Serializer):
         # Save the thumbnail to a BytesIO object
         thumb_io = BytesIO()
         img.save(thumb_io, format='JPEG', quality=85)
-        thumb_io.seek(0)  # Reset the file pointer to the beginning
+        thumb_io.seek(0)
 
-        # Create a new Django file-like object for the thumbnail
-        thumbnail = ContentFile(thumb_io.getvalue(), name='thumb_' + image.name)
+        thumbnail_name = 'thumb_' + image.name
+        thumbnail_path = os.path.join(full_path, thumbnail_name)
 
-        # Save the thumbnail
-        thumb_path = os.path.join(full_path, thumbnail.name)
-        with open(thumb_path, 'wb+') as thumb_file:
-            thumb_file.write(thumbnail.read())
+        with open(thumbnail_path, 'wb+') as thumb_file:
+            thumb_file.write(thumb_io.read())
 
-        # Reset the BytesIO object for the original image
         image.seek(0)
+        original_name = image.name
+        original_path = os.path.join(full_path, original_name)
 
-        # Save the original image
-        original_path = os.path.join(full_path, image.name)
         with open(original_path, 'wb+') as original_file:
             for chunk in image.chunks():
                 original_file.write(chunk)
+
+        # Update the serializer's `image` field with the URL or path to the saved file
+        relative_image_path = os.path.relpath(original_path, BASE_PATH)
+        self.saved_image_url = os.path.join(settings.MEDIA_URL, relative_image_path)
+
+    def to_representation(self, instance):
+        # Ensure saved_image_url is included in the response
+        return {
+            "image": getattr(self, 'saved_image_url', None),
+            "subfolder": self.validated_data.get('subfolder'),
+            "plot_number": self.validated_data.get('plot_number'),
+        }
