@@ -1457,7 +1457,7 @@ function formatPlotModal(plot) {
     
    //phenotypearray.push('<table class="table plots" id="plots_table"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Trait</th><th>Measurement</th><th>Unit</th><th>Index</th></tr></thead><tbody id="phenotypes">'); //original  9 columns
    //phenotypearray.push('<table class="table plots" id="plots_table"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Raw Value Replicate</th><th>Trait</th><th>Measurement</th><th>Unit</th><th>Index</th></tr></thead><tbody id="phenotypes">');  // TEST 9 columns  extra raw value
-   phenotypearray.push('<table class="table plots" id="plots_table"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Raw Value Replicate</th><th>Raw Value Replicate</th><th>Trait</th><th>Measurement</th><th>Unit</th><th>Index</th></tr></thead><tbody id="phenotypes">');// Restore corrected Value 
+   phenotypearray.push('<table class="table plots" id="plots_table"><thead><tr><th>Replicate</th><th>Rack</th><th>Date</th><th>Raw Value</th><th>Corrected Value</th><th>Raw Value Replicate</th><th>Raw Value Replicate</th><th>Trait</th><th>Measurement</th><th>Unit</th><th>Index</th><th>Comment</th></tr></thead><tbody id="phenotypes">');// Restore corrected Value 
 
     let formatted_plot = format_plot_rows(plot, false);
 
@@ -1674,6 +1674,8 @@ function format_plot_rows(plot, replicate_bool) {
             }
 
                 phenotypearray.push('<td>' + SafePrint(observation['index']) + '</td>');
+
+                phenotypearray.push('<td>' + SafePrint(observation['notes']) + '</td>');
 
                 phenotypearray.push('</tr>');
             }
