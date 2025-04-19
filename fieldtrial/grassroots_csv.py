@@ -12,7 +12,8 @@ def getRowCsv(row_json):
     harvest_date = ''
     sowing_date  = ''
     replicate    = '' 
-    
+    accession   = ''
+
     if  ( 'discard' in row_json['rows'][0] ):
         accession = "Discarded"
     elif  ( 'blank' in row_json['rows'][0] ):
