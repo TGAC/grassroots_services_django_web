@@ -394,24 +394,25 @@ def numpy_data(json, pheno, current_name, total_rows, total_columns):
     column = 1
     #loop throght observations in the same fashion as in old JS code. 
     for j in range(len(json)):
-        if ( 'material' in json[j]['rows'][0]):
-            row_acc = np.append(row_acc, json[j]['rows'][0]['material']['accession'])
-        else: 
-            row_acc  = np.append(row_acc, np.nan ) 
+
+        material_flag = 'material' in json[j]['rows'][0]
+
         
         if ( int( json[j]['row_index'] ) == row ):
             if  (int( json[j]['column_index'] ) == column): 
                if column > num_columns:
                    num_columns = column
 
-               if   ( 'discard' in json[j]['rows'][0] ):
+               if   (( 'discard' in json[j]['rows'][0] ) or ( 'blank' in json[j]['rows'][0] )):
                     row_raw  = np.append(row_raw, np.nan )  # use NaN for discarded plots
-                    #row_acc  = np.append(row_acc, np.nan )  
+                    row_acc  = np.append(row_acc, np.nan )  
                     plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
-               elif ( 'blank' in json[j]['rows'][0] ):
+               elif ( not material_flag ):
                     row_raw  = np.append(row_raw, np.nan )  # use NaN for discarded plots
-                    #row_acc  = np.append(row_acc, np.nan )  
+                    row_acc  = np.append(row_acc, "No accession" )  
                     plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
+     
+        
      
                elif ( 'observations' in json[j]['rows'][0] ):
                     if search_phenotype(json[j]['rows'][0]['observations'], current_name):
@@ -428,17 +429,17 @@ def numpy_data(json, pheno, current_name, total_rows, total_columns):
                         if 'corrected_value' in latest_observation:
                             row_raw = np.append(row_raw, latest_observation['corrected_value'])
 
-                        #row_acc = np.append(row_acc, json[j]['rows'][0]['material']['accession'])
+                        row_acc = np.append(row_acc, json[j]['rows'][0]['material']['accession'])
                         plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'])
                     else:
                         row_raw = np.append(row_raw, np.inf)  # use infinity for N/A data
-                        #row_acc = np.append(row_acc, json[j]['rows'][0]['material']['accession'])
+                        row_acc = np.append(row_acc, json[j]['rows'][0]['material']['accession'])
                         plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'])
 
                else:
                   if('rows' in json[j]):      # when plots have rows but no observations!!
                         row_raw = np.append(row_raw, np.inf ) #   use infinity for N/A data
-                        #row_acc = np.append(row_acc, json[j]['rows'][0]['material']['accession'])  
+                        row_acc = np.append(row_acc, json[j]['rows'][0]['material']['accession'])  
                         plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )  
          
   
@@ -449,14 +450,15 @@ def numpy_data(json, pheno, current_name, total_rows, total_columns):
             if column > num_columns:
                    num_columns = column
 
-            if   ( 'discard' in json[j]['rows'][0] ):
-                    row_raw  = np.append(row_raw, np.nan )  
-                    #row_acc  = np.append(row_acc, np.nan )  
-                    plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
-            elif ( 'blank' in json[j]['rows'][0] ):
+            if   (( 'discard' in json[j]['rows'][0] ) or ( 'blank' in json[j]['rows'][0] )):
                     row_raw  = np.append(row_raw, np.nan )  # use NaN for discarded plots
-                    #row_acc  = np.append(row_acc, np.nan )  
+                    row_acc  = np.append(row_acc, np.nan )  
                     plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
+            elif ( not material_flag ):
+                    row_raw  = np.append(row_raw, np.nan )  # use NaN for discarded plots
+                    row_acc  = np.append(row_acc, "No accession" )  
+                    plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )
+
 
             elif ( 'observations' in json[j]['rows'][0] ):
                     if search_phenotype(json[j]['rows'][0]['observations'], current_name):
@@ -473,16 +475,16 @@ def numpy_data(json, pheno, current_name, total_rows, total_columns):
                         if 'corrected_value' in latest_observation:
                             row_raw = np.append(row_raw, latest_observation['corrected_value'])
 
-                        #row_acc = np.append(row_acc, json[j]['rows'][0]['material']['accession'])
+                        row_acc = np.append(row_acc, json[j]['rows'][0]['material']['accession'])
                         plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'])
                     else:
                         row_raw = np.append(row_raw, np.inf)  # use infinity for N/A data
-                        #row_acc = np.append(row_acc, json[j]['rows'][0]['material']['accession'])
+                        row_acc = np.append(row_acc, json[j]['rows'][0]['material']['accession'])
                         plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'])
             else:
                   if('rows' in json[j]):      # when plots have rows but no observations!!
                         row_raw = np.append(row_raw, np.inf ) #   use infinity for N/A data
-                        #row_acc = np.append(row_acc, json[j]['rows'][0]['material']['accession'])  
+                        row_acc = np.append(row_acc, json[j]['rows'][0]['material']['accession'])  
                         plotsIds = np.append(plotsIds, json[j]['rows'][0]['study_index'] )  
             
 

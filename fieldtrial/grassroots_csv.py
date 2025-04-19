@@ -22,6 +22,8 @@ def getRowCsv(row_json):
         accession = row_json['rows'][0]['material']['accession']
         rack      = row_json['rows'][0]['rack_index']
         replicate = row_json['rows'][0]['replicate']
+    else:
+        accession = 'Discarded'
 
     # Get rest of phenotype raw values    
     phenotypeNames = []  
