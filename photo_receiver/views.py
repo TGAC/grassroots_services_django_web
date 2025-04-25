@@ -17,9 +17,19 @@ BASE_PATH = settings.MEDIA_ROOT
 #BASE_PATH = '/home/daniel/Applications/apache/htdocs/TEST/' # local path
 
 def set_apache_grassroots_ownership(path):
-    apache_uid = pwd.getpwnam('apache').pw_uid
-    grassroots_gid = grp.getgrnam('grassroots').gr_gid
-    os.chown(path, apache_uid, grassroots_gid)
+    apache_user = null		
+    grassroots_group = null;
+
+    try: 
+        apache_user = pwd.getpwnam(settings.USER)
+        grp.getgrnam(settings.GROUP)
+    except Exception as e:
+        print ("error getting user ", e)
+
+    if apache_user != null and grassroots_user != null:
+        apache_uid = apache_user.pw_uid
+        grassroots_gid = grassroots_group.gr_gid
+        os.chown(path, apache_uid, grassroots_gid)
 
 class LatestPhoto(APIView):
     def get(self, request, subfolder, plot_number):        
@@ -39,7 +49,7 @@ class LatestPhoto(APIView):
         latest_photo_filename = os.path.basename(latest_photo)
         photo_url = request.build_absolute_uri(os.path.join(settings.MEDIA_URL, subfolder, plot_folder, latest_photo_filename))
          # Manually construct the URL
-        photo_url = 'https://grassroots.tools/' + os.path.join(settings.MEDIA_URL, subfolder, plot_folder, latest_photo_filename)
+        #photo_url = 'https://grassroots.tools/' + os.path.join(settings.MEDIA_URL, subfolder, plot_folder, latest_photo_filename)
 
         print(photo_url)
         # Serve the photo
@@ -58,6 +68,8 @@ class PhotoRetrieveView(APIView):
     def get(self, request, subfolder, photo_name):
         # Construct the path to the photo        
         photo_path = os.path.join(BASE_PATH, subfolder, photo_name)
+
+        print ("photo_path", photo_path)
 
         # Check if the photo exists
         if os.path.exists(photo_path):

@@ -12,9 +12,19 @@ from django.conf import settings
 BASE_PATH = settings.MEDIA_ROOT
 
 def set_apache_grassroots_ownership(path):
-    apache_uid = pwd.getpwnam('apache').pw_uid
-    grassroots_gid = grp.getgrnam('grassroots').gr_gid
-    os.chown(path, apache_uid, grassroots_gid)
+    apache_user = null		
+    grassroots_group = null;
+
+    try: 
+        apache_user = pwd.getpwnam(settings.USER)
+        grp.getgrnam(settings.GROUP)
+    except Exception as e:
+        print ("error getting user ".e)
+
+    if apache_user != null and grassroots_user != null:
+        apache_uid = apache_user.pw_uid
+        grassroots_gid = grassroots_group.gr_gid
+        os.chown(path, apache_uid, grassroots_gid)
 
 class PhotoSerializer(serializers.Serializer):
     image = serializers.ImageField(use_url=True)
@@ -33,6 +43,8 @@ class PhotoSerializer(serializers.Serializer):
         # Construct the full path with subfolder
         #full_path = os.path.join(base_path, subfolder)
         full_path = os.path.join(BASE_PATH, subfolder, f'plot_{plot_number}')
+
+        print ("saving photo to ", full_path)
 
         # Check if the subfolder exists, if not create it
         if not os.path.exists(full_path):
