@@ -2293,6 +2293,8 @@ function format_pheno(plotCurrent, replicateIds, replicates, noReplicates){
 
                 phenotypearray.push('<td>' + SafePrint(observation['index']) + '</td>');
 
+                phenotypearray.push('<td>' + SafePrint(observation['notes']) + '</td>');
+
                 phenotypearray.push('</tr>');
     
    }
