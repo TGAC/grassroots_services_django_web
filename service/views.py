@@ -29,14 +29,14 @@ ontologies = {
 
 
 def index (request):
-	return real_index (request, "public/")
+	return real_index (request, "public")
 
 
 def private_index (request):
-	return real_index (request, "private/")
+	return real_index (request, "private")
 
 def queen_index (request):
-	return real_index (request, "queen/")
+	return real_index (request, "queen")
 
 
 def real_index (request, path):
