@@ -28,10 +28,18 @@ ontologies = {
 };
 
 
-def index(request):
+def index (request):
+	return real_index (request, "public")
+
+def private_index (request):
+	return real_index (request, "private")
+
+
+
+def real_index(request,path):
 
 	services = []
-	service_list_json = get_all_services('public')
+	service_list_json = get_all_services (path)
 
 
 	if service_list_json != None:
@@ -181,7 +189,7 @@ def AddOntologyLinks (src, src_name, dest, dest_name):
 '''
 Private services index page
 '''
-def private_index(request):
+def old_private_index(request):
 	services = []
 	service_list_json = get_all_services('private')
 
