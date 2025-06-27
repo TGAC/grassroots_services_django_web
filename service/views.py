@@ -29,14 +29,17 @@ ontologies = {
 
 
 def index (request):
-	return real_index (request, "public")
+	return real_index (request, "public/")
+
 
 def private_index (request):
-	return real_index (request, "private")
+	return real_index (request, "private/")
+
+def queen_index (request):
+	return real_index (request, "queen/")
 
 
-
-def real_index(request,path):
+def real_index (request, path):
 
 	services = []
 	service_list_json = get_all_services (path)
@@ -210,7 +213,7 @@ def old_private_index(request):
 '''
 Queen services index page
 '''
-def queen_index(request):
+def old_queen_index(request):
     return render(request, 'index.html', {'private': 'queen/'})
 
 '''
