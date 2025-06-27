@@ -45,6 +45,91 @@
         </div>
 
         <div id="legend" style="display: none"></div>
+
+				
+				
+				{% if services %}
+					<table id="services_table">
+						
+					<tr>	
+						<th>Name</th>
+						<th>Description</th>
+						<th>Provider</th>
+						<th>Application Category</th>
+						<th>Application Subcategory</th>
+						<th>Input</th>
+						<th>Output</th>
+					</tr>						
+
+					{% for service in services %}
+					{% autoescape off %}
+					<tr>	
+						<td><a class="newstyle_link" href="{{ service.alt_name }}"> <img src="{{ service.image }}" /> {{ service.name }} </a> </td>
+						<td>{{ service.description }}</td>
+
+
+						<td>{{ service. }}
+							{% if service.provider %}															
+								<ul>
+									{% for obj in service.provider %}
+						        <li title = "{{ obj.description }}"> 
+											{% if obj.logo %}
+												<img src = "{{ obj.logo }}" height="20px"/>
+											{% endif %}
+  										<a target="_blank" href="{{ obj.url }}">{{ obj.name }}</a>
+										</li>
+									{% endfor %}
+								</ul>
+							{% endif %}
+						</td>
+
+						<td>
+							{% if service.category %}
+								<a target="_blank" href="{{ service.category.url }}" class="newstyle_link">{{service.category.name }}</a>
+							{% endif %}
+						</td>
+						
+						<td>
+							{% if service.subcategory %}
+								<a target="_blank" href="{{ service.subcategory.url }}" class="newstyle_link">{{service.subcategory.name }}</a>
+							{% endif %}
+						</td>
+
+						<td>
+							{% if service.input %}															
+								<ul>
+									{% for obj in service.input %}
+						        <li title="{{ obj.description }}"><a target="_blank" href="{{ obj.url }}">{{ obj.name }} </a></li>
+									{% endfor %}
+								</ul>
+							{% endif %}
+						</td>
+						<td>
+							{% if service.output %}															
+								<ul>
+									{% for obj in service.output %}
+						        <li title="{{ obj.description }}"><a target="_blank" href="{{ obj.url }}">{{ obj.name }} </a></li>
+									{% endfor %}
+								</ul>
+							{% endif %}
+						</td>
+					</tr>						
+
+					{% endautoescape %}
+					{% endfor %}
+
+					</table>
+
+				{% else %}
+
+					NO SERVICES
+					
+				{% endif %}
+
+
+
+				<!-- move this to django -->
+<!--
         <script type="text/javascript">
             // change this to your URL (relative), has to be a local URL as JS restriction of cross domain
             var services = '{"operations": {"operation":"get_all_services"}}';
@@ -80,6 +165,7 @@
 
 
         </script>
+-->
     </div>
 </section>
 

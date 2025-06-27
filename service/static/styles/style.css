@@ -358,3 +358,41 @@ table.plots td {
 .tooltip-inner {
  word-break: break-all;
 }
+
+
+
+
+#services_table {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#services_table td, #services_table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#services_table tr:nth-child(even){background-color: #f2f2f2;}
+
+#services_table tr:hover {background-color: #ddd;}
+
+#services_table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #2c3e50;
+  color: white;
+}
+
+#services_table td ul {
+	list-style-type: disc; 
+	margin: 0em;
+}
+
+
+
+#status {
+	display: none;
+}
+

@@ -145,7 +145,10 @@ gtag('consent', 'default', {
     <!--<script src="https://grassroots.tools/js/site.js"></script>-->
 
     <!--<script src="https://grassroots.tools/vendor/jquery-easing/jquery.easing.min.js"></script>-->
-    <link href="https://grassroots.tools/css/site.css" rel="stylesheet">
+
+    <link href="{% static 'fieldtrial/site.css' %}" rel="stylesheet">
+
+    <link href="{% static 'styles/style.css' %}" rel="stylesheet">
 
     <!--NEW STUFF-->
   <!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">  -->
@@ -212,9 +215,17 @@ $(document).ready(function(){
     </div>
 </nav>
 
-
+<!--
 <script type="text/javascript">
    const static_url = '{% static "" %}';
 </script>
+-->
+
+<section>
+<b>request.META</b><br>
+{% for k_meta, v_meta in request.META.items %}
+  <code>{{ k_meta }}</code> : {{ v_meta }} <br>
+{% endfor %}
+</section>
 
 

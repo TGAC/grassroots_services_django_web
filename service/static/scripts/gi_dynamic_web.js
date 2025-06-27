@@ -129,7 +129,8 @@ function get_all_services_as_table() {
         url: root_dir + "service/ajax/interact_backend/",
         type: "POST",
         headers: {
-            'X-CSRFToken': csrftoken
+            'X-CSRFToken': csrftoken,
+						"Authorization": "Bearer " + loaclStorage.getItem ("access_token")
         },
         data: services,
         dataType: "json",

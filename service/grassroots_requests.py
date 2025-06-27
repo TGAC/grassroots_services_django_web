@@ -18,7 +18,7 @@ def get_all_services(str):
         res = requests.post(private_server_url, data=json.dumps(list_services_req))
     elif str == 'queen':
         res = requests.post(queen_server_url, data=json.dumps(list_services_req))
-    return json.dumps(res.json())
+    return res.json()
 
 '''
 Get one service with an alternative name
