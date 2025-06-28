@@ -11,7 +11,7 @@ Get all services
 returns JSON from backend and send to the model
 '''
 def get_all_services (request, path):
-    list_services_req = {"operations": {"operation": "get_all_services"}}
+    req_json = {"operations": {"operation": "get_all_services"}}
     result = call_grassroots_server (request, req_json, path)
 
     return result
@@ -21,7 +21,7 @@ Get one service with an alternative name
 returns JSON from backend and send to the model
 '''
 def get_service(service_alt_name, str):
-    get_service_req = {"services": [{"so:alternateName": service_alt_name}], "operations": {"operation": "get_named_service"}}
+    req_json = {"services": [{"so:alternateName": service_alt_name}], "operations": {"operation": "get_named_service"}}
     result = call_grassroots_server (request, req_json, path)
 
     return result
