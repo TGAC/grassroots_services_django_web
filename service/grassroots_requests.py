@@ -28,7 +28,7 @@ def get_service(service_alt_name, str):
 
 
 
-def call_grassroots_server (request, req_json, path)
+def call_grassroots_server (request, req_json, path):
     result = None
     url = None
 
