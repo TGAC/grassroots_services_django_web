@@ -42,7 +42,7 @@ def queen_index (request):
 def real_index (request, path):
 
 	services = []
-	service_list_json = get_all_services (path)
+	service_list_json = get_all_services (request, path)
 
 
 	if service_list_json != None:
@@ -280,7 +280,7 @@ Get one public grassroots service with a service name
 '''
 def single_service_ajax(request):
     service_name = request.POST['service_name']
-    service_json = get_service(service_name, 'public')
+    service_json = get_service (request, service_name, 'public')
     return HttpResponse(service_json)
 
 '''
@@ -288,7 +288,7 @@ Get one private grassroots service with a service name
 '''
 def private_single_service_ajax(request):
     service_name = request.POST['service_name']
-    service_json = get_service(service_name, 'private')
+    service_json = get_service (request, service_name, 'private')
     return HttpResponse(service_json)
 
 '''
@@ -296,7 +296,7 @@ Get one queen grassroots service with a service name
 '''
 def queen_single_service_ajax(request):
     service_name = request.POST['service_name']
-    service_json = get_service(service_name, 'queen')
+    service_json = get_service (request, service_name, 'queen')
     return HttpResponse(service_json)
 
 

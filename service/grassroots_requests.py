@@ -10,15 +10,11 @@ queen_server_url = settings.QUEEN_SERVER_URL
 Get all services
 returns JSON from backend and send to the model
 '''
-def get_all_services(str):
+def get_all_services (request, path):
     list_services_req = {"operations": {"operation": "get_all_services"}}
-    if str == 'public':
-        res = requests.post(server_url, data=json.dumps(list_services_req))
-    elif str == 'private':
-        res = requests.post(private_server_url, data=json.dumps(list_services_req))
-    elif str == 'queen':
-        res = requests.post(queen_server_url, data=json.dumps(list_services_req))
-    return res.json()
+    result = call_grassroots_server (request, req_json, path)
+
+    return result
 
 '''
 Get one service with an alternative name
@@ -26,13 +22,33 @@ returns JSON from backend and send to the model
 '''
 def get_service(service_alt_name, str):
     get_service_req = {"services": [{"so:alternateName": service_alt_name}], "operations": {"operation": "get_named_service"}}
-    if str == 'public':
-        res = requests.post(server_url, data=json.dumps(get_service_req))
-    elif str == 'private':
-        res = requests.post(private_server_url, data=json.dumps(get_service_req))
-    elif str == 'queen':
-        res = requests.post(queen_server_url, data=json.dumps(get_service_req))
-    return json.dumps(res.json())
+    result = call_grassroots_server (request, req_json, path)
+
+    return result
+
+
+
+def call_grassroots_server (request, req_json, path)
+    result = None
+    url = None
+
+    if path == 'public':
+        url = server_url
+    elif path == 'private':
+        url = private_server_url
+    elif path == 'queen':
+        url = queen_server_url
+
+    if url is not None:
+        print (">>>> calling url " + url)
+        res = requests.post (url, data = json.dumps (req_json), headers = request.headers)
+        result = res.json()
+    else:
+        print (">>>> no url for " + path)
+
+    return result
+
+
 
 '''
 Send request to apache backend
