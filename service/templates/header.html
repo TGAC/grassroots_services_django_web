@@ -55,7 +55,7 @@ gtag('consent', 'default', {
     <!-- font awesome -->
     <link href="{% static 'scripts/fontawesome-free-5.9.0-web/css/all.css' %}" rel="stylesheet" type="text/css"/>
 
-    <!--OLD  jQuery 
+    <!--OLD  jQuery
     <script type="text/javascript" src="{% static 'scripts/jquery/js/jquery-1.11.3.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'scripts/jquery/jquery-ui-1.11.4.base/jquery-ui.min.js' %}"></script>
     <link rel="stylesheet" href="{% static 'scripts/jquery/jquery-ui-1.11.4.base/jquery-ui.min.css' %}"
@@ -67,20 +67,20 @@ gtag('consent', 'default', {
     <script type="text/javascript" src="{% static 'fieldtrial/SCRIPTS/jquery/jquery-3.7.1.min.js' %}"></script>
         <script src="https://code.jquery.com/jquery-migrate-3.5.0.min.js"></script>
     <script type="text/javascript" src="{% static 'fieldtrial/SCRIPTS/jquery/jquery-ui.min.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'fieldtrial/SCRIPTS/jquery/jquery-ui.min.css' %}" type="text/css"/>  
+    <link rel="stylesheet" href="{% static 'fieldtrial/SCRIPTS/jquery/jquery-ui.min.css' %}" type="text/css"/>
 
     <!--NEW  Datatables -->
     <link rel="stylesheet" href="{% static 'fieldtrial/SCRIPTS/datatables/datatables.min.css' %}" type="text/css"/>
-    <script type="text/javascript" src="{% static 'fieldtrial/SCRIPTS/datatables/datatables.min.js' %}"></script> 
-    
-    
+    <script type="text/javascript" src="{% static 'fieldtrial/SCRIPTS/datatables/datatables.min.js' %}"></script>
+
+
     <script type="text/javascript" src="{% static 'scripts/jquery/datatables/js/dataTables.buttons.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'scripts/jquery/jszip.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'scripts/jquery/Buttons-1.5.6/js/buttons.html5.min.js' %}"></script>
     <link rel="stylesheet" href="{% static 'scripts/jquery/Buttons-1.5.6/css/buttons.bootstrap.min.css' %}"
           type="text/css"/>
-    <!-- 
-            OLD datatables 
+    <!--
+            OLD datatables
     <script type="text/javascript" src="{% static 'scripts/jquery/datatables/js/jquery.dataTables.min.js' %}"></script>
       <script type="text/javascript" src="{% static 'scripts/jquery/datatables/js/dataTables.buttons.min.js' %}"></script>
       <script type="text/javascript" src="{% static 'scripts/jquery/jszip.min.js' %}"></script>
@@ -135,7 +135,7 @@ gtag('consent', 'default', {
 
 
     <!-- new style bit -->
-    
+
 
     <link href="https://grassroots.tools/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!--<link href="https://grassroots.tools/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">-->
@@ -167,7 +167,7 @@ gtag('consent', 'default', {
     <!--NEW STUFF
 <script>
 $(document).ready(function(){
-    $('[data-toggle="popover"]').popover( {trigger: 'focus', html:true});   
+    $('[data-toggle="popover"]').popover( {trigger: 'focus', html:true});
 });
 </script>
 -->
@@ -229,3 +229,6 @@ $(document).ready(function(){
 </section>
 
 
+<section id="user_details">
+				<strong> Logged in as {{ request.META|get_logged_in_user_name }}: {{ request.META|get_logged_in_user_email }} </strong>
+</section>
