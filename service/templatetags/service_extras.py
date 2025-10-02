@@ -14,7 +14,7 @@ def get_logged_in_user_email (dictionary):
     name = None
 
     try:
-        key = settings.USER_NAME_EMAIL
+        key = settings.USER_EMAIL_KEY
     except AttributeError:
         pass
 

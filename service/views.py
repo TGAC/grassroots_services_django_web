@@ -15,118 +15,122 @@ index page
 '''
 
 ontologies = {
-	"so": "http://schema.org/",
-	"eo": "http://edamontology.org/",
-	"efo": "http://www.ebi.ac.uk/efo/",
-	"swo": "http://www.ebi.ac.uk/swo/",
-	"co": "http://www.cropontology.org/terms/",
+  "so": "http://schema.org/",
+  "eo": "http://edamontology.org/",
+  "efo": "http://www.ebi.ac.uk/efo/",
+  "swo": "http://www.ebi.ac.uk/swo/",
+  "co": "http://www.cropontology.org/terms/",
 
-	"envo": "http://purl.obolibrary.org/obo/ENVO_",
-	"agro": "http://purl.obolibrary.org/obo/AGRO_",
-	"ncit": "http://purl.obolibrary.org/obo/NCIT_",
-	"stato": "http://purl.obolibrary.org/obo/STATO_"
+  "envo": "http://purl.obolibrary.org/obo/ENVO_",
+  "agro": "http://purl.obolibrary.org/obo/AGRO_",
+  "ncit": "http://purl.obolibrary.org/obo/NCIT_",
+  "stato": "http://purl.obolibrary.org/obo/STATO_"
 };
 
 
 def index (request):
-	return real_index (request, "public")
+  return real_index (request, "public")
 
 
 def private_index (request):
-	return real_index (request, "private")
+  return real_index (request, "private")
 
 def queen_index (request):
-	return real_index (request, "queen")
+  return real_index (request, "queen")
 
 
 def real_index (request, path):
 
-	services = []
-	service_list_json = get_all_services (request, path)
+  services = []
+  service_list_json = get_all_services (request, path)
 
 
-	if service_list_json != None:
-		services_json = service_list_json ["services"]	
-				
+  if service_list_json != None:
+    services_json = service_list_json ["services"]  
+        
 
-		for service_json in services_json:
-			service = {};
+    for service_json in services_json:
+      service = {};
 
-			if "so:name" in service_json:
-				service ["name"] = service_json ["so:name"];
-	
-			if "so:description" in service_json:
-				service ["description"] = service_json ["so:description"];
+      if "so:name" in service_json:
+        service ["name"] = service_json ["so:name"];
+  
+      if "so:description" in service_json:
+        service ["description"] = service_json ["so:description"];
 
-			if "so:alternateName" in service_json:
-				service ["alt_name"] = service_json ["so:alternateName"];
+      if "so:alternateName" in service_json:
+        service ["alt_name"] = service_json ["so:alternateName"];
 
-			if (service_json ["operation"] is not None):
-				if (service_json ["operation"]["so:image"] is not None):
-					service ["image"] = service_json ["operation"]["so:image"];
-			
-			category = service_json ["category"]
+      try:
+        if (service_json ["operation"] is not None):
+           if (service_json ["operation"]["so:image"] is not None):
+            service ["image"] = service_json ["operation"]["so:image"];
+      except KeyError:
+        print (service_json)
 
-			if (category is not None):		
-				if "application_category" in category:
-					AddCategoryLinks (category, "application_category", service, "category");
-	
-				if "application_subcategory" in category:
-					AddCategoryLinks (category, "application_subcategory", service, "subcategory");
+      
+      category = service_json ["category"]
 
-#					if "so:name" in category ["application_subcategory"]:
-#						name = category ["application_subcategory"] ["so:name"]
-#						service ["subcategory"] = name;
+      if (category is not None):    
+        if "application_category" in category:
+          AddCategoryLinks (category, "application_category", service, "category");
+  
+        if "application_subcategory" in category:
+          AddCategoryLinks (category, "application_subcategory", service, "subcategory");
 
-
-				AddOntologyLinks (category, "input", service, "input");
-
-				AddOntologyLinks (category, "output", service, "output");
+#          if "so:name" in category ["application_subcategory"]:
+#            name = category ["application_subcategory"] ["so:name"]
+#            service ["subcategory"] = name;
 
 
-			AddProviderLinks (service_json, service)
+        AddOntologyLinks (category, "input", service, "input");
 
-			services.append (service)				
+        AddOntologyLinks (category, "output", service, "output");
 
-	return render(request, 'index.html', {'private': '', 'services': services})
+
+      AddProviderLinks (service_json, service)
+
+      services.append (service)        
+
+  return render(request, 'index.html', {'private': '', 'services': services})
 
 
 
 def AddProviderLinks (src, dest): 
-	providers = []
+  providers = []
 
-	if "provider" in src	:
-		provider = GetProvider (src ["provider"]);
-		providers.append (provider)
+  if "provider" in src  :
+    provider = GetProvider (src ["provider"]);
+    providers.append (provider)
 
-	elif "providers" in src:
-						
-		for provider_json in providers:
-			provider = GetProvider (provider_json);
-			providers.append (provider)
+  elif "providers" in src:
+            
+    for provider_json in providers:
+      provider = GetProvider (provider_json);
+      providers.append (provider)
 
-	dest ["provider"] = providers
-	
-	return providers
+  dest ["provider"] = providers
+  
+  return providers
 
 
 
 def GetProvider (provider_json):
-	provider = {}
+  provider = {}
 
-	if "so:name" in provider_json:
-		provider ["name"] = provider_json ["so:name"]
-	
-	if "so:description" in provider_json:
-		provider ["description"] = provider_json ["so:description"]
+  if "so:name" in provider_json:
+    provider ["name"] = provider_json ["so:name"]
+  
+  if "so:description" in provider_json:
+    provider ["description"] = provider_json ["so:description"]
 
-	if "so:url" in provider_json:
-		provider ["url"] = provider_json ["so:url"]
+  if "so:url" in provider_json:
+    provider ["url"] = provider_json ["so:url"]
 
-	if "so:logo" in provider_json:
-		provider ["logo"] = provider_json ["so:logo"]
-				
-	return provider
+  if "so:logo" in provider_json:
+    provider ["logo"] = provider_json ["so:logo"]
+        
+  return provider
 
 
 
@@ -134,82 +138,82 @@ def GetProvider (provider_json):
 def AddCategoryLinks (src, src_name, dest, dest_name):
 
 
-	category = {}
+  category = {}
 
-	if src_name in src:
-		i = src [src_name];
+  if src_name in src:
+    i = src [src_name];
 
-		if "so:name" in i:
-			category ["name"] = i ["so:name"]
-		
-		if "so:description" in i:
-			category ["description"] = i ["so:description"]
+    if "so:name" in i:
+      category ["name"] = i ["so:name"]
+    
+    if "so:description" in i:
+      category ["description"] = i ["so:description"]
 
-		if "so:sameAs" in i:
-			parts = i ["so:sameAs"].split (":")
-			
-			if len (parts) == 2:
-				prefix = ontologies [parts [0]]
+    if "so:sameAs" in i:
+      parts = i ["so:sameAs"].split (":")
+      
+      if len (parts) == 2:
+        prefix = ontologies [parts [0]]
 
-				if prefix is not None:
-					category ["url"] = prefix + parts [1]
-		
-		dest [dest_name] = category
-						
-	return category
+        if prefix is not None:
+          category ["url"] = prefix + parts [1]
+    
+    dest [dest_name] = category
+            
+  return category
 
 
 
 def AddOntologyLinks (src, src_name, dest, dest_name):
-	values = []
+  values = []
 
-	if src_name in src:
-		for i in src [src_name]:
-			obj = {}
+  if src_name in src:
+    for i in src [src_name]:
+      obj = {}
 
-			if "so:name" in i:
-				obj ["name"] = i ["so:name"]
-			
-			if "so:description" in i:
-				obj ["description"] = i ["so:description"]
+      if "so:name" in i:
+        obj ["name"] = i ["so:name"]
+      
+      if "so:description" in i:
+        obj ["description"] = i ["so:description"]
 
-			if "so:sameAs" in i:
-				parts = i ["so:sameAs"].split (":")
-				
-				if len (parts) == 2:
-					prefix = ontologies [parts [0]]
+      if "so:sameAs" in i:
+        parts = i ["so:sameAs"].split (":")
+        
+        if len (parts) == 2:
+          prefix = ontologies [parts [0]]
 
-					if prefix is not None:
-						obj ["url"] = prefix + parts [1]
-				
-			values.append (obj)
-	
-	if (len (values) > 0):
-		dest [dest_name] = values
+          if prefix is not None:
+            obj ["url"] = prefix + parts [1]
+        
+      values.append (obj)
+  
+  if (len (values) > 0):
+    dest [dest_name] = values
 
-	return values
+  return values
 
 '''
 Private services index page
 '''
 def old_private_index(request):
-	services = []
-	service_list_json = get_all_services('private')
+  services = []
+  service_list_json = get_all_services('private')
 
-	services_list = None
+  services_list = None
 
-	if service_list_json != None:
-		services_json = service_list_json ["services"]	
-	
-		for i in services_json:
-			s = services_json [i] 
-			t = s ["@type"]
+  if service_list_json != None:
+    services_json = service_list_json ["services"]  
+  
+    for i in services_json:
+      s = services_json [i] 
+      t = s ["@type"]
 
-			if (t != None):
-				services.append (t)
+      if (t != None):
+        services.append (t)
 
-			
-	return render(request, 'index.html', {'private': 'private/', 'services': services})
+      
+  return render(request, 'index.html', {'private': 'private/', 'services': services})
 '''
 Queen services index page
 '''
