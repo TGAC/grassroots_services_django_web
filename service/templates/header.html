@@ -221,13 +221,14 @@ $(document).ready(function(){
 </script>
 -->
 
-<section>
-<b>request.META</b><br>
-{% for k_meta, v_meta in request.META.items %}
-  <code>{{ k_meta }}</code> : {{ v_meta }} <br>
-{% endfor %}
-</section>
+<!--
+request.META
 
+{% for k_meta, v_meta in request.META.items %}
+{{ k_meta }}: {{ v_meta }}
+{% endfor %}
+
+-->
 
 <section id="user_details">
 				<strong> Logged in as {{ request.META|get_logged_in_user_name }}: {{ request.META|get_logged_in_user_email }} </strong>
